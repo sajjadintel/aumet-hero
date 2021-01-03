@@ -19,7 +19,7 @@ $dotenv->load();
 
 $f3 = \Base::instance();
 
-$f3->set('AUTOLOAD', "app/controllers/ | app/classes/ | app/models/ | app/modules/auth/ | app/modules/admin/ | app/modules/common/ | app/modules/communication/ | app/modules/company/ | app/modules/explore/ | app/modules/landing/ | app/modules/matching/ | app/modules/product/");
+$f3->set('AUTOLOAD', "app/controllers/ | app/classes/ | app/models/");
 
 /* Config */
 $f3->set('DEBUG', '3');
@@ -48,30 +48,14 @@ $dbPGHost = getenv('PGDB_HOST');
 $dbPGUsername = getenv('PGDB_USER');
 $dbPGPassword = getenv('PGDB_PASS');
 
-$dbNameAuth = getenv('DB_NAME_AUTH');
-$dbNameIndustry = getenv('DB_NAME_INDUSTRY');
 $dbNameAumet = getenv('DB_NAME_AUMET');
-
-$f3->set('dbPGUsername', $dbPGUsername);
-$f3->set('dbPGPassword', $dbPGPassword);
-
-$f3->set('dbConnStringAumet', "pgsql:host=$dbPGHost;port=$dbPGPort;dbname=$dbNameAumet");
-
-global $dbConnectionAuth;
-
-$dbConnectionAuth = new DB\SQL(
-    $f3->get('dbConnStringAumet'),
-    $f3->get('dbPGUsername'),
-    $f3->get('dbPGPassword'),
-    array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
-);
 
 global $dbConnectionAumet;
 
 $dbConnectionAumet = new DB\SQL(
-    $f3->get('dbConnStringAumet'),
-    $f3->get('dbPGUsername'),
-    $f3->get('dbPGPassword'),
+    "pgsql:host=$dbPGHost;port=$dbPGPort;dbname=$dbNameAumet",
+    $dbPGUsername,
+    $dbPGPassword,
     array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
 );
 

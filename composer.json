@@ -1,6 +1,6 @@
 {
   "name": "aumet/aumet-hero",
-  "description": "Aumet OnEx",
+  "description": "Aumet Hero",
   "minimum-stability": "stable",
   "type": "project",
   "require": {
@@ -27,7 +27,7 @@
   "authors": [
     {
       "name": "Aumet",
-      "email": "a.atrash@aumet.me"
+      "email": "a.atrash@aumet.com"
     }
   ]
 }
