@@ -1,0 +1,14 @@
+# Temp and vendor folders
+.vscode/
+vendor/
+files/
+.idea/
+tmp/cache/
+
+# Temp and environment variables
+.DS_Store
+composer.pharsendgrid.env
+"sendgrid.env"
+.run# Created by .ignore support plugin (hsz.mobi)
+.idea/aumet-onex.iml
+.env

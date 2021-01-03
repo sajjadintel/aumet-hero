@@ -1,0 +1,32 @@
+.login.login-3 .login-aside {
+    width: 100%;
+    max-width: 37% !important;
+}
+
+.login.login-3 .login-content .login-form {
+    width: 100%;
+    max-width: 600px;
+}
+
+.hide-mobile {
+    display: initial;
+}
+
+.show-mobile {
+    display: none !important;
+}
+
+.radio > span {
+    background-color: #ffffff;
+    border: 1px solid #13b9a9;
+}
+
+@media screen and (max-width: 768px) {
+    .hide-mobile {
+        display: none !important;
+    }
+
+    .show-mobile {
+        display: initial !important;
+    }
+}
