@@ -11,7 +11,7 @@ class AuthUser extends BaseModel
     public function __construct()
     {
         global $dbConnectionAumet;
-        parent::__construct($dbConnectionAumet, 'hero.user');
+        parent::__construct($dbConnectionAumet, 'hero.heroUser');
     }
 
     public function getByUID($uid)

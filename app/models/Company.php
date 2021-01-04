@@ -58,4 +58,14 @@ class Company extends BaseModel
     {
         return parent::getWhere('"Type"=\'distributor\' and "CountryID"='. $countryId);
     }
+
+    public function getManufacturers( $where, $page=1, $pageSize=10, $field='ID', $sort='asc')
+    {
+        return parent::getWhere('"Type"=\'manufacturer\'', "$field $sort", $pageSize, ($page-1)*$pageSize);
+    }
+
+    public function getManufacturersCount()
+    {
+        return $this->count('"Type"=\'manufacturer\'');
+    }
 }

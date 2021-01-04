@@ -19,7 +19,7 @@ $dotenv->load();
 
 $f3 = \Base::instance();
 
-$f3->set('AUTOLOAD', "app/controllers/ | app/classes/ | app/models/");
+$f3->set('AUTOLOAD', "app/controllers/ | app/classes/ | app/models/ | app/modules/common/ | app/modules/company/ | app/modules/product/ | app/modules/matching/");
 
 /* Config */
 $f3->set('DEBUG', '3');
@@ -88,8 +88,8 @@ if (getenv('ENV') == Constants::ENV_LOC) {
             if ($f3->get('ERROR.code') == 404) {
                 $f3->reroute('/');
             } else {
-                echo $f3->get('ERROR.text');
-                //var_dump($f3->get('ERROR'));
+                //echo $f3->get('ERROR.text');
+                var_dump($f3->get('ERROR'));
             }
         }
     );

@@ -165,19 +165,12 @@ class Controller
         if ($this->f3->ajax()) {
             echo $this->webResponse->getJSONResponse();
         } else {
-            switch ($this->objUser->companyType) {
-                case Company::TYPE_MANUFACTURER:
+            switch ($this->objUser->roleId) {
+                case 1:
+                default:
                     $this->f3->reroute("/$this->language/dashboard");
                     break;
-                case Company::TYPE_DISTRIBUTOR:
-                    $this->f3->reroute("/$this->language/explore");
-                    break;
-                default:
-                    $this->f3->reroute("/$this->language");
-                    break;
             }
-
-
         }
     }
 
@@ -189,7 +182,6 @@ class Controller
     function renderLayout($ajaxUrl = false)
     {
         if($ajaxUrl) {
-            //$ajaxUrl = "$this->language/$ajaxUrl";
             $this->f3->set("ajaxUrl", $ajaxUrl);
         }
         echo View::instance()->render('layout/layout.php');
@@ -242,8 +234,6 @@ class Controller
         }
         return $headers;
     }
-
-
 
     function generateRandomString($length = 10)
     {
@@ -653,5 +643,76 @@ class Controller
         if (!$full)
             $string = array_slice($string, 0, 1);
         return $string ? implode(', ', $string) . ' ago' : 'just now';
+    }
+
+    function getDatatable(BaseModel $objModel, $where=''){
+
+        $datatable = array_merge(['pagination' => [], 'sort' => [], 'query' => []], $_REQUEST);
+
+        $sort  = !empty($datatable['sort']['sort']) ? $datatable['sort']['sort'] : 'asc';
+        $field = !empty($datatable['sort']['field']) ? $datatable['sort']['field'] : 'ID';
+
+        $page    = !empty($datatable['pagination']['page']) ? (int)$datatable['pagination']['page'] : 1;
+        $perpage = !empty($datatable['pagination']['perpage']) ? (int)$datatable['pagination']['perpage'] : -1;
+
+        $pages = 1;
+
+        $total = $objModel->getDatatableCount($where);
+
+        // $perpage 0; get all data
+        if ($perpage > 0) {
+            $pages  = ceil($total / $perpage); // calculate total pages
+            $page   = max($page, 1); // get 1 page when $_REQUEST['page'] <= 0
+            $page   = min($page, $pages); // get last page when $_REQUEST['page'] > $totalPages
+        }
+
+        $page = $page < 1 ? 1: $page;
+
+        $data = $objModel->getDatatableData($where, $page, $perpage, $field, $sort);
+
+/*
+        // search filter by keywords
+        $filter = isset($datatable['query']['generalSearch']) && is_string($datatable['query']['generalSearch'])
+            ? $datatable['query']['generalSearch'] : '';
+        if (!empty($filter)) {
+            $data = array_filter($data, function ($a) use ($filter) {
+                return (bool)preg_grep("/$filter/i", (array)$a);
+            });
+            unset($datatable['query']['generalSearch']);
+        }
+
+        // filter by field query
+        $query = isset($datatable['query']) && is_array($datatable['query']) ? $datatable['query'] : null;
+        if (is_array($query)) {
+            $query = array_filter($query);
+            foreach ($query as $key => $val) {
+                $data = list_filter($data, [$key => $val]);
+            }
+        }*/
+
+        $meta = [
+            'page'    => $page,
+            'pages'   => $pages,
+            'perpage' => $perpage,
+            'total'   => $total,
+        ];
+
+
+        // if selected all records enabled, provide all the ids
+        /*if (isset($datatable['requestIds']) && filter_var($datatable['requestIds'], FILTER_VALIDATE_BOOLEAN)) {
+            $meta['rowIds'] = array_map(function ($row) {
+                foreach ($row as $first) break;
+                return $first;
+            }, $allData);
+        }*/
+
+
+        return [
+            'meta' => $meta + [
+                    'sort'  => $sort,
+                    'field' => $field,
+                ],
+            'data' => $data,
+        ];
     }
 }

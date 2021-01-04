@@ -23,10 +23,6 @@ function compress_htmlcode($codedata)
 	<!-- TODO: Add SDKs for Firebase products that you want to use
          https://firebase.google.com/docs/web/setup#available-libraries -->
 	<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-auth.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-analytics.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-performance.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-messaging.js"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js"></script>
 
     <script src="/assets/js/fb.js"></script>
     <script>
@@ -180,7 +176,7 @@ function compress_htmlcode($codedata)
 					<?php include_once 'asideBrand.php'; ?>
 					<!--end::Brand-->
 					<!--begin::Aside Menu-->
-					<?php include_once "asideMenu/$objUser->companyType.php";
+					<?php include_once "asideMenu/roleMenu_$objUser->roleId.php";
 					?>
 					<!--end::Aside Menu-->
 				</div>

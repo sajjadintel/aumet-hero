@@ -67,7 +67,6 @@ var WebAuth = function () {
 
 						if (webResponse && typeof webResponse === 'object') {
 							if (webResponse.errorCode == 0) {
-								firebase.analytics().logEvent('auth_ok');
 								window.location.href = "/" + docLang + '/dashboard';
 							}
 							else {
@@ -170,7 +169,6 @@ var WebAuth = function () {
 
 			if (webResponse && typeof webResponse === 'object') {
 				if (webResponse.errorCode == 0) {
-					firebase.analytics().logEvent('signup_ok');
 					window.location.href = "/" + docLang + "/auth/forgot/otp";
 				} else {
 					_unblockPage();
@@ -219,106 +217,6 @@ var WebAuth = function () {
 
 	var _setupFirebase = function () {
 		firebase.auth().languageCode = docLang;
-
-		return;
-
-		firebase.auth().onAuthStateChanged(function (user) {
-			if (user) {
-				let userInfo = {
-					displayName: user.displayName,
-					email: user.email,
-					emailVerified: user.emailVerified,
-					photoURL: user.photoURL,
-					isAnonymous: user.isAnonymous,
-					uid: user.uid,
-					providerData: user.providerData
-				}
-
-				firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
-
-					userInfo.idToken = idToken;
-
-					var urlSignIn = "/" + docLang + "/auth/signin?_t=" + Date.now();
-
-					$.ajax({
-						url: urlSignIn,
-						type: "POST",
-						dataType: "json",
-						data: {
-							token: idToken,
-							userInfo: userInfo
-						},
-						async: true
-					}).done(function (webResponse) {
-
-						if (webResponse && typeof webResponse === 'object') {
-							if (webResponse.errorCode == 0) {
-								firebase.analytics().logEvent('auth_ok');
-								window.location.href = "/" + docLang;
-							} else {
-								Swal.fire({
-									text: webResponse.message,
-									icon: "error",
-									buttonsStyling: false,
-									confirmButtonText: WebAppLocals.getMessage("error_confirmButtonText"),
-									customClass: {
-										confirmButton: "btn font-weight-bold btn-light-primary"
-									}
-								}).then(function () {
-									KTUtil.scrollTop();
-								});
-
-							}
-						}
-						else {
-							Swal.fire({
-								text: WebAppLocals.getMessage("error"),
-								icon: "error",
-								buttonsStyling: false,
-								confirmButtonText: WebAppLocals.getMessage("error_confirmButtonText"),
-								customClass: {
-									confirmButton: "btn font-weight-bold btn-light-primary"
-								}
-							}).then(function () {
-								KTUtil.scrollTop();
-							});
-						}
-					}).fail(function (jqXHR, textStatus, errorThrown) {
-						Swal.fire({
-							text: WebAppLocals.getMessage("error"),
-							icon: "error",
-							buttonsStyling: false,
-							confirmButtonText: WebAppLocals.getMessage("error_confirmButtonText"),
-							customClass: {
-								confirmButton: "btn font-weight-bold btn-light-primary"
-							}
-						}).then(function () {
-							KTUtil.scrollTop();
-						});
-					});
-
-				}).catch(function (error) {
-					Swal.fire({
-						text: error.message,
-						icon: "error",
-						buttonsStyling: false,
-						confirmButtonText: WebAppLocals.getMessage("error_confirmButtonText"),
-						customClass: {
-							confirmButton: "btn font-weight-bold btn-light-primary"
-						}
-					}).then(function () {
-						KTUtil.scrollTop();
-					});
-				});
-
-
-				// ...
-			} else {
-				// User is signed out.
-				// ...
-			}
-		});
-
 	}
 
 	// Public Functions

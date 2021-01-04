@@ -2,10 +2,42 @@
 
 class CompanyController extends Controller
 {
-    function loadCompanyProfile($companyId, $browseOption = null){
+    function getManufacturersPage(){
+        if (!$this->f3->ajax()) {
+            $this->renderLayout("manufacturers");
+        } else {
+            $this->webResponse->setData(View::instance()->render("companies/manufacturers.php"));
+            echo $this->webResponse->getJSONResponse();
+        }
+    }
+
+    function getManufacturersRecords()
+    {
+        echo json_encode(
+            $this->getDatatable((new Company()), '"Type"=\'manufacturer\'')
+        );
+    }
+
+    function getDistributorsPage(){
+        if (!$this->f3->ajax()) {
+            $this->renderLayout("distributors");
+        } else {
+            $this->webResponse->setData(View::instance()->render("companies/distributors.php"));
+            echo $this->webResponse->getJSONResponse();
+        }
+    }
+
+    function getDistributorsRecords()
+    {
+        echo json_encode(
+            $this->getDatatable((new Company()), '"Type"=\'distributor\'')
+        );
+    }
+
+    function loadCompanyProfile($companyId){
         $objCompany = (new Company())->getById($companyId);
         if($objCompany) {
-            if($objCompany->Type == Company::TYPE_MANUFACTURER || $browseOption == 'Manufacturer') {
+            if($objCompany->Type == Company::TYPE_MANUFACTURER) {
                 $this->f3->set('objManufacturerCompany', $objCompany);
                 $this->f3->set('objInchargePerson', (new AumetUser())->getInchargePerson( $companyId));
                 $this->f3->set('arrCatalogs', (new ProductRange())->getByCompanyId($companyId));
@@ -26,7 +58,7 @@ class CompanyController extends Controller
                 $this->webResponse->setData(View::instance()->render("companyprofile/manufacturer.php"));
                 return true;
             }
-            elseif ($objCompany->Type == Company::TYPE_DISTRIBUTOR || $browseOption == 'Distributor'){
+            elseif ($objCompany->Type == Company::TYPE_DISTRIBUTOR){
                 $this->f3->set('objDistributorCompany', $objCompany);
                 $this->f3->set('objInchargePerson', (new AumetUser())->getInchargePerson( $companyId));
                 $this->f3->set('arrCatalogs', (new ProductRange())->getByCompanyId($companyId));
@@ -43,22 +75,6 @@ class CompanyController extends Controller
 
                 $this->f3->set('enableEdit', false);
                 $this->f3->set('enableSendIntroduction', false);
-                if($this->isAuth){
-                    if($this->objCompany->ID == $companyId) {
-                        $this->f3->set('enableEdit', true);
-                    }
-                    else {
-                        $dbPotentialConnectionRecord = new PotentialConnectionRecord();
-                        $dbPotentialConnectionRecord->getPotentialConnection($this->objCompany->ID, $companyId);
-                        if(!$dbPotentialConnectionRecord->dry()){
-                            if($dbPotentialConnectionRecord->statusId == PotentialConnection::STATUS_AVAILABLE) {
-                                $this->f3->set('enableSendIntroduction', true);
-                            }
-                        }
-                    }
-                    $this->f3->set('userEmail', $this->objUser->email);
-                }
-
                 $this->webResponse->setData(View::instance()->render("companyprofile/distributor.php"));
                 return true;
             }
@@ -70,19 +86,10 @@ class CompanyController extends Controller
 
     }
 
-    function getMyCompanyProfile(){
-        if (!$this->f3->ajax()) {
-            $this->renderLayout("mycompanyprofile");
-        } else {
-            $this->loadCompanyProfile($this->objCompany->ID);
-            echo $this->webResponse->getJSONResponse();
-        }
-    }
-
     function getManufacturerCompanyProfile(){
         $companyId = $this->f3->get("PARAMS.companyId");
         if (!$this->f3->ajax()) {
-            $this->renderLayout("browse/manufacturer/$companyId");
+            $this->renderLayout("manufacturers/$companyId");
         } else {
 
             $this->loadCompanyProfile($companyId, 'Manufacturer');
@@ -93,20 +100,10 @@ class CompanyController extends Controller
     function getDistributorCompanyProfile(){
         $companyId = $this->f3->get("PARAMS.companyId");
         if (!$this->f3->ajax()) {
-            $this->renderLayout("browse/distributor/$companyId");
+            $this->renderLayout("distributors/$companyId");
         } else {
 
             $this->loadCompanyProfile($companyId, 'Distributor');
-            echo $this->webResponse->getJSONResponse();
-        }
-    }
-
-    function a(){
-        $companyId = $this->f3->get("PARAMS.companyId");
-        if (!$this->f3->ajax()) {
-            $this->renderLayout("browse/distributor/$companyId");
-        } else {
-            $this->loadCompanyProfile($companyId);
             echo $this->webResponse->getJSONResponse();
         }
     }

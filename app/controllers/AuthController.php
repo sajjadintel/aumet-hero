@@ -62,12 +62,10 @@ class AuthController extends Controller
             $verifiedIdToken = $auth->verifyIdToken($idTokenString);
             $uid = $verifiedIdToken->getClaim('sub');
             $objFBuser = $auth->getUser($uid);
+            $objUser = (new AuthUser())->getByUID($uid);
 
-            $dbUser = new AuthUser();
-            $objUser = $dbUser->getByUID($uid);
-
-            if(!$dbUser->dry()) {
-                switch ($dbUser->statusId){
+            if($objUser) {
+                switch ($objUser->statusId){
                     case AuthUser::userStatus_Active:
                         if($this->setSessionData($objUser, $idTokenString)){
                             $this->webResponse->setErrorCode(Constants::ERROR_SUCCESS);

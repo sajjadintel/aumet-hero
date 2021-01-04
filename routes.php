@@ -19,9 +19,13 @@ $f3->route('GET /@language', 'AuthController->getHome');
 
 $f3->route('GET /@language/dashboard', 'DashboardController->get');
 
+$f3->route('GET /@language/manufacturers', 'CompanyController->getManufacturersPage');
+$f3->route('POST /@language/manufacturers/datatable', 'CompanyController->getManufacturersRecords');
+$f3->route('GET /@language/manufacturers/@companyId', 'CompanyController->getManufacturerCompanyProfile');
 
-
-
+$f3->route('GET /@language/distributors', 'CompanyController->getDistributorsPage');
+$f3->route('POST /@language/distributors/datatable', 'CompanyController->getDistributorsRecords');
+$f3->route('GET /@language/distributors/@companyId', 'CompanyController->getDistributorCompanyProfile');
 
 
 

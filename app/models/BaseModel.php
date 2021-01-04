@@ -138,13 +138,7 @@ class BaseModel extends DB\SQL\Mapper
 
     public function getWhere($where, $order = "", $limit = 0, $offset = 0)
     {
-        if ($order == "") {
-            $this->load(array($where));
-        } else if ($limit == 0) {
-            $this->load(array($where), array('order' => $order, 'offset' => $offset));
-        } else {
-            $this->load(array($where), array('order' => $order, 'limit' => $limit, 'offset' => $offset));
-        }
+        $this->load(array($where), array('order' => $order, 'limit' => $limit, 'offset' => $offset));
         if(!$this->dry()) {
             return array_map(function ($obj) {
                 return BaseModel::toObject($obj);
@@ -300,5 +294,13 @@ class BaseModel extends DB\SQL\Mapper
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    public function getDatatableData($where='', $page=1, $pageSize=10, $field='', $sort=''){
+        return $this->getWhere($where, "$field $sort", $pageSize, ($page-1)*$pageSize);
+    }
+
+    public function getDatatableCount($where=''){
+        return $this->count($where);
     }
 }

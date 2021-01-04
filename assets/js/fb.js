@@ -3,20 +3,17 @@
 let WebFB = (function () {
     // Your web app's Firebase configuration
     let firebaseConfig = {
-        apiKey: "AIzaSyBy1rh8zZNp1lnUBLyQ15a-cgNvZzsNFBU",
-        authDomain: "aumet-com.firebaseapp.com",
-        databaseURL: "https://aumet-com.firebaseio.com",
-        projectId: "aumet-com",
-        storageBucket: "aumet-com.appspot.com",
-        messagingSenderId: "380649916442",
-        appId: "1:380649916442:web:8ff3bfa9cd74f7c69969a3",
-        measurementId: "G-YJ2BRPK2JD"
+        apiKey: "AIzaSyARFOzdDMTRqGqNoukAqloC_fd4kte9Vgc",
+        authDomain: "aumet-internal-products.firebaseapp.com",
+        projectId: "aumet-internal-products",
+        storageBucket: "aumet-internal-products.appspot.com",
+        messagingSenderId: "383302560800",
+        appId: "1:383302560800:web:f8135d4dde873f01392045"
     };
 
     let _init = function () {
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        firebase.analytics();
     }
 
     return {
@@ -25,8 +22,7 @@ let WebFB = (function () {
         },
 
         logPageView: function (_pageUrl) {
-            firebase.analytics().setCurrentScreen(_pageUrl);
-            firebase.analytics().logEvent('page_view')
+
         }
     }
 })();
