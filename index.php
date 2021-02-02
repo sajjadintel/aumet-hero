@@ -75,12 +75,13 @@ $dbConnectionAumet = new DB\SQL(
 
 global $dbConnectionUniOrder;
 
+/*
 $dbConnectionUniOrder = new DB\SQL(
     "sqlsrv:Server=smartsrvr.database.windows.net,1433;Database=uniorders",
     "Smart",
     "MoonLight@2",
     array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
-);
+);*/
 
 $f3->set('rootDomain', getenv('rootDomain'));
 $f3->set('rootDomainUrl', getenv('rootDomainUrl'));
