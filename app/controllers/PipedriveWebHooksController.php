@@ -8,9 +8,9 @@ class PipedriveWebHooksController extends Controller
     }
 
     public function webhookOrganizationAdded(){
-        $req_dump = print_r($_REQUEST, TRUE);
         $fp = fopen($this->getRootDirectory() . '/logs/request-'.$this->generateRandomString(12).'.log', 'a');
-        fwrite($fp, $req_dump);
+        $post = file_get_contents('php://input');
+        fwrite($fp, $post);
         fclose($fp);
     }
 }
