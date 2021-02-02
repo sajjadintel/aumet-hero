@@ -29,6 +29,18 @@ $f3->route('GET /@language/distributors', 'CompanyController->getDistributorsPag
 $f3->route('POST /@language/distributors/datatable', 'CompanyController->getDistributorsRecords');
 $f3->route('GET /@language/distributors/@companyId', 'CompanyController->getDistributorCompanyProfile');
 
+$f3->route('GET /pipedrive/api/organization/added', 'PipedriveWebHooksController->getOrganizationAdded');
+
+
+
+
+
+
+
+
+
+
+
 
 
 

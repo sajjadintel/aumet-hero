@@ -21,7 +21,8 @@
     "google/apiclient": "^2.0",
     "ramsey/uuid": "^4.1",
     "geoip2/geoip2": "^2.11",
-    "aws/aws-sdk-php": "^3.168"
+    "aws/aws-sdk-php": "^3.168",
+    "pipedrive/pipedrive": "^1.0"
   },
   "license": "Aumet Inc All Rights Reserved",
   "authors": [
