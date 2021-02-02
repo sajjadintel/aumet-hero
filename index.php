@@ -43,12 +43,12 @@ $f3->set('uploadDIRServe', 'https://d2qyez1diqag7p.cloudfront.net/uploads/');
 
 $f3->set('authServerKey', '-SC4,=$?.3:&KRR]:DCQx{~wY!)`+--CkhE`2ur<VCZ(Tk8Pt2YXvdp3mz>3wsW`');
 
-$dbNameAumet = getenv('DB_NAME_AUMET');
+$dbNameAumet = getenv('ONEX_DB_NAME_AUMET');
 
-$dbPGPort_DEV = getenv('PGDB_PORT_DEV');
-$dbPGHost_DEV = getenv('PGDB_HOST_DEV');
-$dbPGUsername_DEV = getenv('PGDB_USER_DEV');
-$dbPGPassword_DEV = getenv('PGDB_PASS_DEV');
+$dbPGPort_DEV = getenv('ONEX_DB_PORT_DEV');
+$dbPGHost_DEV = getenv('ONEX_DB_HOST_DEV');
+$dbPGUsername_DEV = getenv('ONEX_DB_USER_DEV');
+$dbPGPassword_DEV = getenv('ONEX_DB_PASS_DEV');
 
 global $dbConnectionAumet_dev;
 
@@ -59,10 +59,10 @@ $dbConnectionAumet_dev = new DB\SQL(
     array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
 );
 
-$dbPGPort_PROD = getenv('PGDB_PORT_PROD');
-$dbPGHost_PROD = getenv('PGDB_HOST_PROD');
-$dbPGUsername_PROD = getenv('PGDB_USER_PROD');
-$dbPGPassword_PROD = getenv('PGDB_PASS_PROD');
+$dbPGPort_PROD = getenv('ONEX_DB_PORT_PROD');
+$dbPGHost_PROD = getenv('ONEX_DB_HOST_PROD');
+$dbPGUsername_PROD = getenv('ONEX_DB_USER_PROD');
+$dbPGPassword_PROD = getenv('ONEX_DB_PASS_PROD');
 
 global $dbConnectionAumet;
 
