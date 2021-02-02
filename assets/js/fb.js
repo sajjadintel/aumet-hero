@@ -3,12 +3,13 @@
 let WebFB = (function () {
     // Your web app's Firebase configuration
     let firebaseConfig = {
-        apiKey: "AIzaSyARFOzdDMTRqGqNoukAqloC_fd4kte9Vgc",
-        authDomain: "aumet-internal-products.firebaseapp.com",
-        projectId: "aumet-internal-products",
-        storageBucket: "aumet-internal-products.appspot.com",
-        messagingSenderId: "383302560800",
-        appId: "1:383302560800:web:f8135d4dde873f01392045"
+        apiKey: "AIzaSyC5kStRUB63Jae9jGbvul93ZNi_jgTjs8Q",
+        authDomain: "aumet-dev.firebaseapp.com",
+        projectId: "aumet-dev",
+        storageBucket: "aumet-dev.appspot.com",
+        messagingSenderId: "773243474783",
+        appId: "1:773243474783:web:22bc0baa02aca627495cea",
+        measurementId: "G-B1GS9BKE18"
     };
 
     let _init = function () {

@@ -14,15 +14,24 @@ class BaseModel extends DB\SQL\Mapper
         parent::__construct($db, $table_name);
     }
 
-    public static function getTableNames(DB\SQL $db)
+    public static function getTableNames(DB\SQL $db, $schema = '')
     {
-        $query = "SELECT table_name FROM information_schema.tables where table_type='BASE TABLE' and table_schema='" . $db->name() . "'";
+        $schema = $schema == '' ? $db->name() : $schema;
+        $query = "SELECT * FROM information_schema.tables where table_type='BASE TABLE' and table_schema='$schema'";
         return $db->exec($query);
     }
 
-    public static function getTablesAndViews(DB\SQL $db)
+    public static function getRoutines(DB\SQL $db, $schema = '')
     {
-        $query = "SELECT table_name, table_type FROM information_schema.tables where table_schema='" . $db->name() . "'";
+        $schema = $schema == '' ? $db->name() : $schema;
+        $query = "SELECT * FROM information_schema.routines WHERE routine_schema='$schema'";
+        return $db->exec($query);
+    }
+
+    public static function getTablesAndViews(DB\SQL $db, $schema = '')
+    {
+        $schema = $schema == '' ? $db->name() : $schema;
+        $query = "SELECT * FROM information_schema.tables where table_schema='$schema'";
         return $db->exec($query);
     }
 

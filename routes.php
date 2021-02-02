@@ -17,6 +17,8 @@ $f3->route('GET /@language/admin/impersonate/@companyId', 'AdminController->getI
 $f3->route('GET /', 'AuthController->getHome');
 $f3->route('GET /@language', 'AuthController->getHome');
 
+$f3->route('GET /@language/database/compare', 'ITController->getComparePage');
+
 $f3->route('GET /@language/dashboard', 'DashboardController->get');
 
 $f3->route('GET /@language/manufacturers', 'CompanyController->getManufacturersPage');
