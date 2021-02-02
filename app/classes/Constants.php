@@ -12,7 +12,8 @@ class Constants
 
     ## Environments
     const ENV_LOC = 'loc';
-    const ENV_PROD = 'prod';
+    const
+        ENV_PROD = 'prod';
 
     const ERROR_SUCCESS = 0;
     const ERROR_UNKNOWN = 1;
