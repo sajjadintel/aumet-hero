@@ -29,8 +29,18 @@ $f3->route('GET /@language/distributors', 'CompanyController->getDistributorsPag
 $f3->route('POST /@language/distributors/datatable', 'CompanyController->getDistributorsRecords');
 $f3->route('GET /@language/distributors/@companyId', 'CompanyController->getDistributorCompanyProfile');
 
-$f3->route('GET /pipedrive/api/organization/added', 'PipedriveWebHooksController->webhookOrganizationAdded');
-$f3->route('POST /pipedrive/api/organization/added', 'PipedriveWebHooksController->webhookOrganizationAdded');
+$f3->route('POST /pipedrive/api/organization', 'PipedriveWebHooksController->processWebhookOrganization');
+$f3->route('POST /pipedrive/api/user', 'PipedriveWebHooksController->processWebhookUser');
+$f3->route('POST /pipedrive/api/deal', 'PipedriveWebHooksController->processWebhookDeal');
+$f3->route('POST /pipedrive/api/activity', 'PipedriveWebHooksController->processWebhookActivity');
+$f3->route('POST /pipedrive/api/activityType', 'PipedriveWebHooksController->processWebhookActivityType');
+$f3->route('POST /pipedrive/api/note', 'PipedriveWebHooksController->processWebhookNote');
+$f3->route('POST /pipedrive/api/person', 'PipedriveWebHooksController->processWebhookPerson');
+$f3->route('POST /pipedrive/api/pipeline', 'PipedriveWebHooksController->processWebhookPipline');
+$f3->route('POST /pipedrive/api/product', 'PipedriveWebHooksController->processWebhookProduct');
+$f3->route('POST /pipedrive/api/stage', 'PipedriveWebHooksController->processWebhookStage');
+
+$f3->route('GET /airtable/api/record', 'AirtableScriptsController->processCall');
 
 
 
