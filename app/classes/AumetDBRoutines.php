@@ -343,4 +343,17 @@ class AumetDBRoutines
             return BaseModel::toObject($obj);
         }, $arr);
     }
+
+    /**
+     * Get All messages
+     *
+     * @return array
+     */
+    public static function getMessages(){
+        global $dbConnectionAumet;
+        $arr = $dbConnectionAumet->exec("select * from onex.\"getMessages\"()");
+        return array_map(function ($obj) {
+            return BaseModel::toObject($obj);
+        }, $arr);
+    }
 }

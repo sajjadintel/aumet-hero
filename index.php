@@ -19,7 +19,7 @@ $dotenv->load();
 
 $f3 = \Base::instance();
 
-$f3->set('AUTOLOAD', "app/controllers/ | app/classes/ | app/models/ | app/modules/common/ | app/modules/company/ | app/modules/product/ | app/modules/matching/");
+$f3->set('AUTOLOAD', "app/controllers/ | app/classes/ | app/models/ | app/modules/common/ | app/modules/company/ | app/modules/product/ | app/modules/matching/ | app/modules/inquiry/ | app/modules/communication/");
 
 /* Config */
 $f3->set('DEBUG', '3');

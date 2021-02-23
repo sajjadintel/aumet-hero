@@ -209,5 +209,7 @@ $f3->route('GET /@language/medicalLine/getAll', 'MedicalLineController->getAll')
 $f3->route('GET /@language/search', 'SearchController->getHome');
 $f3->route('GET /@language/search/products', 'SearchController->getSearchProduct');
 
-
-
+//Get inquiries
+$f3->route('GET /@language/inquiries', 'InquiryController->getInquiriesPage');
+$f3->route('POST /@language/inquiries/datatable', 'InquiryController->getInquiries');
+$f3->route('GET /@language/inquiry/@inquiryId', 'InquiryController->getInquiry');
