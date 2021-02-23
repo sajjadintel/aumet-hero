@@ -356,4 +356,17 @@ class AumetDBRoutines
             return BaseModel::toObject($obj);
         }, $arr);
     }
+
+    /**
+     *
+     * @param $type set then from if empty then to
+     * @return array
+     */
+    public static function getMessagesUsers($type = null){
+        global $dbConnectionAumet;
+        $arr = $dbConnectionAumet->exec("select * from onex.\"getMessagesUser\"($type)");
+        return array_map(function ($obj) {
+            return BaseModel::toObject($obj);
+        }, $arr);
+    }
 }

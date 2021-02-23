@@ -28,11 +28,17 @@
     <div class="container-fluid">
         <div class="card card-custom">
             <div class="card-body">
+                <div class="col-lg-12" id="inquiriesFilters"></div>
                 <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatableInquiries"></div>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+    $(document).ready(function (){
+        WebApp.loadPartialPage("#inquiriesFilters", "inquiry/filters");
+    });
+</script>
 <script src="/assets/js/dt/inquiries.js"></script>
 

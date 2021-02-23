@@ -206,25 +206,26 @@ var KTDatatableMyProducts = (function() {
 				{
 					field: 'actionStatus',
 					title: 'Status',
+					width: 55,
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
 						var temp = '';
 						switch (row.actionStatus){
 							case 0:
-								temp = '<span class="label label-primary">Pending</span>';
+								temp = '<span class="label label-md label-light-primary label-inline">Pending</span>';
 								break;
 							case 1:
-								temp = '<span class="label label-success">Sent</span>';
+								temp = '<span class="label label-md label-light-success label-inline">Sent</span>';
 								break;
 							case 2:
-								temp = '<span class="label label-info">Replied</span>';
+								temp = '<span class="label label-md label-light-info label-inline">Replied</span>';
 								break;
 							case 3:
-								temp = '<span class="label label-warning">Locked</span>';
+								temp = '<span class="label label-md label-light-warning label-inline">Locked</span>';
 								break;
 							case 4:
-								temp = '<span class="label label-danger">Disapproved</span>';
+								temp = '<span class="label label-md label-light-danger label-inline">Disapproved</span>';
 								break;
 						}
 						return temp;
@@ -238,9 +239,9 @@ var KTDatatableMyProducts = (function() {
 					autoHide: false,
 					template: function(row) {
 						return (
-							'<a href="javascript:;" class="btn btn-outline-primary" title="View Product" onclick="KTDatatableMyProducts.viewMessage('+ row.messageId +')">View</a>' +
-							'<a href="javascript:;" class="btn btn-primary mr-5" title="Edit Product" onclick="KTDatatableMyProducts.approveMessage('+ row.messageId +')">Approve</a>' +
-							'<a href="javascript:;" class="btn btn-primary mr-5" title="Edit Product" onclick="KTDatatableMyProducts.disapproveMessage('+ row.messageId +')">Disapprove</a>'
+							'<a href="javascript:;" class="btn btn-outline-primary fab fa-readme" title="View Inquiry" onclick="KTDatatableMyProducts.viewMessage('+ row.messageId +')"></a>' +
+							'<a href="javascript:;" class="btn btn-outline-primary ml-5 fa fa-check" title="Approve" onclick="KTDatatableMyProducts.approveMessage('+ row.messageId +')"></a>' +
+							'<a href="javascript:;" class="btn btn-outline-primary ml-5 fa fa-times" title="Disapprove" onclick="KTDatatableMyProducts.disapproveMessage('+ row.messageId +')"></a>'
 						);
 					}
 				}
@@ -278,25 +279,8 @@ var KTDatatableMyProducts = (function() {
 		},
 	};
 })();
-
-
-
 jQuery(document).ready(function() {
+
 	KTDatatableMyProducts.init();
 
-	$(document).on('click', '#add-product', function(e) {
-		e.preventDefault();
-		WebApp.loadPage('myproducts/add');
-	});
-
-	/*$(document).on('click', '#add-product', function(e) {
-		e.preventDefault();
-		WebApp.loadPage('myproducts/add');
-	});
-
-	$(document).on('click', '#save-product', function(e) {
-		e.preventDefault();
-		WebApp.postForm('#frmProductForm', 'myproducts/add-product', fnCallbackSave);
-		addProduct();
-	});*/
 });

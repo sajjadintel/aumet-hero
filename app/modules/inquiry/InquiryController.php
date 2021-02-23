@@ -25,7 +25,7 @@ class InquiryController extends Controller
         $result=[];
         $data  = AumetDBRoutines::getMessages();
         if(!empty($data)) {
-            $result = $this->getDatatableNonObject($data, 'sentOnDate', 'desc');
+            $result = (new Message())->getDatatableNonObject($data, 'sentOnDate', 'desc');
         }
         echo json_encode($result);
     }
@@ -62,4 +62,13 @@ class InquiryController extends Controller
 
     }
 
+    /**
+     * Get filters form to search on
+     */
+    function getFilters(){
+        $this->f3->set('arrToUser',  AumetDBRoutines::getMessagesUsers());
+        $this->f3->set('arrFromUser',  AumetDBRoutines::getMessagesUsers(1));
+        $this->webResponse->setData(View::instance()->render("inquiry/section/filters.php"));
+        echo $this->webResponse->getJSONResponse();
+    }
 }
