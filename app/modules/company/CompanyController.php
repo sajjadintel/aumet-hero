@@ -47,10 +47,9 @@ class CompanyController extends Controller
         if($name){
             $where .='"Name" ilike \'%'.$name.'%\'';
         }
-//        $where = '"Name" ilike \'%distributor%\'';
-//        echo $where;exit;
-//        echo "<pre>";print_r($_REQUEST);exit;
-
+//echo $where;exit;
+//        $where = '"Name"=\'manufacturer\'';
+        $distributors = ['data'=>[]];
         if($where) {
             $distributors = $this->getDatatable((new Distributors()), $where);
         }else{

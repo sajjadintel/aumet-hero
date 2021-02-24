@@ -40,10 +40,12 @@
                         </div>
                         <!--begin::Form-->
                         <form id="filterForm" class="form">
-                            <input type="hidden" value="" name="pages" id="pages">
-                            <input type="hidden" value="" name="page" id="page">
-                            <input type="hidden" value="" name="perpage" id="perpage">
-                            <input type="hidden" value="" name="total" id="total">
+                            <input type="hidden" value="" name="pagination[pages]" id="pages">
+                            <input type="hidden" value="" name="pagination[page]" id="page">
+                            <input type="hidden" value="" name="pagination[perpage]" id="perpage">
+                            <input type="hidden" value="" name="pagination[total]" id="total">
+                            <input type="hidden" value="" name="sort[field]" id="sort_by">
+                            <input type="hidden" value="" name="sort[sort]" id="sort_order">
                             <div class="card-body">
                                 <div class="form-group row">
                                     <div class="col-lg-4">

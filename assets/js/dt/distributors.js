@@ -200,6 +200,8 @@ var KTDatatableDistributors = (function() {
 			$('#page').val(datatable.API.params.pagination.page);
 			$('#perpage').val(datatable.API.params.pagination.perpage);
 			$('#total').val(datatable.API.params.pagination.total);
+			$('#sort_by').val(datatable.API.params.sort.field);
+			$('#sort_order').val(datatable.API.params.sort.sort);
 
 			var data =JSON.parse(JSON.stringify($('#filterForm').serializeArray()));
 
@@ -211,7 +213,8 @@ var KTDatatableDistributors = (function() {
 		$('#submitButton').click(function(event){
 			distributorFormSubmit();
 		});
-		$('#kt_datatableDistributors').on('datatable-on-goto-page', function(){
+		$('#kt_datatableDistributors').on('datatable-on-goto-page', function(event){
+			event.preventDefault();
 			distributorFormSubmit();
 		});
 
