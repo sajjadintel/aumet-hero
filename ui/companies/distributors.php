@@ -40,12 +40,6 @@
                         </div>
                         <!--begin::Form-->
                         <form id="filterForm" class="form">
-                            <input type="hidden" value="" name="pagination[pages]" id="pages">
-                            <input type="hidden" value="" name="pagination[page]" id="page">
-                            <input type="hidden" value="" name="pagination[perpage]" id="perpage">
-                            <input type="hidden" value="" name="pagination[total]" id="total">
-                            <input type="hidden" value="" name="sort[field]" id="sort_by">
-                            <input type="hidden" value="" name="sort[sort]" id="sort_order">
                             <div class="card-body">
                                 <div class="form-group row">
                                     <div class="col-lg-4">
@@ -56,13 +50,9 @@
                                     <div class="col-lg-4">
                                         <label>Country:</label>
                                         <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="far fa-flag"></i>
-                                                </span>
-                                            </div>
-                                            <select id="country_id" name="CountryID" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
-                                                <option value="0"></option>
+                                            <input type="hidden" id="CountryID" name="CountryID">
+                                            <select id="country_id" name="country_id" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
+                                                <option value="0">Select</option>
                                                 <?php foreach ($arrCountries as $country): ?>
                                                     <option value="<?php echo $country['ID'] ?>" ><?php echo $country['Name']; ?></option>
                                                 <?php endforeach; ?>
@@ -127,14 +117,9 @@
                                     <div class="col-lg-4">
                                         <label>Distributor Experience (Specialty):</label>
                                         <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="la la-bookmark-o"></i>
-                                                </span>
-                                            </div>
-
-                                            <select id="SpecialityID" name="SpecialityID" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
-                                                <option value="0"></option>
+                                            <input type="hidden" id="SpecialityID" name="SpecialityID">
+                                            <select id="Speciality_ID" name="Speciality_ID" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
+                                                <option value="0">Select</option>
                                                 <?php foreach ($speciallities as $speciallity): ?>
                                                     <option value="<?php echo $speciallity->ID ?>" ><?php echo $speciallity->Name; ?></option>
                                                 <?php endforeach; ?>
@@ -145,14 +130,9 @@
                                     <div class="col-lg-4">
                                         <label>Distributor Experience (Medical line):</label>
                                         <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="la la-bookmark-o"></i>
-                                                </span>
-                                            </div>
-
-                                            <select id="MedicallineID" name="MedicallineID" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
-                                                <option value="0"></option>
+                                            <input type="hidden" id="MedicallineID" name="MedicallineID">
+                                            <select id="Medicalline_ID" name="Medicalline_ID" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
+                                                <option value="0">Select</option>
                                                 <?php foreach ($arrMedicalLines as $medicalLine): ?>
                                                     <option value="<?php echo $medicalLine['ID'] ?>" ><?php echo $medicalLine['Name']; ?></option>
                                                 <?php endforeach; ?>
@@ -163,14 +143,9 @@
                                     <div class="col-lg-4">
                                         <label>Status:</label>
                                         <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="la la-bookmark-o"></i>
-                                                </span>
-                                            </div>
-
-                                            <select id="country_id4" name="statusId" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
-                                                    <option value="0" ></option>
+                                            <input type="hidden" name="statusId" id="statusId">
+                                            <select id="status_Id" name="status_Id" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
+                                                    <option value="0" >Select</option>
                                                     <option value="1" >Registered basic</option>
                                                     <option value="2" >Registered full</option>
                                                     <option value="3" >Onboarded</option>
@@ -210,7 +185,7 @@
                                     <div class="col-lg-4"></div>
                                     <div class="col-lg-8">
                                         <a href="javascript:void(0)" type="reset" id="submitButton" class="btn btn-primary mr-2">Submit</a>
-                                        <button type="reset" class="btn btn-secondary">Clear</button>
+                                        <a href="javascript:void(0)" type="reset" onclick="KTDatatableDistributors.resetDataTable()" class="btn btn-secondary">Clear</a>
                                     </div>
                                 </div>
                             </div>

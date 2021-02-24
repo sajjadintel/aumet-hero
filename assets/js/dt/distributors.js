@@ -1,7 +1,29 @@
 'use strict';
+// $('#kt_datepicker_2').daterangepicker({
+// 	autoUpdateInput: false
+// });
 $('#kt_datepicker_2').daterangepicker({
-	autoUpdateInput: false
+}, function(start, end, label) {
+	console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
 });
+$('#country_id').select2().on('select2:selecting', function (e) {
+	console.log(e.params.args.data.id);
+	$('#CountryID').val(e.params.args.data.id);
+});
+$('#Speciality_ID').select2().on('select2:selecting', function (e) {
+	console.log('SpecialityID '+e.params.args.data.id);
+	$('#SpecialityID').val(e.params.args.data.id);
+});
+$('#Medicalline_ID').select2().on('select2:selecting', function (e) {
+	console.log('MedicallineID '+e.params.args.data.id);
+	$('#MedicallineID').val(e.params.args.data.id);
+});
+$('#status_Id').select2().on('select2:selecting', function (e) {
+	console.log('statusId '+e.params.args.data.id);
+	$('#statusId').val(e.params.args.data.id);
+});
+$('#filterForm').trigger("reset");
+
 
 
 var KTDatatableDistributors = (function() {
@@ -13,7 +35,7 @@ var KTDatatableDistributors = (function() {
 				type: 'remote',
 				source: {
 					read: {
-						url: HOST_URL + '/' + docLang + '/distributors/datatable' + '?_t=' + Date.now()
+						url: HOST_URL + '/' + docLang + '/distributors/datatable' + '?_t=' + Date.now(),
 					}
 				},
 				pageSize: 10,
@@ -195,27 +217,39 @@ var KTDatatableDistributors = (function() {
 				}
 			]
 		});
-		function distributorFormSubmit(){
-			$('#pages').val(datatable.API.params.pagination.pages);
-			$('#page').val(datatable.API.params.pagination.page);
-			$('#perpage').val(datatable.API.params.pagination.perpage);
-			$('#total').val(datatable.API.params.pagination.total);
-			$('#sort_by').val(datatable.API.params.sort.field);
-			$('#sort_order').val(datatable.API.params.sort.sort);
-
-			var data =JSON.parse(JSON.stringify($('#filterForm').serializeArray()));
-
-			console.log(data);
-			WebApp.post('distributors/datatable',data,function(response){
-
-			});
-		}
 		$('#submitButton').click(function(event){
-			distributorFormSubmit();
+			console.log('click');
+			var Name = $('#filterForm').find('input[name="Name"]').val();
+			var CountryID = $('#filterForm').find('input[name="CountryID"]').val();
+			var PersonName = $('#filterForm').find('input[name="PersonName"]').val();
+			var email = $('#filterForm').find('input[name="email"]').val();
+			var RegistrationDate = $('#filterForm').find('input[name="RegistrationDate"]').val();
+			var SpecialityID = $('#filterForm').find('input[name="SpecialityID"]').val();
+			var MedicallineID = $('#filterForm').find('input[name="MedicallineID"]').val();
+			var statusId = $('#filterForm').find('input[name="statusId"]').val();
+			var Registered = $("input[name='Registered']:checked").val();;
+			var inquirySend = $("input[name='inquirySend']:checked").val();
+			datatable.setDataSourceParam('Name', Name);
+			datatable.setDataSourceParam('CountryID', CountryID);
+			datatable.setDataSourceParam('PersonName', PersonName);
+			datatable.setDataSourceParam('email', email);
+			datatable.setDataSourceParam('RegistrationDate', RegistrationDate);
+			datatable.setDataSourceParam('SpecialityID', SpecialityID);
+			datatable.setDataSourceParam('MedicallineID', MedicallineID);
+			datatable.setDataSourceParam('Registered', Registered);
+			datatable.setDataSourceParam('inquirySend', inquirySend);
+			datatable.setDataSourceParam('statusId', statusId);
+			console.log(datatable);
+			WebApp.block();
+			datatable.reload();
+
+
 		});
-		$('#kt_datatableDistributors').on('datatable-on-goto-page', function(event){
-			event.preventDefault();
-			distributorFormSubmit();
+		$('#kt_datatableDistributors').on('datatable-on-ajax-done',function(){
+			WebApp.unblock();
+		});
+		$('#kt_datatableDistributors').on('datatable-on-ajax-fail',function(){
+			WebApp.unblock();
 		});
 
 	};
@@ -232,8 +266,30 @@ var KTDatatableDistributors = (function() {
 		view: function(_id) {
 			WebApp.loadPage('distributors/' + _id );
 		},
+		resetDataTable: function(_id) {
+			$('#filterForm').trigger("reset");
+			WebApp.block();
+			$('#submitButton').trigger('click');
+		},
+
 	};
 
 })();
-
+// function distributorFormSubmit(){
+// 	$('#pages').val(datatable.API.params.pagination.pages);
+// 	$('#page').val(datatable.API.params.pagination.page);
+// 	$('#perpage').val(datatable.API.params.pagination.perpage);
+// 	$('#total').val(datatable.API.params.pagination.total);
+// 	$('#sort_by').val(datatable.API.params.sort.field);
+// 	$('#sort_order').val(datatable.API.params.sort.sort);
+//
+// 	var data =JSON.parse(JSON.stringify($('#filterForm').serializeArray()));
+//
+// 	console.log(data);
+// 	WebApp.post('distributors/datatable',data,function(response){
+// 		console.log(response)
+// 		datatable.destroy();
+// 		datatable.reload();
+// 	});
+// }
 KTDatatableDistributors.init();

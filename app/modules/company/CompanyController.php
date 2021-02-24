@@ -31,10 +31,6 @@ class CompanyController extends Controller
             $this->f3->set('arrCountries', $arrCountries);
             $this->f3->set('speciallities', $speciallities);
             $this->f3->set('arrMedicalLines', $arrMedicalLines);
-            $pagination = $_REQUEST['pagination'];
-            $sort = $_REQUEST['sort'];
-            $this->f3->set('pagination', $pagination);
-            $this->f3->set('sort', $sort);
             $this->webResponse->setData(View::instance()->render("companies/distributors.php"));
             echo $this->webResponse->getJSONResponse();
         }
@@ -42,20 +38,61 @@ class CompanyController extends Controller
 
     function getDistributorsRecords()
     {
-        $where = '';
+        $where = '1=1';
         $name = $this->f3->get('POST.Name');
-        if($name){
-            $where .='"Name" ilike \'%'.$name.'%\'';
+        $PersonName = $this->f3->get('POST.PersonName');
+        $email = $this->f3->get('POST.email');
+        $statusId = $this->f3->get('POST.statusId');
+        $inquirySend = $this->f3->get('POST.inquirySend');
+        $CountryID = $this->f3->get('POST.CountryID');
+        $Registered = $this->f3->get('POST.Registered');
+        $RegistrationDate = $this->f3->get('POST.RegistrationDate');
+        $startDate = '';
+        $endDate = '';
+
+        if($RegistrationDate){
+            $arrDate = explode('-',$RegistrationDate);
+            $date = new DateTime($arrDate[0]);
+            $startDate = $date->format('Y-m-d'); // 31-07-2012
+            if(isset($arrDate[1])){
+                $date = new DateTime($arrDate[1]);
+                $endDate = $date->format('Y-m-d');
+            }
+
         }
-//echo $where;exit;
-//        $where = '"Name"=\'manufacturer\'';
-        $distributors = ['data'=>[]];
+        if($name){
+            $where .=' AND "Name" ilike \'%'.$name.'%\'';
+        }
+        if($PersonName){
+            $where .=' AND "PersonName" ilike \'%'.$PersonName.'%\'';
+        }
+        if($email){
+            $where .=' AND "email" ilike \'%'.$email.'%\'';
+        }
+        if($statusId){
+            $where .=' AND "statusId" ='.$statusId;
+        }
+        if($inquirySend){
+            $where .=' AND "inquirySend" >0';
+        }
+        if($Registered){
+            $where .=' AND "RegistrationDate" !=null';
+        }
+        if($CountryID){
+            $where .=' AND "CountryID" ='.$CountryID;
+        }
+        if($RegistrationDate){
+            $where .=' AND "RegistrationDate" >='."'".$startDate."'";
+            if($endDate){
+                $where .=' AND "RegistrationDate" <= '."'".$endDate."'";
+            }
+        }
+
         if($where) {
             $distributors = $this->getDatatable((new Distributors()), $where);
         }else{
             $distributors = $this->getDatatable((new Distributors()));
         }
-
 
         echo json_encode(
             $distributors
