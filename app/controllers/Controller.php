@@ -651,9 +651,8 @@ class Controller
 
         $sort  = !empty($datatable['sort']['sort']) ? $datatable['sort']['sort'] : 'asc';
         $field = !empty($datatable['sort']['field']) ? $datatable['sort']['field'] : 'ID';
-
         $page    = !empty($datatable['pagination']['page']) ? (int)$datatable['pagination']['page'] : 1;
-        $perpage = !empty($datatable['pagination']['perpage']) ? (int)$datatable['pagination']['perpage'] : -1;
+        $perpage = !empty($datatable['pagination']['perpage']) ? (int)$datatable['pagination']['perpage'] : 10;
 
         $pages = 1;
 

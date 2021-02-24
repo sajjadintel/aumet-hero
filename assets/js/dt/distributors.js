@@ -1,4 +1,8 @@
 'use strict';
+$('#kt_datepicker_2').daterangepicker({
+	autoUpdateInput: false
+});
+
 
 var KTDatatableDistributors = (function() {
 
@@ -32,10 +36,9 @@ var KTDatatableDistributors = (function() {
 			sortable: true,
 
 			pagination: true,
-
-			search: {
-				input: $('#kt_datatable_search_query'),
-				key: 'generalSearch'
+			buttonInRowClick:function(event) {
+				event.stopPropagation();
+				console.log('Button in the row clicked.');
 			},
 
 			// columns definition
@@ -62,6 +65,121 @@ var KTDatatableDistributors = (function() {
 					}
 				},
 				{
+					field: 'PersonName',
+					title: 'Person Name',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.PersonName
+					}
+				},
+				{
+					field: 'position',
+					title: 'Job Title',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.position
+					}
+				},
+				{
+					field: 'email',
+					title: 'Email',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.email
+					}
+				},
+				{
+					field: 'CountryName',
+					title: 'Country',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.CountryName;
+					}
+				},
+				{
+					field: 'inquirySend',
+					title: 'inquiries sent',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.inquirySend;
+					}
+				},
+				{
+					field: 'RegistrationDate',
+					title: 'Registered Date',
+					sortable: false,
+					autoHide: false,
+					template: function(row) {
+						return row.RegistrationDate;
+					}
+				},
+				{
+					field: 'Registered',
+					title: 'Registered',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						if(row.RegistrationDate){
+							return 'Yes'
+						}else{
+							return 'No'
+						}
+					}
+				},
+				{
+					field: 'Payload',
+					title: 'last Login',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						let payload = null;
+						if(row.payload!=null){
+							payload = JSON.parse(row.payload);
+							return payload.metadata.lastLoginAt;
+						}else{
+							return '';
+						}
+					}
+				},
+				{
+					field: 'Accssed new website',
+					title: 'Accssed new website',
+					sortable: false,
+					autoHide: false,
+					template: function(row) {
+						let payload = null;
+						if(row.payload!=null){
+							payload = JSON.parse(row.payload);
+							let releaseDate = new Date('2021-1-31');
+							let lastLogin = new Date(payload.metadata.lastLoginAt);
+							let lastLoginDate = new Date(moment(lastLogin).format('YYYY-MM-DD'));
+							if (lastLoginDate >= releaseDate) {
+								return 'Yes';
+							}else{
+								return 'No';
+							}
+						}else{
+							return 'No';
+						}
+					}
+				},{
+					field: 'Activated',
+					title: 'Status',
+					sortable: false,
+					autoHide: false,
+					template: function(row) {
+						if(row.msgCount>0){
+							return '<span class="label font-weight-bold label-lg  label-light-success label-inline">Activated</span>';
+						}
+						return '<span class="label font-weight-bold label-lg  label-light-danger label-inline">Registered</span>';
+					}
+				},
+				{
 					field: 'Actions',
 					title: 'Actions',
 					sortable: false,
@@ -77,7 +195,28 @@ var KTDatatableDistributors = (function() {
 				}
 			]
 		});
+		function distributorFormSubmit(){
+			$('#pages').val(datatable.API.params.pagination.pages);
+			$('#page').val(datatable.API.params.pagination.page);
+			$('#perpage').val(datatable.API.params.pagination.perpage);
+			$('#total').val(datatable.API.params.pagination.total);
+
+			var data =JSON.parse(JSON.stringify($('#filterForm').serializeArray()));
+
+			console.log(data);
+			WebApp.post('distributors/datatable',data,function(response){
+
+			});
+		}
+		$('#submitButton').click(function(event){
+			distributorFormSubmit();
+		});
+		$('#kt_datatableDistributors').on('datatable-on-goto-page', function(){
+			distributorFormSubmit();
+		});
+
 	};
+
 
 	return {
 		// Public functions
@@ -91,6 +230,7 @@ var KTDatatableDistributors = (function() {
 			WebApp.loadPage('distributors/' + _id );
 		},
 	};
+
 })();
 
 KTDatatableDistributors.init();
