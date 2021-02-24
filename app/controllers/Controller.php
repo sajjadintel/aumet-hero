@@ -645,15 +645,15 @@ class Controller
         return $string ? implode(', ', $string) . ' ago' : 'just now';
     }
 
-    function getDatatable(BaseModel $objModel, $where=''){
+    function getDatatable(BaseModel $objModel, $where='', $sortBy= null, $sortType = 'asc'){
 
         $datatable = array_merge(['pagination' => [], 'sort' => [], 'query' => []], $_REQUEST);
 
-        $sort  = !empty($datatable['sort']['sort']) ? $datatable['sort']['sort'] : 'asc';
-        $field = !empty($datatable['sort']['field']) ? $datatable['sort']['field'] : 'ID';
+        $sort  = !empty($datatable['sort']['sort']) ? $datatable['sort']['sort'] : $sortType;
+        $field = !empty($datatable['sort']['field']) ? $datatable['sort']['field'] : ($sortBy ? $sortBy : 'ID');
 
         $page    = !empty($datatable['pagination']['page']) ? (int)$datatable['pagination']['page'] : 1;
-        $perpage = !empty($datatable['pagination']['perpage']) ? (int)$datatable['pagination']['perpage'] : -1;
+        $perpage = !empty($datatable['pagination']['perpage']) ? (int)$datatable['pagination']['perpage'] : 10;
 
         $pages = 1;
 
