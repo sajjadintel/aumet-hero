@@ -78,30 +78,34 @@ BEGIN
 END;
 $$;
 
-alter function "getMessages"(bigint) owner to aumet_user;
+alter function onex."getMessages"(bigint) owner to aumet_user;
 
 create function "getMessagesUser"(id bigint DEFAULT NULL::bigint)
-    returns TABLE("messageUserId" bigint, "displayName" character varying, "authUserId" bigint, "userCompanyName" character varying, "userCompanyId" bigint)
+    returns TABLE("messageUserId" bigint, "displayName" character varying, "authUserId" bigint, "userCompanyName" character varying, "userCompanyId" bigint, "companyType" character varying)
     language plpgsql
 as
 $$
 BEGIN
-    CASE WHEN $1 NOTNULL THEN
+    CASE WHEN $1 NOTNULL AND $1 == 1 THEN
+        --get sender users
         return query select distinct m."fromUserId" "messageFromUserId",
                                      u."displayName",
                                      u.id           "authFromUserId",
                                      com."Name"     "fromUserCompanyName",
-                                     com."ID"       "fromUserCompanyId"
+                                     com."ID"       "fromUserCompanyId",
+                                     u."companyType"
                      from onex.message m
                               join auth."user" u on u.id = m."fromUserId"
                               join onex."companyUser" cu on cu."userId" = m."fromUserId"
                               join production."Company" com on com."ID" = cu."companyId";
         ELSE
+            --get receiver users
             return query select distinct m."toUserId" "messageToUserId",
                                          u."displayName",
                                          u.id         "authToUserId",
                                          com."Name"   "toUserCompanyName",
-                                         com."ID"     "toUserCompanyId"
+                                         com."ID"     "toUserCompanyId",
+                                         u."companyType"
                          from onex.message m
                                   join auth."user" u on u.id = m."toUserId"
                                   join onex."companyUser" cu on cu."userId" = m."toUserId"
@@ -110,24 +114,28 @@ BEGIN
 END;
 $$;
 
-alter function "getMessagesUser"(bigint) owner to aumet_user;
+alter function onex."getMessagesUser"(bigint) owner to aumet_user;
 
-/*create view onex."vwAllMessages"
-            ("messageId", "senderCompany", "senderCountry", "senderType", "receiverCompany", "sentOnDate")
+create view onex."vwMessages"
+            ("messageId", "senderCompany", "senderCountry", "senderType", "receiverCompany", "sentOnDate", subject,
+             content, "actionStatus")
 as
-SELECT m.id             as "messageId",
+SELECT m.id             AS "messageId",
        scom."Name"      AS "senderCompany",
        ct."Name"        AS "senderCountry",
        au."companyType" AS "senderType",
        rcom."Name"      AS "receiverCompany",
-       m."createdAt"    AS "sentOnDate"
+       m."createdAt"    AS "sentOnDate",
+       m.subject,
+       m.content,
+       m."actionStatus"
 FROM onex.message m
-         LEFT JOIN production."Company" scom ON scom."ID" = m."fromCompanyId"
-         LEFT JOIN auth."user" au on au.id = m."fromUserId"
-         LEFT JOIN setup."Country" ct ON scom."CountryID" = ct."ID"
-         LEFT JOIN production."Company" rcom ON rcom."ID" = m."toCompanyId"
+         JOIN production."Company" scom ON scom."ID" = m."fromCompanyId"
+         JOIN auth."user" au ON au.id = m."fromUserId"
+         JOIN setup."Country" ct ON scom."CountryID" = ct."ID"
+         JOIN production."Company" rcom ON rcom."ID" = m."toCompanyId"
 ORDER BY m."createdAt" DESC;
 
-alter table onex."vwAllMessages" owner to aumet_user;*/
+alter table onex."vwMessages" owner to aumet_user;
 
 ## END {Mubasher} {22-02-2021}

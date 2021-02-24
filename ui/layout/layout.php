@@ -42,7 +42,8 @@ function compress_htmlcode($codedata)
 
 	<script src="//maps.google.com/maps/api/js?key=AIzaSyD7aGrZMxZrisUJsfG1rpTCjrUWqExhUO4"></script>
 	<script src="/theme/assets/plugins/custom/gmaps/gmaps.js"></script>
-
+    <!-- Date range picker -->
+    <link rel="stylesheet" href="/assets/plugins/bootstrap-daterangepicker/daterangepicker.css">
 	<!--begin::Global Theme Styles(used by all pages)-->
 	<link href="/theme/assets/plugins/global/plugins.bundle<?php echo $cssDirection == "ltr" ? "" : ".rtl" ?>.css" rel="stylesheet" type="text/css" />
 	<link href="/theme/assets/plugins/custom/prismjs/prismjs.bundle.min.css" rel="stylesheet" type="text/css" />
@@ -275,14 +276,14 @@ function compress_htmlcode($codedata)
 	<script src="https://cdn.amcharts.com/lib/4/geodata/worldLow.js"></script>
 	<script src="https://cdn.amcharts.com/lib/4/geodata/data/countries2.js"></script>
 	<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+    <!--Date range picker-->
+    <script src="/assets/plugins/bootstrap-daterangepicker/daterangepicker.js" rel="script"></script>
 
 	<script type="text/javascript" src="/assets/js/math.min.js"></script>
 	<script type="text/javascript" src="/assets/js/locals.js<?php echo $platformVersion ?>"></script>
 	<script type="text/javascript" src="/assets/js/app.js<?php echo $platformVersion ?>"></script>
 	<script type="text/javascript" src="/assets/js/moment.js<?php echo $platformVersion ?>"></script>
-
 	<script type="text/javascript" src="/assets/js/onboarding.js<?php echo $platformVersion ?>"></script>
-
 	<script type="text/javascript">
 		jQuery(document).ready(function() {
 			if (_isOnBoarding) {

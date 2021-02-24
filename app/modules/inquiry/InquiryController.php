@@ -22,11 +22,9 @@ class InquiryController extends Controller
      */
     function getInquiries()
     {
-        $result=[];
-        $data  = AumetDBRoutines::getMessages();
-        if(!empty($data)) {
-            $result = (new Message())->getDatatableNonObject($data, 'sentOnDate', 'desc');
-        }
+        //$result=[];
+        //$data  = AumetDBRoutines::getMessages();
+        $result = $this->getDatatable((new InquiryView()),'1=1', 'sentOnDate', 'desc');
         echo json_encode($result);
     }
 
@@ -44,6 +42,18 @@ class InquiryController extends Controller
     }
 
     /**
+     * Get filters form to search on
+     */
+    function getFilters(){
+        $this->f3->set('arrToUser',  AumetDBRoutines::getMessagesUsers());
+        $this->f3->set('arrFromUser',  AumetDBRoutines::getMessagesUsers(1));
+        $this->webResponse->setData(View::instance()->render("inquiry/section/filters.php"));
+        echo $this->webResponse->getJSONResponse();
+    }
+
+    /**
+     * Helper Method
+     *
      * Get data for single inquiry
      *
      * @param $inquiryId
@@ -60,15 +70,5 @@ class InquiryController extends Controller
             return false;
         }
 
-    }
-
-    /**
-     * Get filters form to search on
-     */
-    function getFilters(){
-        $this->f3->set('arrToUser',  AumetDBRoutines::getMessagesUsers());
-        $this->f3->set('arrFromUser',  AumetDBRoutines::getMessagesUsers(1));
-        $this->webResponse->setData(View::instance()->render("inquiry/section/filters.php"));
-        echo $this->webResponse->getJSONResponse();
     }
 }
