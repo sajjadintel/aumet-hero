@@ -14,4 +14,10 @@ class Country extends BaseModel
     {
         return parent::getByField('"ID"', $id);
     }
+
+    public function getAll()
+    {
+        $res = $this->db->exec('select "ID", "Name", "CountryCode", "RegionID", "FlagPath", "Long", "Lat" from setup."Country" order by "Name" ASC ');;
+        return $res;
+    }
 }

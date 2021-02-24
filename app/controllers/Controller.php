@@ -648,7 +648,6 @@ class Controller
     function getDatatable(BaseModel $objModel, $where='', $sortBy= null, $sortType = 'asc'){
 
         $datatable = array_merge(['pagination' => [], 'sort' => [], 'query' => []], $_REQUEST);
-
         $sort  = !empty($datatable['sort']['sort']) ? $datatable['sort']['sort'] : $sortType;
         $field = !empty($datatable['sort']['field']) ? $datatable['sort']['field'] : ($sortBy ? $sortBy : 'ID');
 

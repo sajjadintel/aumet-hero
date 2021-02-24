@@ -22,6 +22,19 @@ class CompanyController extends Controller
         if (!$this->f3->ajax()) {
             $this->renderLayout("distributors");
         } else {
+            $arrCountries = [];
+            $speciallities = (new Speciality())->all();
+            $arrCountries = (new Country())->getAll();
+
+            $arrMedicalLines = AumetDBRoutines::GetMedicalLineWithScientificNamesCount();
+
+            $this->f3->set('arrCountries', $arrCountries);
+            $this->f3->set('speciallities', $speciallities);
+            $this->f3->set('arrMedicalLines', $arrMedicalLines);
+            $pagination = $_REQUEST['pagination'];
+            $sort = $_REQUEST['sort'];
+            $this->f3->set('pagination', $pagination);
+            $this->f3->set('sort', $sort);
             $this->webResponse->setData(View::instance()->render("companies/distributors.php"));
             echo $this->webResponse->getJSONResponse();
         }
@@ -29,8 +42,24 @@ class CompanyController extends Controller
 
     function getDistributorsRecords()
     {
+        $where = '';
+        $name = $this->f3->get('POST.Name');
+        if($name){
+            $where .='"Name" ilike \'%'.$name.'%\'';
+        }
+//        $where = '"Name" ilike \'%distributor%\'';
+//        echo $where;exit;
+//        echo "<pre>";print_r($_REQUEST);exit;
+
+        if($where) {
+            $distributors = $this->getDatatable((new Distributors()), $where);
+        }else{
+            $distributors = $this->getDatatable((new Distributors()));
+        }
+
+
         echo json_encode(
-            $this->getDatatable((new Company()), '"Type"=\'distributor\'')
+            $distributors
         );
     }
 
