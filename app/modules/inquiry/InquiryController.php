@@ -24,42 +24,48 @@ class InquiryController extends Controller
      */
     function getInquiries(){
         $where = '1=1';
-        $boOnly = $this->f3->get('POST.boOnly');
-        $rangeTime = $this->f3->get('POST.rangeTime');
-        $senderType = $this->f3->get('POST.senderTypeHidden');
         $inquiryStatus = $this->f3->get('POST.inquiryStatusHidden');
-        $RegistrationDate = $this->f3->get('POST.RegistrationDateHidden');
-        $inquirySenderUser = $this->f3->get('POST.inquirySenderUserHidden');
         $inquiryReceiverUser = $this->f3->get('POST.inquiryReceiverUserHidden');
+        $inquirySenderUser = $this->f3->get('POST.inquirySenderUserHidden');
+        $senderType = $this->f3->get('POST.senderTypeHidden');
+        $inquiryDate= $this->f3->get('POST.inquiryDate');
+        $boOnly = $this->f3->get('POST.boOnly');
+        $startDate = '';
+        $endDate = '';
 
-        if($boOnly){
-            //$where .=' AND "senderType" = "distributor"';
+        if($inquiryStatus){
+            $where .=' AND "actionStatus" = '.$inquiryStatus;
         }
-        if($RegistrationDate){
-            $arrDate = explode('-',$RegistrationDate);
+        if($inquiryReceiverUser){
+            $where .=' AND "toUserId" = '.$inquiryReceiverUser;
+        }
+        if($inquirySenderUser){
+            $where .=' AND "fromUserId" = '.$inquirySenderUser;
+        }
+        if($senderType){
+            $where .=" AND \"senderType\" = ".$senderType;
+        }
+        if($inquiryDate){
+            $arrDate = explode('-',$inquiryDate);
             $date = new DateTime($arrDate[0]);
             $startDate = $date->format('Y-m-d'); // 31-07-2012
             if(isset($arrDate[1])){
                 $date = new DateTime($arrDate[1]);
                 $endDate = $date->format('Y-m-d');
             }
-
+            $where .=' AND "sentOnDate" >='."'".$startDate."'";
+            if($endDate){
+                $where .=' AND "sentOnDate" <= '."'".$endDate."'";
+            }
         }
-        if($senderType){
-            $where .=" AND \"senderType\" = ".$senderType;
+        if($boOnly){
+            //$where .=' AND "senderType" = "distributor"';
         }
-        if($inquiryStatus){
-            $where .=' AND "actionStatus" = '.$inquiryStatus;
+        if($where) {
+            $result = $this->getDatatable((new InquiryView()), $where, 'sentOnDate', 'desc');
+        }else{
+            $result = $this->getDatatable((new InquiryView()), '', 'sentOnDate', 'desc');
         }
-        if($inquirySenderUser){
-            $where .=' AND "senderUser" = '.$inquirySenderUser;
-        }
-        if($inquiryReceiverUser){
-            $where .=' AND "receiverUser" = '.$inquiryReceiverUser;
-        }
-
-
-        $result = $this->getDatatable((new InquiryView()), $where, 'sentOnDate', 'desc');
         echo json_encode($result);
     }
 

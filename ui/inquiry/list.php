@@ -34,89 +34,93 @@
                         </div>
                         <!--begin::Form-->
                         <form class="form" id="filterForm">
-                            <div class="form-group row">
-                                <!--inquiryStatus-->
-                                <div class="col-md-4">
-                                    <label>Inquiry Status:</label>
-                                    <div class="input-group">
-                                        <input type="hidden" name="inquiryStatusHidden" id="inquiryStatusHidden">
-                                        <select class="form-control select2 col-md-8 " id="inquiryStatus" name="status">
-                                            <option value="">Select</option>
-                                            <option value='0'>Pending</option>
-                                            <option value='1'>Sent</option>
-                                            <option value='2'>Replied</option>
-                                            <option value='3'>Locked</option>
-                                            <option value='4'>Disapproved</option>
-                                        </select>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <!--inquiryStatus-->
+                                    <div class="col-md-4">
+                                        <label>Inquiry Status:</label>
+                                        <div class="input-group">
+                                            <input type="hidden" name="inquiryStatusHidden" id="inquiryStatusHidden">
+                                            <select class="form-control select2 col-md-8 " id="inquiryStatus" name="status">
+                                                <option value="">Select</option>
+                                                <option value='0'>Pending</option>
+                                                <option value='1'>Sent</option>
+                                                <option value='2'>Replied</option>
+                                                <option value='3'>Locked</option>
+                                                <option value='4'>Disapproved</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <!--inquirySenderName-->
-                                <div class=" col-md-4">
-                                    <label>Receiver Name:</label>
-                                    <div class="input-group">
-                                        <input type="hidden" name="inquiryReceiverUserHidden" id="inquiryReceiverUserHidden">
-                                        <select class="form-control select2 col-md-8" id="inquiryReceiverUser" name="receiverUser">
-                                            <option value="">Select</option>
-                                            <?php foreach ($arrToUser as $user): ?>
-                                                <option value='<?php echo $user->messageUserId; ?>'><?php echo $user->displayName; ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
+                                    <!--inquirySenderName-->
+                                    <div class=" col-md-4">
+                                        <label>Receiver Name:</label>
+                                        <div class="input-group">
+                                            <input type="hidden" name="inquiryReceiverUserHidden" id="inquiryReceiverUserHidden">
+                                            <select class="form-control select2 col-md-8" id="inquiryReceiverUser" name="receiverUser">
+                                                <option value="">Select</option>
+                                                <?php foreach ($arrToUser as $user): ?>
+                                                    <option value='<?php echo $user->messageUserId; ?>'><?php echo $user->displayName; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <!--inquiryReceiverName-->
-                                <div class="col-md-4">
-                                    <label>Sender Name</label>
-                                    <div class="input-group">
-                                        <input type="hidden" name="inquirySenderUserHidden" id="inquirySenderUserHidden">
-                                        <select class="form-control select2 col-md-8" id="inquirySenderUser" name="senderUser">
-                                            <option value="">Select</option>
-                                            <?php foreach ($arrFromUser as $user): ?>
-                                                <option value='<?php echo $user->messageUserId; ?>'><?php echo $user->displayName; ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <!--senderType-->
-                                <div class="col-md-4">
-                                    <label>Sender Type:</label>
-                                    <div class="input-group">
-                                        <input type="hidden" name="senderTypeHidden" id="senderTypeHidden">
-                                        <select class="form-control select2 col-md-8 " id="senderType" name="sType">
-                                            <option value="">Select</option>
-                                            <option value='manufacturer'>Manufacturer</option>
-                                            <option value='distributor'>Distributor</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!--Created On Date Range-->
-                                <div class="col-lg-4">
-                                    <label>Registered date:</label>
-                                    <div class="input-group date">
-                                        <input type="text" class="form-control" value="" name="RegistrationDate" id="kt_datepicker_2" readonly="readonly" placeholder="Select date">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">
-                                                <i class="la la-calendar-check-o"></i>
-                                            </span>
+                                    <!--inquiryReceiverName-->
+                                    <div class="col-md-4">
+                                        <label>Sender Name</label>
+                                        <div class="input-group">
+                                            <input type="hidden" name="inquirySenderUserHidden" id="inquirySenderUserHidden">
+                                            <select class="form-control select2 col-md-8" id="inquirySenderUser" name="senderUser">
+                                                <option value="">Select</option>
+                                                <?php foreach ($arrFromUser as $user): ?>
+                                                    <option value='<?php echo $user->messageUserId; ?>'><?php echo $user->displayName; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
-                                <!--From Business Opportunity-->
-                                <div class="col-lg-4">
-                                    <label>From Business Opportunity Only :</label>
-                                    <div class="radio-inline">
-                                        <label class="radio radio-solid">
-                                            <input type="radio" name="boOnly" value="1"><span></span>Yes
-                                        </label>
+                                <div class="form-group row">
+                                    <!--senderType-->
+                                    <div class="col-md-4">
+                                        <label>Sender Type:</label>
+                                        <div class="input-group">
+                                            <input type="hidden" name="senderTypeHidden" id="senderTypeHidden">
+                                            <select class="form-control select2 col-md-8 " id="senderType" name="sType">
+                                                <option value="">Select</option>
+                                                <option value='manufacturer'>Manufacturer</option>
+                                                <option value='distributor'>Distributor</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
+                                    <!--Created On Date Range-->
+                                    <div class="col-lg-4">
+                                        <label>Registered date:</label>
+                                        <div class="input-group date">
+                                            <input type="text" class="form-control" value="" name="inquiryDate" id="kt_datepicker_2" readonly="readonly" placeholder="Select date">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="la la-calendar-check-o"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--From Business Opportunity-->
+                                    <div class="col-lg-4">
+                                        <label>From Business Opportunity Only :</label>
+                                        <div class="radio-inline">
+                                            <label class="radio radio-solid">
+                                                <input type="radio" name="boOnly" value="1"><span></span>Yes
+                                            </label>
+                                        </div>
+                                        <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12 text-right mb-10">
-                                    <a href="javascript:void(0)" type="reset" id="submitButton" class="btn btn-primary mr-2">Submit</a>
-                                    <a href="javascript:void(0)" type="reset" onclick="KTDatatableInquiry.resetDataTable()" class="btn btn-secondary">Clear</a>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-lg-12 text-right mb-10">
+                                        <a href="javascript:void(0)" type="reset" id="submitButton" class="btn btn-primary mr-2">Submit</a>
+                                        <a href="javascript:void(0)" type="reset" onclick="KTDatatableInquiry.resetDataTable()" class="btn btn-secondary">Clear</a>
+                                    </div>
                                 </div>
                             </div>
                         </form>

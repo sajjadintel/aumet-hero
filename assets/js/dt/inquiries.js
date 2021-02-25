@@ -67,14 +67,11 @@ var KTDatatableInquiry = (function() {
 			},
 			// column sorting
 			sortable: true,
+
 			pagination: true,
 			buttonInRowClick:function(event) {
 				event.stopPropagation();
 				console.log('Button in the row clicked.');
-			},
-			search: {
-				input: $('#kt_datatable_search_query'),
-				key: 'generalSearch'
 			},
 			// columns definition
 			columns: [
@@ -170,20 +167,22 @@ var KTDatatableInquiry = (function() {
 		});
 		$('#submitButton').click(function(event){
 			console.log('click');
-			var inquirySend = $("input[name='boOnly']:checked").val();
+
+			var inquiryStatusHidden = $('#filterForm').find('input[name="inquiryStatusHidden"]').val();
+			var inquiryReceiverUserHidden = $('#filterForm').find('input[name="inquiryReceiverUserHidden"]').val();
+			var inquirySenderUserHidden = $('#filterForm').find('input[name="inquirySenderUserHidden"]').val();
+			var senderTypeHidden = $('#filterForm').find('input[name="senderTypeHidden"]').val();
+			var inquiryDate = $('#filterForm').find('input[name="inquiryDate"]').val();
 			var boOnly = $('#filterForm').find('input[name="boOnly"]').val();
-			var senderType = $('#filterForm').find('input[name="senderType"]').val();
-			var inquiryStatus = $('#filterForm').find('input[name="inquiryStatus"]').val();
-			var RegistrationDate = $('#filterForm').find('input[name="RegistrationDate"]').val();
-			var inquirySenderUser = $('#filterForm').find('input[name="inquirySenderUser"]').val();
-			var inquiryReceiverUser = $('#filterForm').find('input[name="inquiryReceiverUser"]').val();
+
+
+			datatable.setDataSourceParam('inquiryStatusHidden', inquiryStatusHidden);
+			datatable.setDataSourceParam('inquiryReceiverUserHidden', inquiryReceiverUserHidden);
+			datatable.setDataSourceParam('inquirySenderUserHidden', inquirySenderUserHidden);
+			datatable.setDataSourceParam('senderTypeHidden', senderTypeHidden);
+			datatable.setDataSourceParam('inquiryDate', inquiryDate);
 			datatable.setDataSourceParam('boOnly', boOnly);
-			datatable.setDataSourceParam('senderType', senderType);
-			datatable.setDataSourceParam('inquirySend', inquirySend);
-			datatable.setDataSourceParam('inquiryStatus', inquiryStatus);
-			datatable.setDataSourceParam('RegistrationDate', RegistrationDate);
-			datatable.setDataSourceParam('inquirySenderUser', inquirySenderUser);
-			datatable.setDataSourceParam('inquiryReceiverUser', inquiryReceiverUser);
+
 			console.log(datatable);
 			WebApp.block();
 			datatable.reload();
