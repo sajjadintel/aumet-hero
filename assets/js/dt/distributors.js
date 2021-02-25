@@ -4,22 +4,18 @@
 // });
 $('#kt_datepicker_2').daterangepicker({
 }, function(start, end, label) {
-	console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+	// console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
 });
 $('#country_id').select2().on('select2:selecting', function (e) {
-	console.log(e.params.args.data.id);
 	$('#CountryID').val(e.params.args.data.id);
 });
 $('#Speciality_ID').select2().on('select2:selecting', function (e) {
-	console.log('SpecialityID '+e.params.args.data.id);
 	$('#SpecialityID').val(e.params.args.data.id);
 });
 $('#Medicalline_ID').select2().on('select2:selecting', function (e) {
-	console.log('MedicallineID '+e.params.args.data.id);
 	$('#MedicallineID').val(e.params.args.data.id);
 });
 $('#status_Id').select2().on('select2:selecting', function (e) {
-	console.log('statusId '+e.params.args.data.id);
 	$('#statusId').val(e.params.args.data.id);
 });
 $('#filterForm').trigger("reset");
@@ -162,7 +158,7 @@ var KTDatatableDistributors = (function() {
 						let payload = null;
 						if(row.payload!=null){
 							payload = JSON.parse(row.payload);
-							return payload.metadata.lastLoginAt;
+							return payload.metadata.lastLoginAt.split("T")[0];
 						}else{
 							return '';
 						}
@@ -195,10 +191,19 @@ var KTDatatableDistributors = (function() {
 					sortable: false,
 					autoHide: false,
 					template: function(row) {
-						if(row.msgCount>0){
+						// console.log(row);
+						if(row.statusId==1){
+							return '<span class="label font-weight-bold label-lg  label-light-danger label-inline">Registered basic</span>';
+						}
+						else if(row.statusId==2){
+							return '<span class="label font-weight-bold label-lg  label-light-warning label-inline">Registered full</span>';
+						}
+						else if(row.statusId==3 && row.inquirySend<1){
+							return '<span class="label font-weight-bold label-lg  label-light-success label-inline">Onboarded</span>';
+						}
+						else if(row.statusId==3 && row.inquirySend>0){
 							return '<span class="label font-weight-bold label-lg  label-light-success label-inline">Activated</span>';
 						}
-						return '<span class="label font-weight-bold label-lg  label-light-danger label-inline">Registered</span>';
 					}
 				},
 				{
@@ -218,7 +223,7 @@ var KTDatatableDistributors = (function() {
 			]
 		});
 		$('#submitButton').click(function(event){
-			console.log('click');
+			// console.log('click');
 			var Name = $('#filterForm').find('input[name="Name"]').val();
 			var CountryID = $('#filterForm').find('input[name="CountryID"]').val();
 			var PersonName = $('#filterForm').find('input[name="PersonName"]').val();
@@ -239,7 +244,7 @@ var KTDatatableDistributors = (function() {
 			datatable.setDataSourceParam('Registered', Registered);
 			datatable.setDataSourceParam('inquirySend', inquirySend);
 			datatable.setDataSourceParam('statusId', statusId);
-			console.log(datatable);
+			// console.log(datatable);
 			WebApp.block();
 			datatable.reload();
 
@@ -247,6 +252,21 @@ var KTDatatableDistributors = (function() {
 		});
 		$('#kt_datatableDistributors').on('datatable-on-ajax-done',function(){
 			WebApp.unblock();
+		});
+		$('#kt_datatableDistributors').on('datatable-on-init',function(event){
+			// WebApp.block();
+			event.preventDefault();
+			datatable.setDataSourceParam('Name', '');
+			datatable.setDataSourceParam('CountryID', '');
+			datatable.setDataSourceParam('PersonName', '');
+			datatable.setDataSourceParam('email', '');
+			datatable.setDataSourceParam('RegistrationDate', '');
+			datatable.setDataSourceParam('SpecialityID', '');
+			datatable.setDataSourceParam('MedicallineID', '');
+			datatable.setDataSourceParam('Registered', '');
+			datatable.setDataSourceParam('inquirySend', '');
+			datatable.setDataSourceParam('statusId', '');
+			datatable.reload();
 		});
 		$('#kt_datatableDistributors').on('datatable-on-ajax-fail',function(){
 			WebApp.unblock();
@@ -268,6 +288,18 @@ var KTDatatableDistributors = (function() {
 		},
 		resetDataTable: function(_id) {
 			$('#filterForm').trigger("reset");
+			$('#country_id').val('0');
+			$('#CountryID').val('0');
+			$('#country_id').trigger('change.select2');
+			$('#Speciality_ID').val('0');
+			$('#SpecialityID').val('0');
+			$('#Speciality_ID').trigger('change.select2');
+			$('#Medicalline_ID').val('0');
+			$('#MedicallineID').val('0');
+			$('#Medicalline_ID').trigger('change.select2');
+			$('#status_Id').val('0');
+			$('#statusId').val('0');
+			$('#status_Id').trigger('change.select2');
 			WebApp.block();
 			$('#submitButton').trigger('click');
 		},

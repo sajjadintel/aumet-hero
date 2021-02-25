@@ -47,6 +47,9 @@ class CompanyController extends Controller
         $CountryID = $this->f3->get('POST.CountryID');
         $Registered = $this->f3->get('POST.Registered');
         $RegistrationDate = $this->f3->get('POST.RegistrationDate');
+        $SpecialityID = $this->f3->get('POST.SpecialityID');
+        $MedicallineID = $this->f3->get('POST.MedicallineID');
+        $MedicallineID = $this->f3->get('POST.MedicallineID');
         $startDate = '';
         $endDate = '';
 
@@ -70,7 +73,11 @@ class CompanyController extends Controller
             $where .=' AND "email" ilike \'%'.$email.'%\'';
         }
         if($statusId){
-            $where .=' AND "statusId" ='.$statusId;
+            if($statusId==4){
+                $where .= ' AND "statusId" =3 AND "inquirySend" >0';
+            }else {
+                $where .= ' AND "statusId" =' . $statusId;
+            }
         }
         if($inquirySend){
             $where .=' AND "inquirySend" >0';
@@ -81,13 +88,19 @@ class CompanyController extends Controller
         if($CountryID){
             $where .=' AND "CountryID" ='.$CountryID;
         }
+        if($SpecialityID){
+            $where .=" AND '".$SpecialityID."' = ANY ( \"SpecialityID\" ) ";
+        }
+        if($MedicallineID){
+            $where .=" AND '".$MedicallineID."' = ANY ( \"MedicallineID\" ) ";
+        }
         if($RegistrationDate){
             $where .=' AND "RegistrationDate" >='."'".$startDate."'";
             if($endDate){
                 $where .=' AND "RegistrationDate" <= '."'".$endDate."'";
             }
         }
-
+//echo $where;exit;
         if($where) {
             $distributors = $this->getDatatable((new Distributors()), $where);
         }else{

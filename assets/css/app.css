@@ -206,3 +206,6 @@ ul.dual-listbox__available, ul.dual-listbox__selected {
 #filterForm .select2-container{
 	width: 100% !important;
 }
+#kt_datatableDistributors .datatable-cell{
+	text-align: center;
+}
