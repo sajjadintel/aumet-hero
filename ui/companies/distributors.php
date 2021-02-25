@@ -31,11 +31,177 @@
     <div class="container-fluid">
         <div class="card card-custom">
             <div class="card-body">
+
+                <div id="distributorFilters" class="mb-7">
+
+                    <div class="card card-custom shadow-none gutter-b example example-compact">
+                        <div class="card-header">
+                            <h3 class="card-title">Filter Distributors</h3>
+                        </div>
+                        <!--begin::Form-->
+                        <form id="filterForm" class="form">
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <div class="col-lg-4">
+                                        <label>Distributor Name:</label>
+                                        <input type="text" class="form-control" id="kt_datatable_search_query" placeholder="Enter distributor name" name="Name">
+                                        <span class="form-text text-muted">Please enter distributor name</span>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label>Country:</label>
+                                        <div class="input-group">
+                                            <input type="hidden" id="CountryID" name="CountryID">
+                                            <select id="country_id" name="country_id" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
+                                                <option value="0">Select</option>
+                                                <?php foreach ($arrCountries as $country): ?>
+                                                    <option value="<?php echo $country['ID'] ?>" ><?php echo $country['Name']; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+
+                                        <span class="form-text text-muted">Select country</span>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label>Person Name:</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="far fa-user"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" name="PersonName" class="form-control" placeholder="">
+                                        </div>
+                                        <span class="form-text text-muted">Please enter person name</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-4">
+                                        <label>Email address :</label>
+
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="far fa-envelope"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" name="email" class="form-control" placeholder="">
+                                        </div>
+                                        <span class="form-text text-muted">Please enter email</span>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label>Registered date:</label>
+                                        <div class="input-group date">
+                                            <input type="text" class="form-control" value="" name="RegistrationDate" id="kt_datepicker_2" readonly="readonly" placeholder="Select date">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    <i class="la la-calendar-check-o"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <span class="form-text text-muted">Please enter date range</span>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label>Sent inquiries :</label>
+                                        <div class="radio-inline">
+                                            <label class="radio radio-solid">
+                                                <input type="radio" name="inquirySend" value="1">
+                                                <span></span>Yes</label>
+                                            <label class="radio radio-solid">
+                                                <input type="radio" name="inquirySend" value="0">
+                                                <span></span>No</label>
+                                        </div>
+                                        <span class="form-text text-muted">Please select inquiry status</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-4">
+                                        <label>Distributor Experience (Specialty):</label>
+                                        <div class="input-group">
+                                            <input type="hidden" id="SpecialityID" name="SpecialityID">
+                                            <select id="Speciality_ID" name="Speciality_ID" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
+                                                <option value="0">Select</option>
+                                                <?php foreach ($speciallities as $speciallity): ?>
+                                                    <option value="<?php echo $speciallity->ID ?>" ><?php echo $speciallity->Name; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <span class="form-text text-muted">Please enter your postcode</span>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label>Distributor Experience (Medical line):</label>
+                                        <div class="input-group">
+                                            <input type="hidden" id="MedicallineID" name="MedicallineID">
+                                            <select id="Medicalline_ID" name="Medicalline_ID" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
+                                                <option value="0">Select</option>
+                                                <?php foreach ($arrMedicalLines as $medicalLine): ?>
+                                                    <option value="<?php echo $medicalLine['ID'] ?>" ><?php echo $medicalLine['Name']; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <span class="form-text text-muted">Please enter your postcode</span>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label>Status:</label>
+                                        <div class="input-group">
+                                            <input type="hidden" name="statusId" id="statusId">
+                                            <select id="status_Id" name="status_Id" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
+                                                    <option value="0" >Select</option>
+                                                    <option value="1" >Registered basic</option>
+                                                    <option value="2" >Registered full</option>
+                                                    <option value="3" >Onboarded</option>
+                                                    <option value="4" >Activated</option>
+                                            </select>
+                                        </div>
+                                        <span class="form-text text-muted">Please select status</span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-4">
+                                        <label>UTM:</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="utm" placeholder="">
+                                        </div>
+                                        <span class="form-text text-muted">Please enter UTM</span>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <label>Registered :</label>
+                                        <div class="radio-inline">
+                                            <label class="radio radio-solid">
+                                                <input type="radio" class="radioRegistered" name="Registered" value="1">
+                                                <span></span>Yes</label>
+                                            <label class="radio radio-solid">
+                                                <input type="radio" class="radioRegistered" name="Registered" value="0">
+                                                <span></span>No</label>
+                                        </div>
+                                        <span class="form-text text-muted">Please select registered status</span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-lg-4"></div>
+                                    <div class="col-lg-8">
+                                        <a href="javascript:void(0)" type="reset" id="submitButton" class="btn btn-primary mr-2">Submit</a>
+                                        <a href="javascript:void(0)" type="reset" onclick="KTDatatableDistributors.resetDataTable()" class="btn btn-secondary">Clear</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <!--end::Form-->
+                    </div>
+
+                </div>
+
+
                 <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatableDistributors"></div>
+
+
             </div>
         </div>
     </div>
 </div>
-
 <script src="/assets/js/dt/distributors.js"></script>
 

@@ -22,6 +22,15 @@ class CompanyController extends Controller
         if (!$this->f3->ajax()) {
             $this->renderLayout("distributors");
         } else {
+            $arrCountries = [];
+            $speciallities = (new Speciality())->all();
+            $arrCountries = (new Country())->getAll();
+
+            $arrMedicalLines = AumetDBRoutines::GetMedicalLineWithScientificNamesCount();
+
+            $this->f3->set('arrCountries', $arrCountries);
+            $this->f3->set('speciallities', $speciallities);
+            $this->f3->set('arrMedicalLines', $arrMedicalLines);
             $this->webResponse->setData(View::instance()->render("companies/distributors.php"));
             echo $this->webResponse->getJSONResponse();
         }
@@ -29,8 +38,77 @@ class CompanyController extends Controller
 
     function getDistributorsRecords()
     {
+        $where = '1=1';
+        $name = $this->f3->get('POST.Name');
+        $PersonName = $this->f3->get('POST.PersonName');
+        $email = $this->f3->get('POST.email');
+        $statusId = $this->f3->get('POST.statusId');
+        $inquirySend = $this->f3->get('POST.inquirySend');
+        $CountryID = $this->f3->get('POST.CountryID');
+        $Registered = $this->f3->get('POST.Registered');
+        $RegistrationDate = $this->f3->get('POST.RegistrationDate');
+        $SpecialityID = $this->f3->get('POST.SpecialityID');
+        $MedicallineID = $this->f3->get('POST.MedicallineID');
+        $MedicallineID = $this->f3->get('POST.MedicallineID');
+        $startDate = '';
+        $endDate = '';
+
+        if($RegistrationDate){
+            $arrDate = explode('-',$RegistrationDate);
+            $date = new DateTime($arrDate[0]);
+            $startDate = $date->format('Y-m-d'); // 31-07-2012
+            if(isset($arrDate[1])){
+                $date = new DateTime($arrDate[1]);
+                $endDate = $date->format('Y-m-d');
+            }
+
+        }
+        if($name){
+            $where .=' AND "Name" ilike \'%'.$name.'%\'';
+        }
+        if($PersonName){
+            $where .=' AND "PersonName" ilike \'%'.$PersonName.'%\'';
+        }
+        if($email){
+            $where .=' AND "email" ilike \'%'.$email.'%\'';
+        }
+        if($statusId){
+            if($statusId==4){
+                $where .= ' AND "statusId" =3 AND "inquirySend" >0';
+            }else {
+                $where .= ' AND "statusId" =' . $statusId;
+            }
+        }
+        if($inquirySend){
+            $where .=' AND "inquirySend" >0';
+        }
+        if($Registered){
+            $where .=' AND "RegistrationDate" !=null';
+        }
+        if($CountryID){
+            $where .=' AND "CountryID" ='.$CountryID;
+        }
+        if($SpecialityID){
+            $where .=" AND '".$SpecialityID."' = ANY ( \"SpecialityID\" ) ";
+        }
+        if($MedicallineID){
+            $where .=" AND '".$MedicallineID."' = ANY ( \"MedicallineID\" ) ";
+        }
+        if($RegistrationDate){
+            $where .=' AND "RegistrationDate" >='."'".$startDate."'";
+            if($endDate){
+                $where .=' AND "RegistrationDate" <= '."'".$endDate."'";
+            }
+        }
+//echo $where;exit;
+        if($where) {
+            $distributors = $this->getDatatable((new Distributors()), $where);
+        }else{
+            $distributors = $this->getDatatable((new Distributors()));
+        }
+
         echo json_encode(
-            $this->getDatatable((new Company()), '"Type"=\'distributor\'')
+            $distributors
         );
     }
 

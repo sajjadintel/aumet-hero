@@ -1,4 +1,26 @@
 'use strict';
+// $('#kt_datepicker_2').daterangepicker({
+// 	autoUpdateInput: false
+// });
+$('#kt_datepicker_2').daterangepicker({
+}, function(start, end, label) {
+	// console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+});
+$('#country_id').select2().on('select2:selecting', function (e) {
+	$('#CountryID').val(e.params.args.data.id);
+});
+$('#Speciality_ID').select2().on('select2:selecting', function (e) {
+	$('#SpecialityID').val(e.params.args.data.id);
+});
+$('#Medicalline_ID').select2().on('select2:selecting', function (e) {
+	$('#MedicallineID').val(e.params.args.data.id);
+});
+$('#status_Id').select2().on('select2:selecting', function (e) {
+	$('#statusId').val(e.params.args.data.id);
+});
+$('#filterForm').trigger("reset");
+
+
 
 var KTDatatableDistributors = (function() {
 
@@ -9,7 +31,7 @@ var KTDatatableDistributors = (function() {
 				type: 'remote',
 				source: {
 					read: {
-						url: HOST_URL + '/' + docLang + '/distributors/datatable' + '?_t=' + Date.now()
+						url: HOST_URL + '/' + docLang + '/distributors/datatable' + '?_t=' + Date.now(),
 					}
 				},
 				pageSize: 10,
@@ -32,10 +54,9 @@ var KTDatatableDistributors = (function() {
 			sortable: true,
 
 			pagination: true,
-
-			search: {
-				input: $('#kt_datatable_search_query'),
-				key: 'generalSearch'
+			buttonInRowClick:function(event) {
+				event.stopPropagation();
+				console.log('Button in the row clicked.');
 			},
 
 			// columns definition
@@ -62,6 +83,130 @@ var KTDatatableDistributors = (function() {
 					}
 				},
 				{
+					field: 'PersonName',
+					title: 'Person Name',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.PersonName
+					}
+				},
+				{
+					field: 'position',
+					title: 'Job Title',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.position
+					}
+				},
+				{
+					field: 'email',
+					title: 'Email',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.email
+					}
+				},
+				{
+					field: 'CountryName',
+					title: 'Country',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.CountryName;
+					}
+				},
+				{
+					field: 'inquirySend',
+					title: 'inquiries sent',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.inquirySend;
+					}
+				},
+				{
+					field: 'RegistrationDate',
+					title: 'Registered Date',
+					sortable: false,
+					autoHide: false,
+					template: function(row) {
+						return row.RegistrationDate;
+					}
+				},
+				{
+					field: 'Registered',
+					title: 'Registered',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						if(row.RegistrationDate){
+							return 'Yes'
+						}else{
+							return 'No'
+						}
+					}
+				},
+				{
+					field: 'Payload',
+					title: 'last Login',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						let payload = null;
+						if(row.payload!=null){
+							payload = JSON.parse(row.payload);
+							return payload.metadata.lastLoginAt.split("T")[0];
+						}else{
+							return '';
+						}
+					}
+				},
+				{
+					field: 'Accssed new website',
+					title: 'Accssed new website',
+					sortable: false,
+					autoHide: false,
+					template: function(row) {
+						let payload = null;
+						if(row.payload!=null){
+							payload = JSON.parse(row.payload);
+							let releaseDate = new Date('2021-1-31');
+							let lastLogin = new Date(payload.metadata.lastLoginAt);
+							let lastLoginDate = new Date(moment(lastLogin).format('YYYY-MM-DD'));
+							if (lastLoginDate >= releaseDate) {
+								return 'Yes';
+							}else{
+								return 'No';
+							}
+						}else{
+							return 'No';
+						}
+					}
+				},{
+					field: 'Activated',
+					title: 'Status',
+					sortable: false,
+					autoHide: false,
+					template: function(row) {
+						// console.log(row);
+						if(row.statusId==1){
+							return '<span class="label font-weight-bold label-lg  label-light-danger label-inline">Registered basic</span>';
+						}
+						else if(row.statusId==2){
+							return '<span class="label font-weight-bold label-lg  label-light-warning label-inline">Registered full</span>';
+						}
+						else if(row.statusId==3 && row.inquirySend<1){
+							return '<span class="label font-weight-bold label-lg  label-light-success label-inline">Onboarded</span>';
+						}
+						else if(row.statusId==3 && row.inquirySend>0){
+							return '<span class="label font-weight-bold label-lg  label-light-success label-inline">Activated</span>';
+						}
+					}
+				},
+				{
 					field: 'Actions',
 					title: 'Actions',
 					sortable: false,
@@ -77,7 +222,58 @@ var KTDatatableDistributors = (function() {
 				}
 			]
 		});
+		$('#submitButton').click(function(event){
+			// console.log('click');
+			var Name = $('#filterForm').find('input[name="Name"]').val();
+			var CountryID = $('#filterForm').find('input[name="CountryID"]').val();
+			var PersonName = $('#filterForm').find('input[name="PersonName"]').val();
+			var email = $('#filterForm').find('input[name="email"]').val();
+			var RegistrationDate = $('#filterForm').find('input[name="RegistrationDate"]').val();
+			var SpecialityID = $('#filterForm').find('input[name="SpecialityID"]').val();
+			var MedicallineID = $('#filterForm').find('input[name="MedicallineID"]').val();
+			var statusId = $('#filterForm').find('input[name="statusId"]').val();
+			var Registered = $("input[name='Registered']:checked").val();;
+			var inquirySend = $("input[name='inquirySend']:checked").val();
+			datatable.setDataSourceParam('Name', Name);
+			datatable.setDataSourceParam('CountryID', CountryID);
+			datatable.setDataSourceParam('PersonName', PersonName);
+			datatable.setDataSourceParam('email', email);
+			datatable.setDataSourceParam('RegistrationDate', RegistrationDate);
+			datatable.setDataSourceParam('SpecialityID', SpecialityID);
+			datatable.setDataSourceParam('MedicallineID', MedicallineID);
+			datatable.setDataSourceParam('Registered', Registered);
+			datatable.setDataSourceParam('inquirySend', inquirySend);
+			datatable.setDataSourceParam('statusId', statusId);
+			// console.log(datatable);
+			WebApp.block();
+			datatable.reload();
+
+
+		});
+		$('#kt_datatableDistributors').on('datatable-on-ajax-done',function(){
+			WebApp.unblock();
+		});
+		$('#kt_datatableDistributors').on('datatable-on-init',function(event){
+			// WebApp.block();
+			event.preventDefault();
+			datatable.setDataSourceParam('Name', '');
+			datatable.setDataSourceParam('CountryID', '');
+			datatable.setDataSourceParam('PersonName', '');
+			datatable.setDataSourceParam('email', '');
+			datatable.setDataSourceParam('RegistrationDate', '');
+			datatable.setDataSourceParam('SpecialityID', '');
+			datatable.setDataSourceParam('MedicallineID', '');
+			datatable.setDataSourceParam('Registered', '');
+			datatable.setDataSourceParam('inquirySend', '');
+			datatable.setDataSourceParam('statusId', '');
+			datatable.reload();
+		});
+		$('#kt_datatableDistributors').on('datatable-on-ajax-fail',function(){
+			WebApp.unblock();
+		});
+
 	};
+
 
 	return {
 		// Public functions
@@ -90,7 +286,42 @@ var KTDatatableDistributors = (function() {
 		view: function(_id) {
 			WebApp.loadPage('distributors/' + _id );
 		},
-	};
-})();
+		resetDataTable: function(_id) {
+			$('#filterForm').trigger("reset");
+			$('#country_id').val('0');
+			$('#CountryID').val('0');
+			$('#country_id').trigger('change.select2');
+			$('#Speciality_ID').val('0');
+			$('#SpecialityID').val('0');
+			$('#Speciality_ID').trigger('change.select2');
+			$('#Medicalline_ID').val('0');
+			$('#MedicallineID').val('0');
+			$('#Medicalline_ID').trigger('change.select2');
+			$('#status_Id').val('0');
+			$('#statusId').val('0');
+			$('#status_Id').trigger('change.select2');
+			WebApp.block();
+			$('#submitButton').trigger('click');
+		},
 
+	};
+
+})();
+// function distributorFormSubmit(){
+// 	$('#pages').val(datatable.API.params.pagination.pages);
+// 	$('#page').val(datatable.API.params.pagination.page);
+// 	$('#perpage').val(datatable.API.params.pagination.perpage);
+// 	$('#total').val(datatable.API.params.pagination.total);
+// 	$('#sort_by').val(datatable.API.params.sort.field);
+// 	$('#sort_order').val(datatable.API.params.sort.sort);
+//
+// 	var data =JSON.parse(JSON.stringify($('#filterForm').serializeArray()));
+//
+// 	console.log(data);
+// 	WebApp.post('distributors/datatable',data,function(response){
+// 		console.log(response)
+// 		datatable.destroy();
+// 		datatable.reload();
+// 	});
+// }
 KTDatatableDistributors.init();

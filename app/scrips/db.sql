@@ -46,3 +46,88 @@ ON CONFLICT DO NOTHING;
 insert into onex."productCatalogue" ("productId", "catalogueId")
 select p.id, c.id from onex.catalogue c
                            join public.products p on p."productrangeId" = c."legacyProductRangeId"
+
+
+## START {Mubasher} {22-02-2021}
+
+alter table onex.message add "actionStatus" int default 0 not null;
+
+create function "getMessages"(id bigint DEFAULT NULL::bigint)
+    returns TABLE("messageId" bigint, "senderCompany" character varying, "senderCountry" character varying, "senderType" character varying, "receiverCompany" character varying, "sentOnDate" timestamp without time zone, subject character varying, content text, "actionStatus" integer)
+    language plpgsql
+as
+$$
+BEGIN
+    return query
+        SELECT m.id             as "messageId",
+               scom."Name"      AS "senderCompany",
+               ct."Name"        AS "senderCountry",
+               au."companyType" AS "senderType",
+               rcom."Name"      AS "receiverCompany",
+               m."createdAt"    AS "sentOnDate",
+               m.subject,
+               m.content,
+               m."actionStatus"
+        FROM onex.message m
+                 JOIN production."Company" scom ON scom."ID" = m."fromCompanyId"
+                 JOIN auth."user" au on au.id = m."fromUserId"
+                 JOIN setup."Country" ct ON scom."CountryID" = ct."ID"
+                 JOIN production."Company" rcom ON rcom."ID" = m."toCompanyId"
+        WHERE CASE WHEN $1 NOTNULL THEN m.id = $1 ELSE 1=1 END
+        ORDER BY m."createdAt" DESC;
+END;
+$$;
+
+alter function "getMessages"(bigint) owner to aumet_user;
+
+create function "getMessagesUser"(id bigint DEFAULT NULL::bigint)
+    returns TABLE("messageUserId" bigint, "displayName" character varying, "authUserId" bigint, "userCompanyName" character varying, "userCompanyId" bigint)
+    language plpgsql
+as
+$$
+BEGIN
+    CASE WHEN $1 NOTNULL THEN
+        return query select distinct m."fromUserId" "messageFromUserId",
+                                     u."displayName",
+                                     u.id           "authFromUserId",
+                                     com."Name"     "fromUserCompanyName",
+                                     com."ID"       "fromUserCompanyId"
+                     from onex.message m
+                              join auth."user" u on u.id = m."fromUserId"
+                              join onex."companyUser" cu on cu."userId" = m."fromUserId"
+                              join production."Company" com on com."ID" = cu."companyId";
+        ELSE
+            return query select distinct m."toUserId" "messageToUserId",
+                                         u."displayName",
+                                         u.id         "authToUserId",
+                                         com."Name"   "toUserCompanyName",
+                                         com."ID"     "toUserCompanyId"
+                         from onex.message m
+                                  join auth."user" u on u.id = m."toUserId"
+                                  join onex."companyUser" cu on cu."userId" = m."toUserId"
+                                  join production."Company" com on com."ID" = cu."companyId";
+        END CASE;
+END;
+$$;
+
+alter function "getMessagesUser"(bigint) owner to aumet_user;
+
+/*create view onex."vwAllMessages"
+            ("messageId", "senderCompany", "senderCountry", "senderType", "receiverCompany", "sentOnDate")
+as
+SELECT m.id             as "messageId",
+       scom."Name"      AS "senderCompany",
+       ct."Name"        AS "senderCountry",
+       au."companyType" AS "senderType",
+       rcom."Name"      AS "receiverCompany",
+       m."createdAt"    AS "sentOnDate"
+FROM onex.message m
+         LEFT JOIN production."Company" scom ON scom."ID" = m."fromCompanyId"
+         LEFT JOIN auth."user" au on au.id = m."fromUserId"
+         LEFT JOIN setup."Country" ct ON scom."CountryID" = ct."ID"
+         LEFT JOIN production."Company" rcom ON rcom."ID" = m."toCompanyId"
+ORDER BY m."createdAt" DESC;
+
+alter table onex."vwAllMessages" owner to aumet_user;*/
+
+## END {Mubasher} {22-02-2021}
