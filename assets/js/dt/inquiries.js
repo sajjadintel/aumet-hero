@@ -1,6 +1,46 @@
 'use strict';
+
+// Date range picker with time picker
+$('#rangetime').daterangepicker({
+	autoUpdateInput: false,
+	timePicker: true,
+	locale: {
+		format: 'MM/DD/YYYY hh:mm A',
+		cancelLabel: 'Clear',
+		applyLabel: 'OK'
+	}
+});
+
+//Setting fields in hidden fields
+$('#rangetime').on('apply.daterangepicker', function(ev, picker) {
+	$(this).val(picker.startDate.format('MM/DD/YYYY hh:mm A') + ' - ' + picker.endDate.format('MM/DD/YYYY hh:mm A'));
+
+});
+$('#boOnly').select2().on('select2:selecting', function (e) {
+	$('#boOnlyHidden').val(e.params.args.data.id);
+});
+$('#senderType').select2().on('select2:selecting', function (e) {
+	$('#senderTypeHidden').val(e.params.args.data.id);
+});
+$('#inquiryStatus').select2().on('select2:selecting', function (e) {
+	$('#inquiryStatusHidden').val(e.params.args.data.id);
+});
+$('#inquirySenderUser').select2().on('select2:selecting', function (e) {
+	$('#inquirySenderUserHidden').val(e.params.args.data.id);
+});
+$('#inquiryReceiverUser').select2().on('select2:selecting', function (e) {
+	$('#inquiryReceiverUserHidden').val(e.params.args.data.id);
+});
+$('#kt_datepicker_2').daterangepicker({
+}, function(start, end, label) {
+	console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+});
+
+//reset form
+$('#filterForm').trigger("reset");
+
 // Class definition
-var KTDatatableMyProducts = (function() {
+var KTDatatableInquiry = (function() {
 	// Private functions
 	var _init = function() {
 		var datatable = $('#kt_datatableInquiries').KTDatatable({
@@ -129,19 +169,31 @@ var KTDatatableMyProducts = (function() {
 			]
 		});
 		$('#submitButton').click(function(event){
-			distributorFormSubmit();
+			console.log('click');
+			var inquirySend = $("input[name='boOnly']:checked").val();
+			var boOnly = $('#filterForm').find('input[name="boOnly"]').val();
+			var senderType = $('#filterForm').find('input[name="senderType"]').val();
+			var inquiryStatus = $('#filterForm').find('input[name="inquiryStatus"]').val();
+			var RegistrationDate = $('#filterForm').find('input[name="RegistrationDate"]').val();
+			var inquirySenderUser = $('#filterForm').find('input[name="inquirySenderUser"]').val();
+			var inquiryReceiverUser = $('#filterForm').find('input[name="inquiryReceiverUser"]').val();
+			datatable.setDataSourceParam('boOnly', boOnly);
+			datatable.setDataSourceParam('senderType', senderType);
+			datatable.setDataSourceParam('inquirySend', inquirySend);
+			datatable.setDataSourceParam('inquiryStatus', inquiryStatus);
+			datatable.setDataSourceParam('RegistrationDate', RegistrationDate);
+			datatable.setDataSourceParam('inquirySenderUser', inquirySenderUser);
+			datatable.setDataSourceParam('inquiryReceiverUser', inquiryReceiverUser);
+			console.log(datatable);
+			WebApp.block();
+			datatable.reload();
 		});
-		$('#kt_datatableDistributors').on('datatable-on-goto-page', function(){
-			distributorFormSubmit();
+		$('#kt_datatableInquiries').on('datatable-on-ajax-done',function(){
+			WebApp.unblock();
 		});
-		function distributorFormSubmit(){
-			$('#pages').val(datatable.API.params.pagination.pages);
-			$('#page').val(datatable.API.params.pagination.page);
-			$('#perpage').val(datatable.API.params.pagination.perpage);
-			$('#total').val(datatable.API.params.pagination.total);
-			var formData =JSON.parse(JSON.stringify($('#filterForm').serializeArray()));
-			WebApp.post('inquiries/datatable',formData);
-		}
+		$('#kt_datatableInquiries').on('datatable-on-ajax-fail',function(){
+			WebApp.unblock();
+		});
 	};
 
 	var _disapproveMessage = function(_id) {
@@ -171,10 +223,15 @@ var KTDatatableMyProducts = (function() {
 		viewMessage: function(_id) {
 			_viewMessage(_id);
 		},
+		resetDataTable: function(_id) {
+			$('#filterForm').trigger("reset");
+			WebApp.block();
+			$('#submitButton').trigger('click');
+		},
 	};
 
 })();
 
 jQuery(document).ready(function() {
-	KTDatatableMyProducts.init();
+	KTDatatableInquiry.init();
 });

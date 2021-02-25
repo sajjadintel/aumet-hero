@@ -12,6 +12,8 @@ class InquiryController extends Controller
         if (!$this->f3->ajax()) {
             $this->renderLayout("inquiries");
         } else {
+            $this->f3->set('arrToUser',  AumetDBRoutines::getMessagesUsers());
+            $this->f3->set('arrFromUser',  AumetDBRoutines::getMessagesUsers(1));
             $this->webResponse->setData(View::instance()->render("inquiry/list.php"));
             echo $this->webResponse->getJSONResponse();
         }
@@ -24,24 +26,27 @@ class InquiryController extends Controller
         $where = '1=1';
         $boOnly = $this->f3->get('POST.boOnly');
         $rangeTime = $this->f3->get('POST.rangeTime');
-        $senderType = $this->f3->get('POST.senderType');
-        $inquiryStatus = $this->f3->get('POST.inquiryStatus');
-        $inquirySenderUser = $this->f3->get('POST.inquirySenderUser');
-        $inquiryReceiverUser = $this->f3->get('POST.inquiryReceiverUser');
+        $senderType = $this->f3->get('POST.senderTypeHidden');
+        $inquiryStatus = $this->f3->get('POST.inquiryStatusHidden');
+        $RegistrationDate = $this->f3->get('POST.RegistrationDateHidden');
+        $inquirySenderUser = $this->f3->get('POST.inquirySenderUserHidden');
+        $inquiryReceiverUser = $this->f3->get('POST.inquiryReceiverUserHidden');
 
         if($boOnly){
-            $where .=' AND "senderType" = "distributor"';
+            //$where .=' AND "senderType" = "distributor"';
         }
-        if($rangeTime) {
-            $dt                 = explode('-', $rangeTime);
-            $end_date_time      = date('Y-m-d', strtotime(trim($dt[1])));
-            $start_date_time    = date('Y-m-d', strtotime(trim($dt[0])));
-            if ($start_date_time != '' && $end_date_time != '') {
-                $where.= " AND DATE(sentOnDate) BETWEEN '" . $start_date_time . "' AND '" . $end_date_time . "'";
+        if($RegistrationDate){
+            $arrDate = explode('-',$RegistrationDate);
+            $date = new DateTime($arrDate[0]);
+            $startDate = $date->format('Y-m-d'); // 31-07-2012
+            if(isset($arrDate[1])){
+                $date = new DateTime($arrDate[1]);
+                $endDate = $date->format('Y-m-d');
             }
+
         }
         if($senderType){
-            $where .=' AND "senderType" = "'.$senderType.'"';
+            $where .=" AND \"senderType\" = ".$senderType;
         }
         if($inquiryStatus){
             $where .=' AND "actionStatus" = '.$inquiryStatus;

@@ -650,25 +650,18 @@ class Controller
         $datatable = array_merge(['pagination' => [], 'sort' => [], 'query' => []], $_REQUEST);
         $sort  = !empty($datatable['sort']['sort']) ? $datatable['sort']['sort'] : $sortType;
         $field = !empty($datatable['sort']['field']) ? $datatable['sort']['field'] : ($sortBy ? $sortBy : 'ID');
-
         $page    = !empty($datatable['pagination']['page']) ? (int)$datatable['pagination']['page'] : 1;
         $perpage = !empty($datatable['pagination']['perpage']) ? (int)$datatable['pagination']['perpage'] : 10;
-
         $pages = 1;
-
         $total = $objModel->getDatatableCount($where);
-
         // $perpage 0; get all data
         if ($perpage > 0) {
             $pages  = ceil($total / $perpage); // calculate total pages
             $page   = max($page, 1); // get 1 page when $_REQUEST['page'] <= 0
             $page   = min($page, $pages); // get last page when $_REQUEST['page'] > $totalPages
         }
-
         $page = $page < 1 ? 1: $page;
-
         $data = $objModel->getDatatableData($where, $page, $perpage, $field, $sort);
-
 /*
         // search filter by keywords
         $filter = isset($datatable['query']['generalSearch']) && is_string($datatable['query']['generalSearch'])
