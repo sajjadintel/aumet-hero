@@ -124,26 +124,26 @@ var KTDatatableInquiry = (function() {
 				{
 					field: 'actionStatus',
 					title: 'Status',
-					width: 55,
+					width: 100,
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
 						var temp = '';
 						switch (row.actionStatus){
 							case 0:
-								temp = '<span class="label label-md label-light-primary label-inline">Pending</span>';
+								temp = '<span class="label font-weight-bold label-lg  label-light-warning label-inline">Pending</span>';
 								break;
 							case 1:
-								temp = '<span class="label label-md label-light-success label-inline">Sent</span>';
+								temp = '<span class="label font-weight-bold label-lg  label-success label-inline">Sent</span>';
 								break;
 							case 2:
-								temp = '<span class="label label-md label-light-info label-inline">Replied</span>';
+								temp = '<span class="label font-weight-bold label-lg label-light-info label-inline">Replied</span>';
 								break;
 							case 3:
-								temp = '<span class="label label-md label-light-warning label-inline">Locked</span>';
+								temp = '<span class="label font-weight-bold label-lg label-light-danger label-inline">Locked</span>';
 								break;
 							case 4:
-								temp = '<span class="label label-md label-light-danger label-inline">Disapproved</span>';
+								temp = '<span class="label font-weight-bold label-lg label-danger label-inline">Disapproved</span>';
 								break;
 						}
 						return temp;
@@ -157,9 +157,9 @@ var KTDatatableInquiry = (function() {
 					autoHide: false,
 					template: function(row) {
 						return (
-							'<a href="javascript:;" class="btn btn-outline-primary fab fa-readme" title="View Inquiry" onclick="KTDatatableMyProducts.viewMessage('+ row.messageId +')"></a>' +
-							'<a href="javascript:;" class="btn btn-outline-primary ml-5 fa fa-check" title="Approve" onclick="KTDatatableMyProducts.approveMessage('+ row.messageId +')"></a>' +
-							'<a href="javascript:;" class="btn btn-outline-primary ml-5 fa fa-times" title="Disapprove" onclick="KTDatatableMyProducts.disapproveMessage('+ row.messageId +')"></a>'
+							'<a href="javascript:;" class="btn btn-outline-secondary fab fa-readme" title="View Inquiry" onclick="KTDatatableInquiry.viewMessage('+ row.messageId +')"></a>' +
+							'<a href="javascript:;" class="btn btn-outline-primary ml-5" title="Approve" onclick="KTDatatableInquiry.approveMessage('+ row.messageId +')"> <i class="ki ki-bold-check-1 icon-sm"></i></a>' +
+							'<a href="javascript:;" class="btn btn-outline-danger ml-5" title="Disapprove" onclick="KTDatatableInquiry.disapproveMessage('+ row.messageId +')"> <i class="ki ki-bold-close icon-sm"></a>'
 						);
 					}
 				}
@@ -196,17 +196,18 @@ var KTDatatableInquiry = (function() {
 	};
 
 	var _disapproveMessage = function(_id) {
-		WebApp.loadPartialPage("#genericModalContent", "inquiry/"+_step);
+		WebApp.get( "inquiry/disapprove/"+_id,KTDatatableInquiry.submitCallback);
 	}
 
 	var _approveMessage = function(_id) {
-		WebApp.loadPartialPage("#genericModalContent", "inquiry/"+_step);
+		WebApp.get( "inquiry/approve/"+_id,KTDatatableInquiry.submitCallback);
 	}
 
 	var _viewMessage = function(_id) {
 		$("#genericModal").modal("show");
 		WebApp.loadPartialPage("#genericModalContent", "inquiry/"+_id);
 	}
+
 
 	return {
 		// Public functions
@@ -227,10 +228,21 @@ var KTDatatableInquiry = (function() {
 			WebApp.block();
 			$('#submitButton').trigger('click');
 		},
+		submitCallback: function(webResponse) {
+			if(webResponse.errorCode == 0){
+				WebApp.alertSuccess(webResponse.message);
+			}else {
+				WebApp.alertError(webResponse.message);
+			}
+		},
 	};
 
 })();
 
 jQuery(document).ready(function() {
+	function disapproveModel(webResponse){
+		WebApp.alertSuccess(webResponse.message);
+	}
+
 	KTDatatableInquiry.init();
 });
