@@ -11,10 +11,5 @@ class InquiryView extends BaseModel
         parent::__construct($dbConnectionAumet, 'onex.vwMessages');
     }
 
-    public function getById($id)
-    {
-        return parent::getByField('"messageId"', $id);
-    }
-
 
 }

@@ -20,11 +20,41 @@ class InquiryController extends Controller
     /**
      * Get inquiries datatable
      */
-    function getInquiries()
-    {
-        //$result=[];
-        //$data  = AumetDBRoutines::getMessages();
-        $result = $this->getDatatable((new InquiryView()),'1=1', 'sentOnDate', 'desc');
+    function getInquiries(){
+        $where = '1=1';
+        $boOnly = $this->f3->get('POST.boOnly');
+        $rangeTime = $this->f3->get('POST.rangeTime');
+        $senderType = $this->f3->get('POST.senderType');
+        $inquiryStatus = $this->f3->get('POST.inquiryStatus');
+        $inquirySenderUser = $this->f3->get('POST.inquirySenderUser');
+        $inquiryReceiverUser = $this->f3->get('POST.inquiryReceiverUser');
+
+        if($boOnly){
+            $where .=' AND "senderType" = "distributor"';
+        }
+        if($rangeTime) {
+            $dt                 = explode('-', $rangeTime);
+            $end_date_time      = date('Y-m-d', strtotime(trim($dt[1])));
+            $start_date_time    = date('Y-m-d', strtotime(trim($dt[0])));
+            if ($start_date_time != '' && $end_date_time != '') {
+                $where.= " AND DATE(sentOnDate) BETWEEN '" . $start_date_time . "' AND '" . $end_date_time . "'";
+            }
+        }
+        if($senderType){
+            $where .=' AND "senderType" = "'.$senderType.'"';
+        }
+        if($inquiryStatus){
+            $where .=' AND "actionStatus" = '.$inquiryStatus;
+        }
+        if($inquirySenderUser){
+            $where .=' AND "senderUser" = '.$inquirySenderUser;
+        }
+        if($inquiryReceiverUser){
+            $where .=' AND "receiverUser" = '.$inquiryReceiverUser;
+        }
+
+
+        $result = $this->getDatatable((new InquiryView()), $where, 'sentOnDate', 'desc');
         echo json_encode($result);
     }
 

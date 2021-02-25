@@ -68,8 +68,8 @@
                 </div>
                 <select class="form-control select2 col-md-8 " id="senderType" name="status">
                     <option value=""></option>
-                    <option value='0'>Manufacturer</option>
-                    <option value='1'>Distributor</option>
+                    <option value='manufacturer'>Manufacturer</option>
+                    <option value='distributor'>Distributor</option>
                 </select>
             </div>
         </div>
@@ -82,7 +82,7 @@
                         <i class="la la-calendar-check-o"></i>
                     </span>
                 </div>
-                <input type="text" class="form-control pull-right" readonly="readonly" name="dtr" id="rangetime" placeholder="Select Date and Time range" value="<?php echo ($dtr ? $dtr : ''); ?>" style="background-color: #fff;">
+                <input type="text" class="form-control pull-right" readonly="readonly" name="dtr" id="rangeTime" placeholder="Select Date and Time range" value="<?php echo ($dtr ? $dtr : ''); ?>" style="background-color: #fff;">
             </div>
         </div>
         <!--From Business Opportunity-->
@@ -90,7 +90,7 @@
             <label>From Business Opportunity Only :</label>
             <div class="radio-inline">
                 <label class="radio radio-solid">
-                    <input type="radio" name="BOonly" value="2">
+                    <input type="radio" name="boOnly" value="2">
                     <span></span>Yes
                 </label>
             </div>

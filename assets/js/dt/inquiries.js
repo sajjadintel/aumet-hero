@@ -1,8 +1,6 @@
-/*
 'use strict';
-
-var KTDatatableInquiry = (function() {
-
+// Class definition
+var KTDatatableMyProducts = (function() {
 	// Private functions
 	var _init = function() {
 		var datatable = $('#kt_datatableInquiries').KTDatatable({
@@ -22,127 +20,6 @@ var KTDatatableInquiry = (function() {
 					webstorage: false,
 				},
 			},
-
-			// layout definition
-			layout: {
-				scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
-				footer: false, // display/hide footer
-			},
-
-			// column sorting
-			sortable: true,
-
-			pagination: true,
-
-			search: {
-				input: $('#kt_datatable_search_query'),
-				key: 'generalSearch'
-			},
-
-			// columns definition
-			columns: [
-				{
-					field: 'senderCompany',
-					title: 'Sender Company',
-					sortable: true,
-					autoHide: false,
-					template: function(row) {
-						return row.senderCompany;
-					}
-				},
-				{
-					field: 'senderCountry',
-					title: 'Sender Country',
-					sortable: true,
-					autoHide: false,
-					template: function(row) {
-						return row.senderCountry;
-					}
-				},
-				{
-					field: 'senderType',
-					title: 'Sender Type',
-					sortable: true,
-					autoHide: false,
-					template: function(row) {
-						return row.senderType;
-					}
-				},
-				{
-					field: 'receiverCompany',
-					title: 'Receiver Company',
-					sortable: true,
-					autoHide: false,
-					template: function(row) {
-						return row.receiverCompany;
-					}
-				},
-				{
-					field: 'sentOnDate',
-					title: 'Sent On Date',
-					sortable: true,
-					autoHide: false,
-					template: function(row) {
-						return row.sentOnDate;
-					}
-				},
-				{
-					field: 'Actions',
-					title: 'Actions',
-					sortable: false,
-
-					width: 200,
-					autoHide: false,
-					template: function(row) {
-						return (
-							'<a href="javascript:;" class="btn btn-primary mr-5" title="Edit" onclick="KTDatatableInquiry.edit('+ row.messageId +')">Edit</a>' +
-							'<a href="javascript:;" class="btn btn-outline-primary" title="View" onclick="KTDatatableInquiry.view('+ row.messageId +')">View</a>'
-						);
-					}
-				}
-			]
-		});
-	};
-
-	return {
-		// Public functions
-		init: function() {
-			_init();
-		},
-		edit: function(_id) {
-			WebApp.loadPage('inquiry/' + _id + '/edit' );
-		},
-		view: function(_id) {
-			WebApp.loadPage('inquiry/' + _id );
-		},
-	};
-})();
-
-KTDatatableInquiry.init();*/
-
-'use strict';
-// Class definition
-
-var KTDatatableMyProducts = (function() {
-
-	// Private functions
-	var _init = function() {
-		var datatable = $('#kt_datatableInquiries').KTDatatable({
-			data: {
-				type: 'remote',
-				source: {
-					read: {
-						url: HOST_URL + '/' + docLang + '/inquiries/datatable' + '?_t=' + Date.now()
-					}
-				},
-				serverPaging: false,
-				serverFiltering: true,
-				serverSorting: false,
-				saveState: {
-					cookie: true,
-					webstorage: true,
-				},
-			},
 			// layout definition
 			layout: {
 				scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
@@ -151,6 +28,10 @@ var KTDatatableMyProducts = (function() {
 			// column sorting
 			sortable: true,
 			pagination: true,
+			buttonInRowClick:function(event) {
+				event.stopPropagation();
+				console.log('Button in the row clicked.');
+			},
 			search: {
 				input: $('#kt_datatable_search_query'),
 				key: 'generalSearch'
@@ -247,7 +128,20 @@ var KTDatatableMyProducts = (function() {
 				}
 			]
 		});
-
+		$('#submitButton').click(function(event){
+			distributorFormSubmit();
+		});
+		$('#kt_datatableDistributors').on('datatable-on-goto-page', function(){
+			distributorFormSubmit();
+		});
+		function distributorFormSubmit(){
+			$('#pages').val(datatable.API.params.pagination.pages);
+			$('#page').val(datatable.API.params.pagination.page);
+			$('#perpage').val(datatable.API.params.pagination.perpage);
+			$('#total').val(datatable.API.params.pagination.total);
+			var formData =JSON.parse(JSON.stringify($('#filterForm').serializeArray()));
+			WebApp.post('inquiries/datatable',formData);
+		}
 	};
 
 	var _disapproveMessage = function(_id) {
@@ -278,9 +172,9 @@ var KTDatatableMyProducts = (function() {
 			_viewMessage(_id);
 		},
 	};
+
 })();
+
 jQuery(document).ready(function() {
-
 	KTDatatableMyProducts.init();
-
 });
