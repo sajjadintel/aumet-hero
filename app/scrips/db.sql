@@ -134,7 +134,7 @@ SELECT m.id                                        AS "messageId",
        CASE
            WHEN ((SELECT count(*) AS count
                   FROM onex.subscription sub
-                  WHERE sub."companyId" = m."toCompanyId")) > 0 AND rcom."Type"::text = 'manufacturer'::text AND
+                  WHERE sub."companyId" = m."toCompanyId")) < 0 AND rcom."Type"::text = 'manufacturer'::text AND
                 m."actionStatus" = 1 THEN 3
            ELSE m."actionStatus"
            END                                     AS "actionStatus",
