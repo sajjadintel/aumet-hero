@@ -136,12 +136,25 @@
                                         </div>
                                         <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
                                     </div>
+
+                                    <div class="col-lg-4">
+                                        <label>Email Needed :</label>
+                                        <div class="radio-inline">
+                                            <label class="radio radio-solid">
+                                                <input type="radio" name="emailNeeded" id="emailNeeded" value="1"><span></span>Yes
+                                            </label>
+                                        </div>
+                                        <span class="form-text text-muted">Inquiries where manufacturer has no email.</span>
+                                    </div>
+
                                     <!--Submit and reset button-->
-                                    <div class="col-lg-8 text-right mb-10">
+                                    <div class="col-lg-4 text-right mb-10">
                                         <a href="javascript:void(0)" type="reset" id="submitButton" class="btn btn-primary mr-2">Submit</a>
                                         <a href="javascript:void(0)" type="reset" onclick="KTDatatableInquiry.resetDataTable()" class="btn btn-secondary">Clear</a>
                                     </div>
+
                                 </div>
+
                             </div>
                             <!--<div class="card-footer pb-1 pt-2 ">
                                 <div class="row">

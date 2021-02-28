@@ -169,12 +169,24 @@ var KTDatatableInquiry = (function() {
 					overflow: 'visible',
 					autoHide: false,
 					template: function(row) {
+						let emailNeeded = '';
+						if(row.noOfRcverUsers==0){
+							emailNeeded = '<a href="javascript:;" class="btn btn-outline-primary ml-5 fa fa-envelope" title="Add Email" onclick="KTDatatableInquiry.addEmail('+ row.messageId +')"></a>';
+						}
 						var temp='<a href="javascript:;" class="btn btn-outline-secondary fab fa-readme" title="View Inquiry" onclick="KTDatatableInquiry.viewMessage('+ row.messageId +')"></a>';
 						if(row.actionStatus == 0 && row.parentId == 0){
 							temp += '<a href="javascript:;" class="btn btn-outline-primary ml-5" title="Approve" onclick="KTDatatableInquiry.approveMessage('+ row.messageId +')"> <i class="ki ki-bold-check-1 icon-sm"></i></a>' +
 								'<a href="javascript:;" class="btn btn-outline-danger ml-5" title="Disapprove" onclick="KTDatatableInquiry.disapproveMessage('+ row.messageId +')"> <i class="ki ki-bold-close icon-sm"></a>';
 						}
+						temp = emailNeeded;
 						return temp;
+
+						return (
+							'<a href="javascript:;" class="btn btn-outline-secondary fab fa-readme" title="View Inquiry" onclick="KTDatatableInquiry.viewMessage('+ row.messageId +')"></a>' +
+							'<a href="javascript:;" class="btn btn-outline-primary ml-5" title="Approve" onclick="KTDatatableInquiry.approveMessage('+ row.messageId +')"> <i class="ki ki-bold-check-1 icon-sm"></i></a>' +
+							'<a href="javascript:;" class="btn btn-outline-danger ml-5" title="Disapprove" onclick="KTDatatableInquiry.disapproveMessage('+ row.messageId +')"> <i class="ki ki-bold-close icon-sm"></a>' +
+							emailNeeded
+						);
 					}
 				}
 			]
@@ -189,7 +201,7 @@ var KTDatatableInquiry = (function() {
 			var inquiryDate = $('#filterForm').find('input[name="inquiryDate"]').val();
 			var boOnly = $('#filterForm').find('input[name="boOnly"]').val();
 			var manufacturerType = $('#filterForm').find('input[name="manufacturerTypeHidden"]').val();
-
+			var emailNeeded = ($('#filterForm #emailNeeded:checked').length)?1:0;
 
 			datatable.setDataSourceParam('inquiryStatusHidden', inquiryStatusHidden);
 			datatable.setDataSourceParam('inquiryReceiverUserHidden', inquiryReceiverUserHidden);
@@ -198,6 +210,7 @@ var KTDatatableInquiry = (function() {
 			datatable.setDataSourceParam('inquiryDate', inquiryDate);
 			datatable.setDataSourceParam('boOnly', boOnly);
 			datatable.setDataSourceParam('manufacturerTypeHidden', manufacturerType);
+			datatable.setDataSourceParam('emailNeeded', emailNeeded);
 
 			console.log(datatable);
 			WebApp.block();
@@ -224,6 +237,64 @@ var KTDatatableInquiry = (function() {
 		WebApp.loadPartialPage("#genericModalContent", "inquiry/"+_id);
 	}
 
+	var _submitNewEmail = function(){
+		var msgId = $('#msgId').val();
+		var newEmail = $('#newEmail').val();
+		if(newEmail==''){
+			$('#newEmailError').text('Please add email');
+			return false;
+		}
+
+		let _url = '/' + docLang + '/inquiry/add_email';
+		$.ajax({
+			url: _url + '?_t=' + Date.now(),
+			type: 'POST',
+			dataType: 'json',
+			data: {'msgId':msgId,'email':newEmail},
+			async: true,
+		})
+		.done(function (webResponse) {
+			if (webResponse && typeof webResponse === 'object') {
+				if (webResponse.errorCode == 200) {
+					WebApp.alertSuccess(webResponse.message);
+					$("#genericModal").modal("hide");
+				}else{
+					WebApp.alertError(webResponse.message);
+				}
+			} else {
+				WebApp.alertError(webResponse.message);
+			}
+		});
+	}
+
+	var _addEmail = function(_id) {
+		var modelConent = `<div class="modal-header">
+			<h5 class="modal-title" id="inquirySubject">Add Email</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<i aria-hidden="true" className="ki ki-close"></i>
+			</button>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-9">
+					<label id="newEmailError" class="text-danger"></label>
+					<input type="hidden" id="msgId" name="msgId" value="${_id}" /> 
+					<input type="email" id="newEmail" name="newEmail" class="form-control" /> 
+				</div>
+				<div class="col-3">
+					<label id="btnLabel" class="text-danger"></label>
+					<button type="button" name="add_email" class="btn btn-primary mt-6" onclick="KTDatatableInquiry.submitNewEmail()">Add Email</button>
+				</div>
+        	</div>   
+        </div>
+        <div class="modal-footer">
+        <label class="text-danger"></label>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>`;
+
+		$('#genericModalContent').html(modelConent);
+		$("#genericModal").modal("show");
+	}
 
 	return {
 		// Public functions
@@ -238,6 +309,12 @@ var KTDatatableInquiry = (function() {
 		},
 		viewMessage: function(_id) {
 			_viewMessage(_id);
+		},
+		addEmail: function(_id) {
+			_addEmail(_id);
+		},
+		submitNewEmail: function() {
+			_submitNewEmail();
 		},
 		resetDataTable: function(_id) {
 			$('#filterForm').trigger("reset");
