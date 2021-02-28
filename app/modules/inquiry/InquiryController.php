@@ -22,74 +22,118 @@ class InquiryController extends Controller
     /**
      * Get inquiries datatable
      */
-    function getInquiries(){
+    function getInquiries()
+    {
         $where = '1=1';
         $inquiryStatus = $this->f3->get('POST.inquiryStatusHidden');
         $inquiryReceiverUser = $this->f3->get('POST.inquiryReceiverUserHidden');
         $inquirySenderUser = $this->f3->get('POST.inquirySenderUserHidden');
         $senderType = $this->f3->get('POST.senderTypeHidden');
-        $inquiryDate= $this->f3->get('POST.inquiryDate');
+        $inquiryDate = $this->f3->get('POST.inquiryDate');
         $boOnly = $this->f3->get('POST.boOnly');
         $manufacturerType = $this->f3->get('POST.manufacturerTypeHidden');
         $startDate = '';
         $endDate = '';
+        $emailNeeded = intval($this->f3->get('POST.emailNeeded')) ;
 
-        if($inquiryStatus){
-            switch ($inquiryStatus){
+        if ($inquiryStatus) {
+            switch ($inquiryStatus) {
                 case 1:
-                    $where .=' AND "actionStatus" = 0';
+                    $where .= ' AND "actionStatus" = 0';
                     break;
                 case 2:
-                    $where .=' AND "actionStatus" = 1';
+                    $where .= ' AND "actionStatus" = 1';
                     break;
                 case 3:
-                    $where .=' AND "actionStatus" = 2';
+                    $where .= ' AND "actionStatus" = 2';
                     break;
                 case 4:
-                    $where .=' AND "actionStatus" = 3';
+                    $where .= ' AND "actionStatus" = 3';
                     break;
                 case 5:
-                    $where .=' AND "actionStatus" = 4';
+                    $where .= ' AND "actionStatus" = 4';
                     break;
             }
         }
-        if($inquiryReceiverUser){
-            $where .=' AND "toUserId" = '.$inquiryReceiverUser;
+        if ($inquiryReceiverUser) {
+            $where .= ' AND "toUserId" = ' . $inquiryReceiverUser;
         }
-        if($inquirySenderUser){
-            $where .=' AND "fromUserId" = '.$inquirySenderUser;
+        if ($inquirySenderUser) {
+            $where .= ' AND "fromUserId" = ' . $inquirySenderUser;
         }
-        if($senderType){
-            $where .=" AND \"senderType\" = '".$senderType."'";
+        if ($senderType) {
+            $where .= " AND \"senderType\" = '" . $senderType . "'";
         }
-        if($inquiryDate){
-            $arrDate = explode('-',$inquiryDate);
+        if ($inquiryDate) {
+            $arrDate = explode('-', $inquiryDate);
             $date = new DateTime($arrDate[0]);
             $startDate = $date->format('Y-m-d'); // 31-07-2012
-            if(isset($arrDate[1])){
+            if (isset($arrDate[1])) {
                 $date = new DateTime($arrDate[1]);
                 $endDate = $date->format('Y-m-d');
             }
-            $where .=' AND DATE("sentOnDate") >='."'".$startDate."'";
-            if($endDate){
-                $where .=' AND DATE("sentOnDate") <= '."'".$endDate."'";
+            $where .= ' AND DATE("sentOnDate") >=' . "'" . $startDate . "'";
+            if ($endDate) {
+                $where .= ' AND DATE("sentOnDate") <= ' . "'" . $endDate . "'";
             }
         }
-        if($boOnly){
+        if ($boOnly) {
             //$where .=' AND "senderType" = "distributor"';
         }
-        if($manufacturerType){
-            if($manufacturerType == 2) {
+        if($emailNeeded){
+         $where .= ' AND "noOfRcverUsers" = 0';
+        }
+
+
+        if ($manufacturerType) {
+            if ($manufacturerType == 2) {
                 $where .= ' AND "subscription" = 1';
-            }elseif ($manufacturerType == 3){
+            } elseif ($manufacturerType == 3) {
                 $where .= ' AND "subscription" = 0';
             }
+        }
+        if ($where) {
+            $result = $this->getDatatable((new InquiryView()), $where, 'sentOnDate', 'desc');
+        } else {
+            $result = $this->getDatatable((new InquiryView()), '', 'sentOnDate', 'desc');
         }
         $result = $this->getDatatable((new InquiryView()), $where, 'sentOnDate', 'desc');
 
         echo json_encode($result);
     }
+    /**
+     * Get inquiries datatable
+     */
+    function addEmail(){
+        $msgId = $this->f3->get('POST.msgId');
+        $newEmail = $this->f3->get('POST.email');
 
+        $objMessage = (new Message())->getById($msgId);
+        $objInquiryDetail = (new InquiryView())->getWhere('"messageId"='.$msgId);
+        $toCompanyId = $objMessage->toCompanyId;
+        $dbUser = new AumetUser();
+        $ojbUser = $dbUser->getWhere('"Email"=\''.$newEmail.'\'');
+
+        if(!$ojbUser){
+            $dbUser->FirstName = $objInquiryDetail->receiverCompany;
+            $dbUser->Email = $newEmail;
+            $dbUser->CompanyID = $toCompanyId;
+            $dbUser->add();
+
+            //Send email to new user
+            $inBox = new InboxController();
+            $res = $inBox->sendMessageEmail($objMessage);
+            $this->webResponse->setErrorCode(200);
+            $this->webResponse->setTitle('Email added');
+            $this->webResponse->setMessage('Email added successfully');
+            echo $this->webResponse->getJSONResponse();
+        }else{
+            $this->webResponse->setErrorCode(404);
+            $this->webResponse->setTitle('email already exist');
+            $this->webResponse->setMessage('User with this email already exist');
+            echo $this->webResponse->getJSONResponse();
+        }
+    }
     /**
      * Get single inquiry view
      */

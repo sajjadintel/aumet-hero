@@ -129,6 +129,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-4">
+                                        <label>Email Needed :</label>
+                                        <div class="radio-inline">
+                                            <label class="radio radio-solid">
+                                                <input type="radio" name="emailNeeded" id="emailNeeded" value="1"><span></span>Yes
+                                            </label>
+                                        </div>
+                                        <span class="form-text text-muted">Inquiries where manufacturer has no email.</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-footer pb-1 pt-2 ">
                                 <div class="row">
