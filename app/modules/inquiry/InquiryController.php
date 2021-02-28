@@ -85,18 +85,90 @@ class InquiryController extends Controller
     /**
      * Approve a message
      */
-    function getApprove(){
-        $inquiryId = $this->f3->get("PARAMS.inquiryId");
-        $dbMessage = new Message();
-        $dbMessage->getById($inquiryId);
+    function setApprove(){
+        $inquiryId  = $this->f3->get("PARAMS.inquiryId");
+        $dbMessage  = new Message();
+        $objMessage = $dbMessage->getById($inquiryId);
         if ($dbMessage->dry()) {
             $this->webResponse->setErrorCode(500);
             $this->webResponse->setMessage("Inquiry not found");
         } else {
+
             //Approved
             $dbMessage->actionStatus = 1;
             $dbMessage->update();
-            $this->webResponse->setMessage("Inquiry approved successfully");
+
+            /**
+             * Check if message is sent via dialogue box then send email as well.
+             */
+            if($objMessage->messageDialogue == 1) {
+                $this->webResponse->setMessage("Inquiry approved and email sent successfully.");
+                $arrContacts = (new AumetUser())->getEmailListByCompanyId($dbMessage->toCompanyId);
+                if (count($arrContacts) > 0) {
+                    //list($status,$exception) = $this->sendMessageEmail($objMessage, $arrContacts);
+                    $messageSent = true;
+                    $messageException = null;
+                    try {
+                        $user               = (new AuthAumetUser())->getById($objMessage->fromUserId);
+                        if($user) {
+                            $objCompanyUser = (new CompanyUser())->getByUserId($user->id);
+                            if($objCompanyUser) {
+                                $objAumetCompany = (new Company())->getById($objCompanyUser->companyId);
+                                global $emailSender;
+                                $bccEmails = [];
+                                if ((getenv('USE_REAL_EMAILS') == 1) && (getenv('ENV') == 'prod')) {
+                                    $bccEmails = [
+                                        "a.atrash@aumet.com" => "Alaa",
+                                        "m.issa@aumet.com" => "Mohammed",
+                                        "r.abdelhadi@aumet.com" => "Raseel"
+                                    ];
+                                }
+                                $this->f3->set("emailType", "message");
+                                $this->f3->set('objMessage', $objMessage);
+                                $this->f3->set('fromName', $user->displayName);
+                                $this->f3->set('userPic', $user->photoUrl);
+                                $this->f3->set('companyLogo', $objAumetCompany->Logo);
+                                //If manufacturer is sending message to distributor instead of using manufacturer id use it's slug in email View Company Button
+                                if ($objCompanyUser->accessType == Company::TYPE_MANUFACTURER) {
+                                    $this->f3->set('companySlug', 'medical-manufacturers/' . $objAumetCompany->Slug);
+                                }
+                                /*$countryObj =  (new Country())->getById($objAumetCompany->CountryID);
+                                print_r($countryObj);
+                                $this->f3->set('countryName', $countryObj->Name);*/
+                                $this->f3->set('companyType', $objAumetCompany->Type);
+                                $htmlContent = View::instance()->render('email/layout.php');
+                                $response = $emailSender->send("New message @ Aumet from " . $user->displayName, $htmlContent, $arrContacts, null, $bccEmails);
+                                if(!$response){
+                                    $messageSent        = false;
+                                    $messageException   = 'Some thing went wrong while sending email.';
+                                }else{
+                                    $messageSent        = true;
+                                }
+                            }else{
+                                $messageSent        = false;
+                                $messageException   = 'Sender company does not exists';
+                            }
+                        }else{
+                            $messageSent        = false;
+                            $messageException   = 'Sender User does not exists';
+                        }
+                    }catch (Exception $e){
+                        $messageSent        = false;
+                        $messageException   = $e;
+                    }
+                    if(!$messageSent){
+                        $this->webResponse->setErrorCode(500);
+                        $this->webResponse->setMessage("Inquiry approved successfully but unable to send email. $messageException");
+                    }
+                }else{
+                    $this->webResponse->setErrorCode(500);
+                    $this->webResponse->setMessage("Inquiry approved, but no company user to send email to.");
+                }
+            }else{
+                $this->webResponse->setErrorCode(500);
+                $this->webResponse->setMessage("Inquiry approved successfully.");
+            }
+
         }
         echo $this->webResponse->getJSONResponse();
     }
@@ -104,7 +176,7 @@ class InquiryController extends Controller
     /**
      * Disapprove a message
      */
-    function getDisapprove(){
+    function setDisapprove(){
         $inquiryId = $this->f3->get("PARAMS.inquiryId");
         $dbMessage = new Message();
         $dbMessage->getById($inquiryId);
@@ -139,6 +211,68 @@ class InquiryController extends Controller
             return false;
         }
 
+    }
+
+    /**
+     * Send email on approval for message type inquiry only
+     *
+     * @param $objMessage
+     * @param $arrContacts
+     * @return array
+     */
+    function sendMessageEmail($objMessage, $arrContacts)
+    {
+        $messageSent = true;
+        $messageException = null;
+        try {
+            $user               = (new AuthAumetUser())->getById($objMessage->fromUserId);
+            if($user) {
+                $objCompanyUser = (new CompanyUser())->getByUserId($user->id);
+                if($objCompanyUser) {
+                    $objAumetCompany = (new Company())->getById($objCompanyUser->companyId);
+                    global $emailSender;
+                    $bccEmails = [];
+                    if ((getenv('USE_REAL_EMAILS') == 1) && (getenv('ENV') == 'prod')) {
+                        $bccEmails = [
+                            "a.atrash@aumet.com" => "Alaa",
+                            "m.issa@aumet.com" => "Mohammed",
+                            "r.abdelhadi@aumet.com" => "Raseel"
+                        ];
+                    }
+                    $this->f3->set("emailType", "message");
+                    $this->f3->set('objMessage', $objMessage);
+                    $this->f3->set('fromName', $user->displayName);
+                    $this->f3->set('userPic', $user->photoUrl);
+                    $this->f3->set('companyLogo', $objAumetCompany->Logo);
+                    //If manufacturer is sending message to distributor instead of using manufacturer id use it's slug in email View Company Button
+                    if ($objCompanyUser->accessType == Company::TYPE_MANUFACTURER) {
+                        $this->f3->set('companySlug', 'medical-manufacturers/' . $objAumetCompany->Slug);
+                    }
+                    /*$countryObj =  (new Country())->getById($objAumetCompany->CountryID);
+                    print_r($countryObj);
+                    $this->f3->set('countryName', $countryObj->Name);*/
+                    $this->f3->set('companyType', $objAumetCompany->Type);
+                    $htmlContent = View::instance()->render('email/layout.php');
+                    $response = $emailSender->send("New message @ Aumet from " . $user->displayName, $htmlContent, $arrContacts, null, $bccEmails);
+                    if(!$response){
+                        $messageSent        = false;
+                        $messageException   = 'Some thing went wrong while sending email.';
+                    }else{
+                        $messageSent        = true;
+                    }
+                }else{
+                    $messageSent        = false;
+                    $messageException   = 'Sender company does not exists';
+                }
+            }else{
+                $messageSent        = false;
+                $messageException   = 'Sender User does not exists';
+            }
+        }catch (Exception $e){
+            $messageSent        = false;
+            $messageException   = $e;
+        }
+        return array('messageStatus' => $messageSent, 'messageException' => $messageException);
     }
 
     function getTest(){

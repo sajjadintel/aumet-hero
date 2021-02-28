@@ -234,6 +234,7 @@ var KTDatatableInquiry = (function() {
 		submitCallback: function(webResponse) {
 			if(webResponse.errorCode == 0){
 				WebApp.alertSuccess(webResponse.message);
+				window.location.reload();
 			}else {
 				WebApp.alertError(webResponse.message);
 			}
