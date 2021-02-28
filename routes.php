@@ -213,4 +213,8 @@ $f3->route('GET /@language/search/products', 'SearchController->getSearchProduct
 $f3->route('GET /@language/inquiries', 'InquiryController->getInquiriesPage');
 $f3->route('POST /@language/inquiries/datatable', 'InquiryController->getInquiries');
 $f3->route('GET /@language/inquiry/@inquiryId', 'InquiryController->getInquiry');
-$f3->route('GET /@language/inquiry/filters', 'InquiryController->getFilters');
+$f3->route('GET /@language/inquiry/approve/@inquiryId', 'InquiryController->getApprove');
+$f3->route('GET /@language/inquiry/disapprove/@inquiryId', 'InquiryController->getDisapprove');
+
+//Test
+$f3->route('GET /@language/test', 'InquiryController->getTest');
