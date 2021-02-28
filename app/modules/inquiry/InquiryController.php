@@ -30,11 +30,28 @@ class InquiryController extends Controller
         $senderType = $this->f3->get('POST.senderTypeHidden');
         $inquiryDate= $this->f3->get('POST.inquiryDate');
         $boOnly = $this->f3->get('POST.boOnly');
+        $manufacturerType = $this->f3->get('POST.manufacturerTypeHidden');
         $startDate = '';
         $endDate = '';
 
         if($inquiryStatus){
-            $where .=' AND "actionStatus" = '.$inquiryStatus;
+            switch ($inquiryStatus){
+                case 1:
+                    $where .=' AND "actionStatus" = 0';
+                    break;
+                case 2:
+                    $where .=' AND "actionStatus" = 1';
+                    break;
+                case 3:
+                    $where .=' AND "actionStatus" = 2';
+                    break;
+                case 4:
+                    $where .=' AND "actionStatus" = 3';
+                    break;
+                case 5:
+                    $where .=' AND "actionStatus" = 4';
+                    break;
+            }
         }
         if($inquiryReceiverUser){
             $where .=' AND "toUserId" = '.$inquiryReceiverUser;
@@ -43,7 +60,7 @@ class InquiryController extends Controller
             $where .=' AND "fromUserId" = '.$inquirySenderUser;
         }
         if($senderType){
-            $where .=" AND \"senderType\" = ".$senderType;
+            $where .=" AND \"senderType\" = '".$senderType."'";
         }
         if($inquiryDate){
             $arrDate = explode('-',$inquiryDate);
@@ -61,11 +78,15 @@ class InquiryController extends Controller
         if($boOnly){
             //$where .=' AND "senderType" = "distributor"';
         }
-        if($where) {
-            $result = $this->getDatatable((new InquiryView()), $where, 'sentOnDate', 'desc');
-        }else{
-            $result = $this->getDatatable((new InquiryView()), '', 'sentOnDate', 'desc');
+        if($manufacturerType){
+            if($manufacturerType == 2) {
+                $where .= ' AND "subscription" = 1';
+            }elseif ($manufacturerType == 3){
+                $where .= ' AND "subscription" = 0';
+            }
         }
+        $result = $this->getDatatable((new InquiryView()), $where, 'sentOnDate', 'desc');
+
         echo json_encode($result);
     }
 
@@ -97,6 +118,7 @@ class InquiryController extends Controller
             //Approved
             $dbMessage->actionStatus = 1;
             $dbMessage->update();
+            $this->webResponse->setMessage("Inquiry approved successfully.");
 
             /**
              * Check if message is sent via dialogue box then send email as well.
@@ -164,9 +186,6 @@ class InquiryController extends Controller
                     $this->webResponse->setErrorCode(500);
                     $this->webResponse->setMessage("Inquiry approved, but no company user to send email to.");
                 }
-            }else{
-                $this->webResponse->setErrorCode(500);
-                $this->webResponse->setMessage("Inquiry approved successfully.");
             }
 
         }

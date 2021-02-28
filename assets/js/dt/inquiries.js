@@ -35,7 +35,9 @@ $('#kt_datepicker_2').daterangepicker({
 }, function(start, end, label) {
 	console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
 });
-
+$('#manufacturerType').select2().on('select2:selecting', function (e) {
+	$('#manufacturerTypeHidden').val(e.params.args.data.id);
+});
 //reset form
 $('#filterForm').trigger("reset");
 
@@ -65,6 +67,7 @@ var KTDatatableInquiry = (function() {
 				scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
 				footer: false, // display/hide footer
 			},
+
 			// column sorting
 			sortable: true,
 
@@ -177,6 +180,7 @@ var KTDatatableInquiry = (function() {
 			var senderTypeHidden = $('#filterForm').find('input[name="senderTypeHidden"]').val();
 			var inquiryDate = $('#filterForm').find('input[name="inquiryDate"]').val();
 			var boOnly = $('#filterForm').find('input[name="boOnly"]').val();
+			var manufacturerType = $('#filterForm').find('input[name="manufacturerTypeHidden"]').val();
 
 
 			datatable.setDataSourceParam('inquiryStatusHidden', inquiryStatusHidden);
@@ -185,6 +189,7 @@ var KTDatatableInquiry = (function() {
 			datatable.setDataSourceParam('senderTypeHidden', senderTypeHidden);
 			datatable.setDataSourceParam('inquiryDate', inquiryDate);
 			datatable.setDataSourceParam('boOnly', boOnly);
+			datatable.setDataSourceParam('manufacturerTypeHidden', manufacturerType);
 
 			console.log(datatable);
 			WebApp.block();
