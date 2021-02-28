@@ -240,6 +240,27 @@ var KTDatatableInquiry = (function() {
 		},
 		resetDataTable: function(_id) {
 			$('#filterForm').trigger("reset");
+
+			$('#inquiryStatusHidden').val('0');
+			$('#inquiryStatus').val('0');
+			$('#inquiryStatus').trigger('change.select2');
+
+			$('#inquiryReceiverUserHidden').val('0');
+			$('#inquiryReceiverUser').val('0');
+			$('#inquiryReceiverUser').trigger('change.select2');
+
+			$('#inquirySenderUserHidden').val('0');
+			$('#inquirySenderUser').val('0');
+			$('#inquirySenderUser').trigger('change.select2');
+
+			$('#senderTypeHidden').val('0');
+			$('#senderType').val('0');
+			$('#senderType').trigger('change.select2');
+
+			$('#manufacturerTypeHidden').val('0');
+			$('#manufacturerType').val('0');
+			$('#manufacturerType').trigger('change.select2');
+
 			WebApp.block();
 			$('#submitButton').trigger('click');
 		},
