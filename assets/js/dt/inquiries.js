@@ -38,6 +38,7 @@ $('#kt_datepicker_2').daterangepicker({
 $('#manufacturerType').select2().on('select2:selecting', function (e) {
 	$('#manufacturerTypeHidden').val(e.params.args.data.id);
 });
+
 //reset form
 $('#filterForm').trigger("reset");
 
@@ -260,6 +261,10 @@ var KTDatatableInquiry = (function() {
 			$('#manufacturerTypeHidden').val('0');
 			$('#manufacturerType').val('0');
 			$('#manufacturerType').trigger('change.select2');
+
+
+			$("input:radio").val(0);
+			$("input:radio").attr("checked", false);
 
 			WebApp.block();
 			$('#submitButton').trigger('click');

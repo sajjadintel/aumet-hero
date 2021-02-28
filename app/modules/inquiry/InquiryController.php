@@ -23,7 +23,7 @@ class InquiryController extends Controller
      * Get inquiries datatable
      */
     function getInquiries(){
-        $where = '1=1';
+        $where = '1=1 AND "parentId" = 0 ';
         $inquiryStatus = $this->f3->get('POST.inquiryStatusHidden');
         $inquiryReceiverUser = $this->f3->get('POST.inquiryReceiverUserHidden');
         $inquirySenderUser = $this->f3->get('POST.inquirySenderUserHidden');
@@ -76,7 +76,7 @@ class InquiryController extends Controller
             }
         }
         if($boOnly){
-            //$where .=' AND "senderType" = "distributor"';
+            $where .=' AND "hasActiveBO" = 1';
         }
         if($manufacturerType){
             if($manufacturerType == 2) {
