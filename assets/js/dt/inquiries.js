@@ -204,6 +204,7 @@ var KTDatatableInquiry = (function() {
 
 	var _approveMessage = function(_id) {
 		WebApp.get( "inquiry/approve/"+_id,KTDatatableInquiry.submitCallback);
+		window.location.reload();
 	}
 
 	var _viewMessage = function(_id) {
@@ -234,6 +235,7 @@ var KTDatatableInquiry = (function() {
 		submitCallback: function(webResponse) {
 			if(webResponse.errorCode == 0){
 				WebApp.alertSuccess(webResponse.message);
+				window.location.reload();
 			}else {
 				WebApp.alertError(webResponse.message);
 			}
