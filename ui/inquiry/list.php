@@ -43,11 +43,11 @@
                                             <input type="hidden" name="inquiryStatusHidden" id="inquiryStatusHidden">
                                             <select class="form-control select2 col-md-8 " id="inquiryStatus" name="status">
                                                 <option value="">Select</option>
-                                                <option value='0'>Pending</option>
-                                                <option value='1'>Sent</option>
-                                                <option value='2'>Replied</option>
-                                                <option value='3'>Locked</option>
-                                                <option value='4'>Disapproved</option>
+                                                <option value='1'>Pending</option>
+                                                <option value='2'>Sent</option>
+                                                <option value='3'>Replied</option>
+                                                <option value='4'>Locked</option>
+                                                <option value='5'>Disapproved</option>
                                             </select>
                                         </div>
                                     </div>
@@ -104,7 +104,7 @@
                                         </div>
                                     </div>
                                     <!--From Business Opportunity-->
-                                    <div class="col-lg-4">
+                                    <!--<div class="col-lg-4">
                                         <label>From Business Opportunity Only :</label>
                                         <div class="radio-inline">
                                             <label class="radio radio-solid">
@@ -112,6 +112,20 @@
                                             </label>
                                         </div>
                                         <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
+                                    </div>-->
+
+                                    <!--Manufacturer Type-->
+                                    <div class="col-md-4">
+                                        <label>Manufacturer type:</label>
+                                        <div class="input-group">
+                                            <input type="hidden" name="manufacturerTypeHidden" id="manufacturerTypeHidden">
+                                            <select class="form-control select2 col-md-8 " id="manufacturerType" name="manufacturerType">
+                                                <option value="">Select</option>
+                                                <option value='1'>Both</option>
+                                                <option value='2'>Subscribed</option>
+                                                <option value='3'>Non Subscribed</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
