@@ -93,7 +93,7 @@
                                     </div>
                                     <!--Created On Date Range-->
                                     <div class="col-lg-4">
-                                        <label>Registered date:</label>
+                                        <label>Sent date:</label>
                                         <div class="input-group date">
                                             <input type="text" class="form-control" value="" name="inquiryDate" id="kt_datepicker_2" readonly="readonly" placeholder="Select date">
                                             <div class="input-group-append">

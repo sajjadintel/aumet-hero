@@ -82,6 +82,9 @@ class InquiryController extends Controller
         }
     }
 
+    /**
+     * Approve a message
+     */
     function getApprove(){
         $inquiryId = $this->f3->get("PARAMS.inquiryId");
         $dbMessage = new Message();
@@ -98,6 +101,9 @@ class InquiryController extends Controller
         echo $this->webResponse->getJSONResponse();
     }
 
+    /**
+     * Disapprove a message
+     */
     function getDisapprove(){
         $inquiryId = $this->f3->get("PARAMS.inquiryId");
         $dbMessage = new Message();
