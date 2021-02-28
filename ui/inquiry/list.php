@@ -23,10 +23,10 @@
     </div>
 </div>
 
-<div class="d-flex flex-column-fluid pt-10">
+<div class="d-flex flex-column-fluid pt-5">
     <div class="container-fluid">
         <div class="card card-custom">
-            <div class="card-body">
+            <div class="card-body p-0">
                 <div id="inquiryFilters" class="mb-7">
                     <div class="card card-custom shadow-none gutter-b example example-compact">
                         <div class="card-header">
@@ -34,7 +34,7 @@
                         </div>
                         <!--begin::Form-->
                         <form class="form" id="filterForm">
-                            <div class="card-body">
+                            <div class="card-body pb-1 pt-1">
                                 <div class="form-group row">
                                     <!--inquiryStatus-->
                                     <div class="col-md-4">
@@ -42,7 +42,7 @@
                                         <div class="input-group">
                                             <input type="hidden" name="inquiryStatusHidden" id="inquiryStatusHidden">
                                             <select class="form-control select2 col-md-8 " id="inquiryStatus" name="status">
-                                                <option value="">Select</option>
+                                                <option value="0">Select</option>
                                                 <option value='1'>Pending</option>
                                                 <option value='2'>Sent</option>
                                                 <option value='3'>Replied</option>
@@ -57,7 +57,7 @@
                                         <div class="input-group">
                                             <input type="hidden" name="inquiryReceiverUserHidden" id="inquiryReceiverUserHidden">
                                             <select class="form-control select2 col-md-8" id="inquiryReceiverUser" name="receiverUser">
-                                                <option value="">Select</option>
+                                                <option value="0">Select</option>
                                                 <?php foreach ($arrToUser as $user): ?>
                                                     <option value='<?php echo $user->messageUserId; ?>'><?php echo $user->displayName; ?></option>
                                                 <?php endforeach; ?>
@@ -70,7 +70,7 @@
                                         <div class="input-group">
                                             <input type="hidden" name="inquirySenderUserHidden" id="inquirySenderUserHidden">
                                             <select class="form-control select2 col-md-8" id="inquirySenderUser" name="senderUser">
-                                                <option value="">Select</option>
+                                                <option value="0">Select</option>
                                                 <?php foreach ($arrFromUser as $user): ?>
                                                     <option value='<?php echo $user->messageUserId; ?>'><?php echo $user->displayName; ?></option>
                                                 <?php endforeach; ?>
@@ -85,7 +85,7 @@
                                         <div class="input-group">
                                             <input type="hidden" name="senderTypeHidden" id="senderTypeHidden">
                                             <select class="form-control select2 col-md-8 " id="senderType" name="sType">
-                                                <option value="">Select</option>
+                                                <option value="0">Select</option>
                                                 <option value='manufacturer'>Manufacturer</option>
                                                 <option value='distributor'>Distributor</option>
                                             </select>
@@ -103,6 +103,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <!--From Business Opportunity-->
                                     <!--<div class="col-lg-4">
                                         <label>From Business Opportunity Only :</label>
@@ -120,7 +121,7 @@
                                         <div class="input-group">
                                             <input type="hidden" name="manufacturerTypeHidden" id="manufacturerTypeHidden">
                                             <select class="form-control select2 col-md-8 " id="manufacturerType" name="manufacturerType">
-                                                <option value="">Select</option>
+                                                <option value="0">Select</option>
                                                 <option value='1'>Both</option>
                                                 <option value='2'>Subscribed</option>
                                                 <option value='3'>Non Subscribed</option>
@@ -129,7 +130,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer">
+                            <div class="card-footer pb-1 pt-2 ">
                                 <div class="row">
                                     <div class="col-lg-12 text-right mb-10">
                                         <a href="javascript:void(0)" type="reset" id="submitButton" class="btn btn-primary mr-2">Submit</a>
