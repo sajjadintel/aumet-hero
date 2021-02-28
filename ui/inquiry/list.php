@@ -103,18 +103,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!--From Business Opportunity-->
-                                    <!--<div class="col-lg-4">
-                                        <label>From Business Opportunity Only :</label>
-                                        <div class="radio-inline">
-                                            <label class="radio radio-solid">
-                                                <input type="radio" name="boOnly" value="1"><span></span>Yes
-                                            </label>
-                                        </div>
-                                        <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
-                                    </div>-->
-
                                     <!--Manufacturer Type-->
                                     <div class="col-md-4">
                                         <label>Manufacturer type:</label>
@@ -129,7 +117,26 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="form-group row">
+                                    <!--From Business Opportunity-->
+                                    <div class="col-lg-4">
+                                       <!-- <div class="checkbox-inline">
+
+                                            <label class="checkbox checkbox-success">
+                                                <input type="checkbox" name="boOnly" >
+                                                <span></span>From Business Opportunity Only :</label>
+
+                                        </div>-->
+                                        <label>From Business Opportunity Only :</label>
+                                        <div class="radio-inline">
+                                            <label class="radio radio-solid">
+                                                <input type="radio" name="boOnly" ><span></span>Yes
+                                            </label>
+                                        </div>
+                                        <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
+                                    </div>
+
                                     <div class="col-lg-4">
                                         <label>Email Needed :</label>
                                         <div class="radio-inline">
@@ -139,16 +146,24 @@
                                         </div>
                                         <span class="form-text text-muted">Inquiries where manufacturer has no email.</span>
                                     </div>
+
+                                    <!--Submit and reset button-->
+                                    <div class="col-lg-4 text-right mb-10">
+                                        <a href="javascript:void(0)" type="reset" id="submitButton" class="btn btn-primary mr-2">Submit</a>
+                                        <a href="javascript:void(0)" type="reset" onclick="KTDatatableInquiry.resetDataTable()" class="btn btn-secondary">Clear</a>
+                                    </div>
+
                                 </div>
+
                             </div>
-                            <div class="card-footer pb-1 pt-2 ">
+                            <!--<div class="card-footer pb-1 pt-2 ">
                                 <div class="row">
                                     <div class="col-lg-12 text-right mb-10">
                                         <a href="javascript:void(0)" type="reset" id="submitButton" class="btn btn-primary mr-2">Submit</a>
                                         <a href="javascript:void(0)" type="reset" onclick="KTDatatableInquiry.resetDataTable()" class="btn btn-secondary">Clear</a>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                         </form>
                     </div>
                 </div>

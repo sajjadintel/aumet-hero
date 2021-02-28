@@ -38,6 +38,7 @@ $('#kt_datepicker_2').daterangepicker({
 $('#manufacturerType').select2().on('select2:selecting', function (e) {
 	$('#manufacturerTypeHidden').val(e.params.args.data.id);
 });
+
 //reset form
 $('#filterForm').trigger("reset");
 
@@ -170,14 +171,14 @@ var KTDatatableInquiry = (function() {
 					template: function(row) {
 						let emailNeeded = '';
 						if(row.noOfRcverUsers==0){
-							emailNeeded = '<a href="javascript:;" class="btn btn-outline-primary ml-5 fa fa-envelope" title="Add Email" onclick="KTDatatableInquiry.addEmail('+ row.messageId +')"></a>';
+							emailNeeded += '<a href="javascript:;" class="btn btn-outline-primary ml-5 fa fa-envelope" title="Add Email" onclick="KTDatatableInquiry.addEmail('+ row.messageId +')"></a>';
 						}
 						var temp='<a href="javascript:;" class="btn btn-outline-secondary fab fa-readme" title="View Inquiry" onclick="KTDatatableInquiry.viewMessage('+ row.messageId +')"></a>';
 						if(row.actionStatus == 0 && row.parentId == 0){
 							temp += '<a href="javascript:;" class="btn btn-outline-primary ml-5" title="Approve" onclick="KTDatatableInquiry.approveMessage('+ row.messageId +')"> <i class="ki ki-bold-check-1 icon-sm"></i></a>' +
 								'<a href="javascript:;" class="btn btn-outline-danger ml-5" title="Disapprove" onclick="KTDatatableInquiry.disapproveMessage('+ row.messageId +')"> <i class="ki ki-bold-close icon-sm"></a>';
 						}
-						temp = emailNeeded;
+						temp += emailNeeded;
 						return temp;
 
 						return (
@@ -337,6 +338,10 @@ var KTDatatableInquiry = (function() {
 			$('#manufacturerTypeHidden').val('0');
 			$('#manufacturerType').val('0');
 			$('#manufacturerType').trigger('change.select2');
+
+
+			$("input:radio").val(0);
+			$("input:radio").attr("checked", false);
 
 			WebApp.block();
 			$('#submitButton').trigger('click');

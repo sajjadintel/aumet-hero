@@ -22,9 +22,8 @@ class InquiryController extends Controller
     /**
      * Get inquiries datatable
      */
-    function getInquiries()
-    {
-        $where = '1=1';
+    function getInquiries(){
+        $where = '1=1 AND "parentId" = 0 ';
         $inquiryStatus = $this->f3->get('POST.inquiryStatusHidden');
         $inquiryReceiverUser = $this->f3->get('POST.inquiryReceiverUserHidden');
         $inquirySenderUser = $this->f3->get('POST.inquirySenderUserHidden');
@@ -77,8 +76,8 @@ class InquiryController extends Controller
                 $where .= ' AND DATE("sentOnDate") <= ' . "'" . $endDate . "'";
             }
         }
-        if ($boOnly) {
-            //$where .=' AND "senderType" = "distributor"';
+        if($boOnly){
+            $where .=' AND "hasActiveBO" = 1';
         }
         if($emailNeeded){
          $where .= ' AND "noOfRcverUsers" = 0';

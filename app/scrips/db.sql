@@ -119,7 +119,7 @@ alter function onex."getMessagesUser"(bigint) owner to aumet_user;
 create view onex."vwMessages"
             ("messageId", "senderCompany", "senderCountry", "senderType", "receiverType", "receiverCompany",
              "receiverCompanyId", "sentOnDate", subject, content, "actionStatus", "toUserId", "fromUserId",
-             "noOfRcverUsers", subscription, "parentId", "repliedOnDate")
+             "noOfRcverUsers", subscription, "parentId", "repliedOnDate", "hasActiveBO")
 as
 SELECT m.id                                        AS "messageId",
        scom."Name"                                 AS "senderCompany",
@@ -150,7 +150,18 @@ SELECT m.id                                        AS "messageId",
            ELSE 0
            END                                     AS subscription,
        m."parentId",
-       (SELECT "createdAt" from onex.message where id = m."parentId") AS "repliedOnDate"
+       (SELECT message."createdAt"
+        FROM onex.message
+        WHERE message.id = m."parentId")           AS "repliedOnDate",
+       CASE
+           WHEN ((SELECT count(*) AS count
+                  FROM onex."vwBusinessOpportunities"
+                  WHERE "vwBusinessOpportunities"."fromCompanyId" = scom."ID"
+                    AND "vwBusinessOpportunities"."companyId" = rcom."ID"
+                    AND "vwBusinessOpportunities"."endDate" >= now())) > 0 AND
+                scom."Type"::text = 'distributor'::text AND rcom."Type"::text = 'manufacturer'::text THEN 1
+           ELSE 0
+           END                                     AS "hasActiveBO"
 FROM onex.message m
          JOIN production."Company" scom ON scom."ID" = m."fromCompanyId"
          JOIN setup."Country" ct ON scom."CountryID" = ct."ID"
