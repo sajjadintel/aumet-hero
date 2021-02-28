@@ -125,6 +125,15 @@ var KTDatatableInquiry = (function() {
 					}
 				},
 				{
+					field: 'repliedOnDate',
+					title: 'Received Reply On',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.repliedOnDate;
+					}
+				},
+				{
 					field: 'actionStatus',
 					title: 'Status',
 					width: 100,
@@ -160,11 +169,9 @@ var KTDatatableInquiry = (function() {
 					autoHide: false,
 					template: function(row) {
 						var temp='<a href="javascript:;" class="btn btn-outline-secondary fab fa-readme" title="View Inquiry" onclick="KTDatatableInquiry.viewMessage('+ row.messageId +')"></a>';
-						switch (row.actionStatus){
-							case 0:
-								temp += '<a href="javascript:;" class="btn btn-outline-primary ml-5" title="Approve" onclick="KTDatatableInquiry.approveMessage('+ row.messageId +')"> <i class="ki ki-bold-check-1 icon-sm"></i></a>' +
-										'<a href="javascript:;" class="btn btn-outline-danger ml-5" title="Disapprove" onclick="KTDatatableInquiry.disapproveMessage('+ row.messageId +')"> <i class="ki ki-bold-close icon-sm"></a>';
-								break;
+						if(row.actionStatus == 0 && row.parentId == 0){
+							temp += '<a href="javascript:;" class="btn btn-outline-primary ml-5" title="Approve" onclick="KTDatatableInquiry.approveMessage('+ row.messageId +')"> <i class="ki ki-bold-check-1 icon-sm"></i></a>' +
+								'<a href="javascript:;" class="btn btn-outline-danger ml-5" title="Disapprove" onclick="KTDatatableInquiry.disapproveMessage('+ row.messageId +')"> <i class="ki ki-bold-close icon-sm"></a>';
 						}
 						return temp;
 					}

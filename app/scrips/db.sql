@@ -116,10 +116,10 @@ $$;
 
 alter function onex."getMessagesUser"(bigint) owner to aumet_user;
 
-create view "vwMessages"
+create view onex."vwMessages"
             ("messageId", "senderCompany", "senderCountry", "senderType", "receiverType", "receiverCompany",
              "receiverCompanyId", "sentOnDate", subject, content, "actionStatus", "toUserId", "fromUserId",
-             "noOfRcverUsers", subscription, "parentId")
+             "noOfRcverUsers", subscription, "parentId", "repliedOnDate")
 as
 SELECT m.id                                        AS "messageId",
        scom."Name"                                 AS "senderCompany",
@@ -149,13 +149,14 @@ SELECT m.id                                        AS "messageId",
                   WHERE sub."companyId" = m."toCompanyId")) > 0 THEN 1
            ELSE 0
            END                                     AS subscription,
-       m."parentId"
+       m."parentId",
+       (SELECT "createdAt" from onex.message where id = m."parentId") AS "repliedOnDate"
 FROM onex.message m
          JOIN production."Company" scom ON scom."ID" = m."fromCompanyId"
          JOIN setup."Country" ct ON scom."CountryID" = ct."ID"
          JOIN production."Company" rcom ON rcom."ID" = m."toCompanyId"
 ORDER BY m."createdAt" DESC;
 
-alter table "vwMessages" owner to aumet_user;
+alter table onex."vwMessages" owner to aumet_user;
 
 ## END {Mubasher} {22-02-2021}
