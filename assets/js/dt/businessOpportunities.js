@@ -185,6 +185,7 @@ var KTDatatableDistributors = (function() {
 			var BussinessUserPersonName = $('#filterForm').find('input[name="BussinessUserPersonName"]').val();
 			var BussinessUserEmail = $('#filterForm').find('input[name="BussinessUserEmail"]').val();
 			var sendDateTime = $('#filterForm').find('input[name="sendDateTime"]').val();
+			var email = $('#filterForm').find('input[name="email"]').val();
 			var SpecialityID = $('#filterForm').find('input[name="SpecialityID"]').val();
 			var MedicallineID = $('#filterForm').find('input[name="MedicallineID"]').val();
 			var statusId = $('#filterForm').find('input[name="statusId"]').val();
@@ -200,6 +201,7 @@ var KTDatatableDistributors = (function() {
 			datatable.setDataSourceParam('MedicallineID', MedicallineID);
 			datatable.setDataSourceParam('reminderCount', reminderCount);
 			datatable.setDataSourceParam('connectionStatusId', statusId);
+			datatable.setDataSourceParam('BussinessUserEmail', email);
 			// console.log(datatable);
 			WebApp.block();
 			datatable.reload();
