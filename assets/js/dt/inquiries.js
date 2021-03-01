@@ -165,6 +165,7 @@ var KTDatatableInquiry = (function() {
 				{
 					field: 'Actions',
 					title: 'Actions',
+					width: 220,
 					sortable: false,
 					overflow: 'visible',
 					autoHide: false,
