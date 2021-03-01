@@ -193,16 +193,15 @@ var KTDatatableInquiry = (function() {
 		}).sort('sentOnDate','desc');
 
 		$('#submitButton').click(function(event){
-			console.log('click');
 
 			var inquiryStatusHidden = $('#filterForm').find('input[name="inquiryStatusHidden"]').val();
 			var inquiryReceiverUserHidden = $('#filterForm').find('input[name="inquiryReceiverUserHidden"]').val();
 			var inquirySenderUserHidden = $('#filterForm').find('input[name="inquirySenderUserHidden"]').val();
 			var senderTypeHidden = $('#filterForm').find('input[name="senderTypeHidden"]').val();
 			var inquiryDate = $('#filterForm').find('input[name="inquiryDate"]').val();
-			var boOnly = $('#filterForm').find('input[name="boOnly"]').val();
+			var boOnly = ($('#filterForm .boOnly:checked').length>0)? $('#filterForm .boOnly:checked').val() : 0;
 			var manufacturerType = $('#filterForm').find('input[name="manufacturerTypeHidden"]').val();
-			var emailNeeded = ($('#filterForm #emailNeeded:checked').length)?1:0;
+			var emailNeeded = ($('#filterForm .emailNeeded:checked').length>0)? $('#filterForm .emailNeeded:checked').val() : 0;
 
 			datatable.setDataSourceParam('inquiryStatusHidden', inquiryStatusHidden);
 			datatable.setDataSourceParam('inquiryReceiverUserHidden', inquiryReceiverUserHidden);
@@ -213,7 +212,7 @@ var KTDatatableInquiry = (function() {
 			datatable.setDataSourceParam('manufacturerTypeHidden', manufacturerType);
 			datatable.setDataSourceParam('emailNeeded', emailNeeded);
 
-			console.log(datatable);
+			//console.log(datatable);
 			WebApp.block();
 			datatable.reload();
 		});
