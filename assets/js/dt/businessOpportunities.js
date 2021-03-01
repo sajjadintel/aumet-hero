@@ -206,10 +206,10 @@ var KTDatatableDistributors = (function() {
 
 
 		});
-		$('#kt_datatableDistributors').on('datatable-on-ajax-done',function(){
+		$('#kt_datatableBusinessOpportunity').on('datatable-on-ajax-done',function(){
 			WebApp.unblock();
 		});
-		$('#kt_datatableDistributors').on('datatable-on-init',function(event){
+		$('#kt_datatableBusinessOpportunity').on('datatable-on-init',function(event){
 			// WebApp.block();
 			event.preventDefault();
 			datatable.setDataSourceParam('ManufacturerName', '');
@@ -226,7 +226,7 @@ var KTDatatableDistributors = (function() {
 			// datatable.sort('ID', 'asc');
 			datatable.reload();
 		});
-		$('#kt_datatableDistributors').on('datatable-on-ajax-fail',function(){
+		$('#kt_datatableBusinessOpportunity').on('datatable-on-ajax-fail',function(){
 			WebApp.unblock();
 		});
 
