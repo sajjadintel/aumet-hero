@@ -190,7 +190,8 @@ var KTDatatableInquiry = (function() {
 					}
 				}
 			]
-		});
+		}).sort('sentOnDate','desc');
+
 		$('#submitButton').click(function(event){
 			console.log('click');
 
