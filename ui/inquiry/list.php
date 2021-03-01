@@ -134,7 +134,7 @@
                                                 <input type="radio" name="boOnly" class="boOnly" value="1" ><span></span>Yes
                                             </label>
                                             <label class="radio radio-solid">
-                                                <input type="radio" name="boOnly" class="boOnly" value="0" ><span></span>No
+                                                <input type="radio" name="boOnly" class="boOnly" checked value="0" ><span></span>No
                                             </label>
                                         </div>
                                         <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
@@ -147,7 +147,7 @@
                                                 <input type="radio" name="emailNeeded" class="emailNeeded" value="1"><span></span>Yes
                                             </label>
                                             <label class="radio radio-solid">
-                                                <input type="radio" name="emailNeeded" class="emailNeeded" value="0"><span></span>No
+                                                <input type="radio" name="emailNeeded" class="emailNeeded" checked value="0"><span></span>No
                                             </label>
                                         </div>
                                         <span class="form-text text-muted">Inquiries where manufacturer has no email.</span>
