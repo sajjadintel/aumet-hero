@@ -209,9 +209,6 @@ var KTDatatableDistributors = (function() {
 		$('#kt_datatableBusinessOpportunity').on('datatable-on-ajax-done',function(){
 			WebApp.unblock();
 		});
-		$('#kt_datatableBusinessOpportunity').on('datatable-on-reloaded',function(){
-			WebApp.unblock();
-		});
 		$('#kt_datatableBusinessOpportunity').on('datatable-on-init',function(event){
 			// WebApp.block();
 			event.preventDefault();
