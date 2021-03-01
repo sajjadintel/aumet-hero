@@ -339,7 +339,121 @@ class InquiryController extends Controller
 
     function getTest(){
         print_r('<pre>');
-        print_r($_SESSION);
+        //print_r($_SESSION);
+        $objInquiries = (new Message())->all();
+        $tree = $this->inboxTree($objInquiries,0,1, 778);
+        $html = $this->getTreeHTML($tree);
+        print_r('<style>
+            body {
+              margin: 0 auto;
+              max-width: 800px;
+              padding: 0 20px;
+            }
+            
+            .container {
+              border: 2px solid #dedede;
+              background-color: #f1f1f1;
+              border-radius: 5px;
+              padding: 10px;
+              margin: 10px 0;
+            }
+            
+            .darker {
+              border-color: #ccc;
+              background-color: #ddd;
+            }
+            
+            
+            .container img {
+              float: left;
+              max-width: 60px;
+              width: 100%;
+              margin-right: 20px;
+              border-radius: 50%;
+            }
+            
+            .container img.right {
+              float: right;
+            }
+            
+            .time-right {
+              float: right;
+              color: #aaa;
+            }
+            
+            .time-left {
+              float: left;
+              color: #999;
+            }
+            </style>');
+        print_r($html);
         print_r('</pre>');
     }
+
+    function getTreeHTML($tree, $loop=0, $html = ''){
+        $html ='';
+        print_r('<br>####################################################');
+        echo '<br>------------<br>';
+        echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$loop;
+        echo '<br>------------<br>';
+        print_r($tree);
+        print_r('####################################################<br>');
+
+        foreach ($tree as $msg){
+            if ($loop == 0){
+                $html .= '<div class="container">
+                              <img src="/w3images/bandmember.jpg" alt="Avatar" style="width:100%;height: 35%;">
+                              <p >'.$msg->content.'</p>
+                              <span class="time-right">11:00</span>
+                            </div>';
+            }
+            if ($loop == 1){
+                $html .= '<div class="container">
+                              <img src="/w3images/bandmember.jpg" alt="Avatar" style="width:100%;height: 35%;" class="right">
+                              <div class="col-md-12" style="float: right;">'.$msg->content.'</div>
+                              <span class="time-right clearfix">11:00</span>
+                            </div>';
+            }
+            if(!empty(is_array($msg->children))){
+                $loop = ($loop == 1 ? 0 : 1);
+                $html .= $this->getTreeHTML($msg->children,$loop, $html);
+            }
+        }
+        return $html;
+    }
+
+    /**
+     * Helper Method
+     *
+     * Generate inbox tree for a particulate message
+     *
+     * @param array $elements
+     * @param int $parentId
+     * @param int $iteration
+     * @param int $parentMessageId
+     * @return array
+     */
+    function inboxTree(array $elements, $parentId = 0, $iteration=0, $parentMessageId=0) {
+        $check  = false;
+        $branch = array();
+        foreach ($elements as $element) {
+            if($iteration != 0 && $parentMessageId == $element->id){
+                $check = true;
+            }
+            if($check) {
+                if ($element->parentId == $parentId) {
+                    $children = $this->inboxTree((array)$elements, $element->id, $iteration++, $element->id);
+                    if ($children) {
+                        $element->children = $children;
+                    }
+                    $branch[] = $element;
+                    if(count($branch)>0){
+                        break;
+                    }
+                }
+            }
+        }
+        return $branch;
+    }
+
 }
