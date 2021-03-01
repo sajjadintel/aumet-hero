@@ -29,6 +29,10 @@ $f3->route('GET /@language/distributors', 'CompanyController->getDistributorsPag
 $f3->route('POST /@language/distributors/datatable', 'CompanyController->getDistributorsRecords');
 $f3->route('GET /@language/distributors/@companyId', 'CompanyController->getDistributorCompanyProfile');
 
+
+$f3->route('GET /@language/businessOppotunities', 'BusinessOpportunitiesController->getBusinessOppotunitiesPage');
+$f3->route('POST /@language/businessOppotunities/datatable', 'BusinessOpportunitiesController->getBORecords');
+
 $f3->route('POST /pipedrive/api/organization', 'PipedriveWebHooksController->processWebhookOrganization');
 $f3->route('POST /pipedrive/api/user', 'PipedriveWebHooksController->processWebhookUser');
 $f3->route('POST /pipedrive/api/deal', 'PipedriveWebHooksController->processWebhookDeal');

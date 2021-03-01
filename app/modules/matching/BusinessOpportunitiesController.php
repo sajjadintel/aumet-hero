@@ -130,9 +130,99 @@ class BusinessOpportunitiesController extends Controller
             $availableSlots = [];
             $this->f3->set('allSlots', $availableSlots);
 
-            $this->webResponse->setData(View::instance()->render("businessopportunities/list.php"));
+            $this->webResponse->setData(View::instance()->render("businessopportunities/list2.php"));
 
             echo $this->webResponse->getJSONResponse();
         }
+    }
+
+    function getBusinessOppotunitiesPage(){
+        if (!$this->f3->ajax()) {
+            $this->renderLayout("distributors");
+        } else {
+            $arrCountries = [];
+            $speciallities = (new Speciality())->all();
+            $arrCountries = (new Country())->getAll();
+
+            $arrMedicalLines = AumetDBRoutines::GetMedicalLineWithScientificNamesCount();
+
+            $this->f3->set('arrCountries', $arrCountries);
+            $this->f3->set('speciallities', $speciallities);
+            $this->f3->set('arrMedicalLines', $arrMedicalLines);
+            $this->webResponse->setData(View::instance()->render("businessopportunities/list.php"));
+            echo $this->webResponse->getJSONResponse();
+        }
+    }
+
+    function getBORecords()
+    {
+        $where = '1=1';
+        $ManufacturerName = $this->f3->get('POST.ManufacturerName');
+        $DistributorName = $this->f3->get('POST.DistributorName');
+        $BussinessUserPersonName = $this->f3->get('POST.BussinessUserPersonName');
+        $BussinessUserEmail = $this->f3->get('POST.BussinessUserEmail');
+        $connectionStatusId = $this->f3->get('POST.connectionStatusId');
+        $CountryID = $this->f3->get('POST.CountryID');
+        $sendDateTime = $this->f3->get('POST.sendDateTime');
+        $SpecialityID = $this->f3->get('POST.SpecialityID');
+        $reminderCount = $this->f3->get('POST.reminderCount');
+        $MedicallineID = $this->f3->get('POST.MedicallineID');
+        $startDate = '';
+        $endDate = '';
+
+        if($sendDateTime){
+            $arrDate = explode('-',$sendDateTime);
+            $date = new DateTime($arrDate[0]);
+            $startDate = $date->format('Y-m-d'); // 31-07-2012
+            if(isset($arrDate[1])){
+                $date = new DateTime($arrDate[1]);
+                $endDate = $date->format('Y-m-d');
+            }
+
+        }
+        if($ManufacturerName){
+            $where .=' AND "ManufacturerName" ilike \'%'.$ManufacturerName.'%\'';
+        }
+        if($DistributorName){
+            $where .=' AND "DistributorName" ilike \'%'.$DistributorName.'%\'';
+        }
+        if($BussinessUserPersonName){
+            $where .=' AND "BussinessUserPersonName" ilike \'%'.$BussinessUserPersonName.'%\'';
+        }
+        if($BussinessUserEmail){
+            $where .=' AND "BussinessUserEmail" ilike \'%'.$BussinessUserEmail.'%\'';
+        }
+        if($CountryID){
+            $where .=' AND "CountryID" ='.$CountryID;
+        }
+        if($reminderCount){
+            $where .=' AND "reminderCount" ='.$reminderCount;
+        }
+        if($connectionStatusId){
+            $where .=' AND "connectionStatusId" ='.$connectionStatusId;
+        }
+        if($SpecialityID){
+            $where .=" AND '".$SpecialityID."' = ANY ( \"SpecialityID\" ) ";
+        }
+        if($MedicallineID){
+            $where .=" AND '".$MedicallineID."' = ANY ( \"MedicallineID\" ) ";
+        }
+        if($sendDateTime){
+            $where .=' AND "sendDateTime" >='."'".$startDate."'";
+            if($endDate){
+                $where .=' AND "sendDateTime" <= '."'".$endDate."'";
+            }
+        }
+//echo $where;exit;
+        if($where) {
+            $distributors = $this->getDatatable((new BusinessOpportunities()), $where);
+        }else{
+
+            $distributors = $this->getDatatable((new BusinessOpportunities()));
+        }
+
+        echo json_encode(
+            $distributors
+        );
     }
 }
