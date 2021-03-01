@@ -126,10 +126,11 @@
                                             <input type="hidden" name="statusId" id="statusId">
                                             <select id="status_Id" name="status_Id" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
                                                 <option value="0" >Select</option>
-                                                <option value="1" >Registered basic</option>
-                                                <option value="2" >Registered full</option>
-                                                <option value="3" >Onboarded</option>
-                                                <option value="4" >Activated</option>
+                                                <option value="1" >Pending</option>
+                                                <option value="2" >Mail Opened</option>
+                                                <option value="3" >Viewed</option>
+                                                <option value="4" >Inquiry Sent</option>
+                                                <option value="5" >Call Scheduled</option>
                                             </select>
                                         </div>
                                         <span class="form-text text-muted">Please select status</span>
