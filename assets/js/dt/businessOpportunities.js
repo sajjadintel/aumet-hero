@@ -23,14 +23,15 @@ $('#filterForm').trigger("reset");
 
 
 var KTDatatableDistributors = (function() {
+
 	// Private functions
 	var _init = function() {
-		var datatable = $('#kt_datatableDistributors').KTDatatable({
+		var datatable = $('#kt_datatableBusinessOpportunity').KTDatatable({
 			data: {
 				type: 'remote',
 				source: {
 					read: {
-						url: HOST_URL + '/' + docLang + '/distributors/datatable' + '?_t=' + Date.now(),
+						url: HOST_URL + '/' + docLang + '/businessOppotunities/datatable' + '?_t=' + Date.now(),
 					}
 				},
 				pageSize: 10,
@@ -73,39 +74,21 @@ var KTDatatableDistributors = (function() {
 					}
 				},
 				{
-					field: 'Name',
-					title: 'Name',
+					field: 'ManufacturerName',
+					title: 'Manufacturer Name',
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
-						return row.Name;
+						return row.ManufacturerName;
 					}
 				},
 				{
-					field: 'PersonName',
-					title: 'Person Name',
+					field: 'DistributorName',
+					title: 'Distributor Name',
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
-						return row.PersonName
-					}
-				},
-				{
-					field: 'position',
-					title: 'Job Title',
-					sortable: true,
-					autoHide: false,
-					template: function(row) {
-						return row.position
-					}
-				},
-				{
-					field: 'email',
-					title: 'Email',
-					sortable: true,
-					autoHide: false,
-					template: function(row) {
-						return row.email
+						return row.DistributorName
 					}
 				},
 				{
@@ -114,43 +97,48 @@ var KTDatatableDistributors = (function() {
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
-						return row.CountryName;
+						return row.CountryName
 					}
 				},
 				{
-					field: 'inquirySend',
-					title: 'inquiries sent',
+					field: 'BussinessUserPersonName',
+					title: 'Person Name',
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
-						return row.inquirySend;
+						return row.BussinessUserPersonName
 					}
 				},
 				{
-					field: 'RegistrationDate',
-					title: 'Registered Date',
-					sortable: false,
-					autoHide: false,
-					template: function(row) {
-						return row.RegistrationDate;
-					}
-				},
-				{
-					field: 'Registered',
-					title: 'Registered',
+					field: 'BussinessUserJobTitle',
+					title: 'Job Title',
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
-						if(row.RegistrationDate){
-							return 'Yes'
-						}else{
-							return 'No'
-						}
+						return row.BussinessUserJobTitle;
 					}
 				},
 				{
-					field: 'Payload',
-					title: 'last Login',
+					field: 'BussinessUserEmail',
+					title: 'Email',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.BussinessUserEmail;
+					}
+				},
+				{
+					field: 'sendDateTime',
+					title: 'Sent on',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.sendDateTime;
+					}
+				},
+				{
+					field: 'Days remaining',
+					title: 'Days remaining',
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
@@ -164,45 +152,12 @@ var KTDatatableDistributors = (function() {
 					}
 				},
 				{
-					field: 'payload',
-					title: 'Accssed new website',
+					field: 'reminderCount',
+					title: 'Follow up emails sent',
 					sortable: false,
 					autoHide: false,
 					template: function(row) {
-						let payload = null;
-						if(row.payload!=null){
-							payload = JSON.parse(row.payload);
-							let releaseDate = new Date('2021-1-31');
-							let lastLogin = new Date(payload.metadata.lastLoginAt);
-							let lastLoginDate = new Date(moment(lastLogin).format('YYYY-MM-DD'));
-							if (lastLoginDate >= releaseDate) {
-								return 'Yes';
-							}else{
-								return 'No';
-							}
-						}else{
-							return 'No';
-						}
-					}
-				},{
-					field: 'Activated',
-					title: 'Status',
-					sortable: false,
-					autoHide: false,
-					template: function(row) {
-						// console.log(row);
-						if(row.statusId==1){
-							return '<span class="label font-weight-bold label-lg  label-light-danger label-inline">Registered basic</span>';
-						}
-						else if(row.statusId==2){
-							return '<span class="label font-weight-bold label-lg  label-light-warning label-inline">Registered full</span>';
-						}
-						else if(row.statusId==3 && row.inquirySend<1){
-							return '<span class="label font-weight-bold label-lg  label-light-success label-inline">Onboarded</span>';
-						}
-						else if(row.statusId==3 && row.inquirySend>0){
-							return '<span class="label font-weight-bold label-lg  label-light-success label-inline">Activated</span>';
-						}
+						return row.reminderCount;
 					}
 				},
 				{
@@ -220,29 +175,31 @@ var KTDatatableDistributors = (function() {
 					}
 				}
 			]
-		}).sort('ID', 'asc');
+		}).sort('ID','asc');
 		$('#submitButton').click(function(event){
 			// console.log('click');
-			var Name = $('#filterForm').find('input[name="Name"]').val();
+			var Name = $('#filterForm').find('input[name="ManufacturerName"]').val();
+			var DistributorName = $('#filterForm').find('input[name="DistributorName"]').val();
+			var BussinessUserJobTitle = $('#filterForm').find('input[name="BussinessUserJobTitle"]').val();
 			var CountryID = $('#filterForm').find('input[name="CountryID"]').val();
-			var PersonName = $('#filterForm').find('input[name="PersonName"]').val();
-			var email = $('#filterForm').find('input[name="email"]').val();
-			var RegistrationDate = $('#filterForm').find('input[name="RegistrationDate"]').val();
+			var BussinessUserPersonName = $('#filterForm').find('input[name="BussinessUserPersonName"]').val();
+			var BussinessUserEmail = $('#filterForm').find('input[name="BussinessUserEmail"]').val();
+			var sendDateTime = $('#filterForm').find('input[name="sendDateTime"]').val();
 			var SpecialityID = $('#filterForm').find('input[name="SpecialityID"]').val();
 			var MedicallineID = $('#filterForm').find('input[name="MedicallineID"]').val();
 			var statusId = $('#filterForm').find('input[name="statusId"]').val();
-			var Registered = $("input[name='Registered']:checked").val();;
-			var inquirySend = $("input[name='inquirySend']:checked").val();
-			datatable.setDataSourceParam('Name', Name);
+			var reminderCount = $('#filterForm').find('input[name="reminderCount"]').val();
+			datatable.setDataSourceParam('ManufacturerName', Name);
+			datatable.setDataSourceParam('BussinessUserJobTitle', BussinessUserJobTitle);
+			datatable.setDataSourceParam('DistributorName', DistributorName);
 			datatable.setDataSourceParam('CountryID', CountryID);
-			datatable.setDataSourceParam('PersonName', PersonName);
-			datatable.setDataSourceParam('email', email);
-			datatable.setDataSourceParam('RegistrationDate', RegistrationDate);
+			datatable.setDataSourceParam('BussinessUserPersonName', BussinessUserPersonName);
+			datatable.setDataSourceParam('BussinessUserEmail', BussinessUserEmail);
+			datatable.setDataSourceParam('sendDateTime', sendDateTime);
 			datatable.setDataSourceParam('SpecialityID', SpecialityID);
 			datatable.setDataSourceParam('MedicallineID', MedicallineID);
-			datatable.setDataSourceParam('Registered', Registered);
-			datatable.setDataSourceParam('inquirySend', inquirySend);
-			datatable.setDataSourceParam('statusId', statusId);
+			datatable.setDataSourceParam('reminderCount', reminderCount);
+			datatable.setDataSourceParam('connectionStatusId', statusId);
 			// console.log(datatable);
 			WebApp.block();
 			datatable.reload();
@@ -255,16 +212,18 @@ var KTDatatableDistributors = (function() {
 		$('#kt_datatableDistributors').on('datatable-on-init',function(event){
 			// WebApp.block();
 			event.preventDefault();
-			datatable.setDataSourceParam('Name', '');
+			datatable.setDataSourceParam('ManufacturerName', '');
+			datatable.setDataSourceParam('BussinessUserJobTitle', '');
+			datatable.setDataSourceParam('DistributorName', '');
 			datatable.setDataSourceParam('CountryID', '');
-			datatable.setDataSourceParam('PersonName', '');
-			datatable.setDataSourceParam('email', '');
-			datatable.setDataSourceParam('RegistrationDate', '');
+			datatable.setDataSourceParam('BussinessUserPersonName', '');
+			datatable.setDataSourceParam('BussinessUserEmail', '');
+			datatable.setDataSourceParam('sendDateTime', '');
 			datatable.setDataSourceParam('SpecialityID', '');
 			datatable.setDataSourceParam('MedicallineID', '');
-			datatable.setDataSourceParam('Registered', '');
-			datatable.setDataSourceParam('inquirySend', '');
-			datatable.setDataSourceParam('statusId', '');
+			datatable.setDataSourceParam('reminderCount', '');
+			datatable.setDataSourceParam('connectionStatusId', '');
+			// datatable.sort('ID', 'asc');
 			datatable.reload();
 		});
 		$('#kt_datatableDistributors').on('datatable-on-ajax-fail',function(){
