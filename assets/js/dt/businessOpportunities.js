@@ -175,7 +175,7 @@ var KTDatatableDistributors = (function() {
 					}
 				}
 			]
-		}).sort('ID','asc');
+		}).sort('sendDateTime','desc');
 		$('#submitButton').click(function(event){
 			// console.log('click');
 			var Name = $('#filterForm').find('input[name="ManufacturerName"]').val();
