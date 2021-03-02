@@ -216,8 +216,8 @@ SELECT m.id                                        AS "messageId",
        CASE
            WHEN ((SELECT count(*) AS count
                   FROM onex."vwBusinessOpportunities"
-                  WHERE "vwBusinessOpportunities"."fromCompanyId" = scom."ID"
-                    AND "vwBusinessOpportunities"."companyId" = rcom."ID"
+                  WHERE "vwBusinessOpportunities"."fromCompanyId" = rcom."ID"
+                    AND "vwBusinessOpportunities"."companyId" = scom."ID"
                     AND "vwBusinessOpportunities"."endDate" >= now())) > 0 AND
                 scom."Type"::text = 'distributor'::text AND rcom."Type"::text = 'manufacturer'::text THEN 1
            ELSE 0
