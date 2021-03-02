@@ -95,9 +95,12 @@ if (getenv('ENV') == Constants::ENV_PROD) {
 
 define('CHUNK_SIZE', 1024 * 1024);
 
-global $emailSender;
+//Old sendgrid credentials
+/*global $emailSender;
+$emailSender = new AumetEmail("Aumet", "no-reply@aumet.me", getenv('SENDGRID_API_KEY'));*/
 
-$emailSender = new AumetEmail("Aumet", "no-reply@aumet.me", getenv('SENDGRID_API_KEY'));
+global $emailSender;
+$emailSender = new AumetEmail("Aumet", "info@aumet.com", getenv('SENDGRID_API_KEY'));
 
 include_once("routes.php");
 

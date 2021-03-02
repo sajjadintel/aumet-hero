@@ -205,7 +205,7 @@ class InquiryController extends Controller
                                 $this->f3->set('companyType', $objAumetCompany->Type);
                                 $htmlContent = View::instance()->render('email/layout.php');
                                 $response = $emailSender->send("New message @ Aumet from " . $user->displayName, $htmlContent, $arrContacts, null, $bccEmails);
-                                if(!$response){
+                                if(!$response || !in_array($response, range(200, 299))){
                                     $messageSent        = false;
                                     $messageException   = 'Some thing went wrong while sending email.';
                                 }else{
