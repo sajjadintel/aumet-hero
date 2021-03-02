@@ -133,6 +133,7 @@ class InquiryController extends Controller
             echo $this->webResponse->getJSONResponse();
         }
     }
+
     /**
      * Get single inquiry view
      */
@@ -266,6 +267,11 @@ class InquiryController extends Controller
         $objInquiries = (new Message())->getById($inquiryId);
         if($objInquiries) {
             $this->f3->set('objInquiries',$objInquiries);
+            /*$objInquiries = (new Message())->all();
+            $tree = $this->inboxTree($objInquiries,0,1, $inquiryId);
+            $htmlChat = $this->getTreeHTML($tree);
+            $html = '<div class="msg_history">'.$htmlChat.'</div>';
+            $this->f3->set('tree',$html);*/
             $this->webResponse->setData(View::instance()->render("inquiry/model/message.php"));
         }
         else {
@@ -342,4 +348,69 @@ class InquiryController extends Controller
         print_r($_SESSION);
         print_r('</pre>');
     }
+
+    function getTreeHTML($tree, $loop=0, $html = ''){
+        $html ='';
+        foreach ($tree as $msg){
+            if ($loop == 0){
+                $html .= '<div class="outgoing_msg">
+                              <div class="sent_msg">
+                                    <p>'.($msg->content != ""? html_entity_decode($msg->content): "Content of message is empty").'</p>
+                                    <span class="time_date"> '.date('h:i A', strtotime($msg->createdAt)).'    |   '.$month = date('j M ', strtotime($msg->createdAt)).'</span>
+                                </div>
+                            </div>';
+            }
+            if ($loop == 1){
+                $html .= '<div class="incoming_msg">
+                              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                              <div class="received_msg">
+                                <div class="received_withd_msg">
+                                  <p>'.($msg->content != "" ? html_entity_decode($msg->content): "Content of message is empty").'</p>
+                                  <span class="time_date"> '.date('h:i A', strtotime($msg->createdAt)).'    |   '.$month = date('j M ', strtotime($msg->createdAt)).'</span>
+                                </div>
+                              </div>
+                            </div>';
+            }
+            if(!empty(is_array($msg->children))){
+                $loop = ($loop == 1 ? 0 : 1);
+                $html .= $this->getTreeHTML($msg->children,$loop, $html);
+            }
+        }
+        return $html;
+    }
+
+    /**
+     * Helper Method
+     *
+     * Generate inbox tree for a particulate message
+     *
+     * @param array $elements
+     * @param int $parentId
+     * @param int $iteration
+     * @param int $parentMessageId
+     * @return array
+     */
+    function inboxTree(array $elements, $parentId = 0, $iteration=0, $parentMessageId=0) {
+        $check  = false;
+        $branch = array();
+        foreach ($elements as $element) {
+            if($iteration != 0 && $parentMessageId == $element->id){
+                $check = true;
+            }
+            if($check) {
+                if ($element->parentId == $parentId) {
+                    $children = $this->inboxTree((array)$elements, $element->id, $iteration++, $element->id);
+                    if ($children) {
+                        $element->children = $children;
+                    }
+                    $branch[] = $element;
+                    if(count($branch)>0){
+                        break;
+                    }
+                }
+            }
+        }
+        return $branch;
+    }
+
 }
