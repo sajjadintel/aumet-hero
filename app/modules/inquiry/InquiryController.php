@@ -133,6 +133,7 @@ class InquiryController extends Controller
             echo $this->webResponse->getJSONResponse();
         }
     }
+
     /**
      * Get single inquiry view
      */
@@ -266,6 +267,11 @@ class InquiryController extends Controller
         $objInquiries = (new Message())->getById($inquiryId);
         if($objInquiries) {
             $this->f3->set('objInquiries',$objInquiries);
+            /*$objInquiries = (new Message())->all();
+            $tree = $this->inboxTree($objInquiries,0,1, $inquiryId);
+            $htmlChat = $this->getTreeHTML($tree);
+            $html = '<div class="msg_history">'.$htmlChat.'</div>';
+            $this->f3->set('tree',$html);*/
             $this->webResponse->setData(View::instance()->render("inquiry/model/message.php"));
         }
         else {
@@ -339,79 +345,30 @@ class InquiryController extends Controller
 
     function getTest(){
         print_r('<pre>');
-        //print_r($_SESSION);
-        $objInquiries = (new Message())->all();
-        $tree = $this->inboxTree($objInquiries,0,1, 778);
-        $html = $this->getTreeHTML($tree);
-        print_r('<style>
-            body {
-              margin: 0 auto;
-              max-width: 800px;
-              padding: 0 20px;
-            }
-            
-            .container {
-              border: 2px solid #dedede;
-              background-color: #f1f1f1;
-              border-radius: 5px;
-              padding: 10px;
-              margin: 10px 0;
-            }
-            
-            .darker {
-              border-color: #ccc;
-              background-color: #ddd;
-            }
-            
-            
-            .container img {
-              float: left;
-              max-width: 60px;
-              width: 100%;
-              margin-right: 20px;
-              border-radius: 50%;
-            }
-            
-            .container img.right {
-              float: right;
-            }
-            
-            .time-right {
-              float: right;
-              color: #aaa;
-            }
-            
-            .time-left {
-              float: left;
-              color: #999;
-            }
-            </style>');
-        print_r($html);
+        print_r($_SESSION);
         print_r('</pre>');
     }
 
     function getTreeHTML($tree, $loop=0, $html = ''){
         $html ='';
-        print_r('<br>####################################################');
-        echo '<br>------------<br>';
-        echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$loop;
-        echo '<br>------------<br>';
-        print_r($tree);
-        print_r('####################################################<br>');
-
         foreach ($tree as $msg){
             if ($loop == 0){
-                $html .= '<div class="container">
-                              <img src="/w3images/bandmember.jpg" alt="Avatar" style="width:100%;height: 35%;">
-                              <p >'.$msg->content.'</p>
-                              <span class="time-right">11:00</span>
+                $html .= '<div class="outgoing_msg">
+                              <div class="sent_msg">
+                                    <p>'.($msg->content != ""? html_entity_decode($msg->content): "Content of message is empty").'</p>
+                                    <span class="time_date"> '.date('h:i A', strtotime($msg->createdAt)).'    |   '.$month = date('j M ', strtotime($msg->createdAt)).'</span>
+                                </div>
                             </div>';
             }
             if ($loop == 1){
-                $html .= '<div class="container">
-                              <img src="/w3images/bandmember.jpg" alt="Avatar" style="width:100%;height: 35%;" class="right">
-                              <div class="col-md-12" style="float: right;">'.$msg->content.'</div>
-                              <span class="time-right clearfix">11:00</span>
+                $html .= '<div class="incoming_msg">
+                              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                              <div class="received_msg">
+                                <div class="received_withd_msg">
+                                  <p>'.($msg->content != "" ? html_entity_decode($msg->content): "Content of message is empty").'</p>
+                                  <span class="time_date"> '.date('h:i A', strtotime($msg->createdAt)).'    |   '.$month = date('j M ', strtotime($msg->createdAt)).'</span>
+                                </div>
+                              </div>
                             </div>';
             }
             if(!empty(is_array($msg->children))){
