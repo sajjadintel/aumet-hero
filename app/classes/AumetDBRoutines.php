@@ -358,13 +358,30 @@ class AumetDBRoutines
     }
 
     /**
-     *
      * @param $type set then from if empty then to
      * @return array
      */
     public static function getMessagesUsers($type = null){
         global $dbConnectionAumet;
         $arr = $dbConnectionAumet->exec("select * from onex.\"getMessagesUser\"($type)");
+        return array_map(function ($obj) {
+            return BaseModel::toObject($obj);
+        }, $arr);
+    }
+
+    /**
+     * @param null $type set then from if empty then to
+     * @return array
+     */
+    public static function getMessagesCompany($type = null){
+        global $dbConnectionAumet;
+        $query = '';
+        if($type){
+            $query = 'select distinct "senderCompanyId", "senderCompany" from onex."vwMessages"';
+        }else{
+            $query = 'select distinct "receiverCompanyId", "receiverCompany" from onex."vwMessages"';
+        }
+        $arr = $dbConnectionAumet->exec($query);
         return array_map(function ($obj) {
             return BaseModel::toObject($obj);
         }, $arr);
