@@ -100,6 +100,7 @@ var KTDatatableInquiry = (function() {
 				{
 					field: 'senderType',
 					title: 'Sender Type',
+					width: 90,
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
@@ -137,7 +138,7 @@ var KTDatatableInquiry = (function() {
 				{
 					field: 'actionStatus',
 					title: 'Status',
-					width: 100,
+					width: 70,
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
@@ -156,7 +157,7 @@ var KTDatatableInquiry = (function() {
 								temp = '<span class="label font-weight-bold label-lg label-light-danger label-inline">Locked</span>';
 								break;
 							case 4:
-								temp = '<span class="label font-weight-bold label-lg label-danger label-inline">Disapproved</span>';
+								temp = '<span class="label font-weight-bold label-sm label-danger label-inline pt-4 pb-4">Disapproved</span>';
 								break;
 						}
 						return temp;

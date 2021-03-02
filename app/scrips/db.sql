@@ -174,7 +174,6 @@ alter table onex."vwMessages" owner to aumet_user;
 
 ## START {Mubasher} {02-03-2021}
 
--- auto-generated definition
 create view onex."vwMessages"
             ("messageId", "senderCompany", "senderCompanyId", "senderCountry", "senderType", "receiverType",
              "receiverCompany", "receiverCompanyId", "sentOnDate", subject, content, "actionStatus", "toUserId",
@@ -204,9 +203,13 @@ SELECT m.id                                        AS "messageId",
         FROM production."User" ruser
         WHERE ruser."CompanyID" = m."toCompanyId") AS "noOfRcverUsers",
        CASE
-           WHEN ((SELECT count(*) AS count
-                  FROM onex.subscription sub
-                  WHERE sub."companyId" = m."fromCompanyId")) > 0 THEN 1
+           WHEN (
+                   ((SELECT count(*) AS count FROM onex.subscription sub WHERE sub."companyId" = m."fromCompanyId") >
+                    0 AND scom."Type"::text = 'manufacturer'::text) OR
+                   ((SELECT count(*) AS count FROM onex.subscription sub WHERE sub."companyId" = m."toCompanyId") >
+                    0 AND rcom."Type"::text = 'manufacturer'::text)
+               )
+               THEN 1
            ELSE 0
            END                                     AS subscription,
        m."parentId",
@@ -227,6 +230,7 @@ FROM onex.message m
          JOIN setup."Country" ct ON scom."CountryID" = ct."ID"
          JOIN production."Company" rcom ON rcom."ID" = m."toCompanyId"
 ORDER BY m."createdAt" DESC;
+
 alter table onex."vwMessages" owner to aumet_user;
 
 ## END {Mubasher} {02-03-2021}
