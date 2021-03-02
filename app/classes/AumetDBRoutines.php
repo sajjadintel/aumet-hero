@@ -345,13 +345,17 @@ class AumetDBRoutines
     }
 
     /**
-     * Get All messages
-     *
+     * Get a/all message
+     * @param null $id
      * @return array
      */
-    public static function getMessages(){
+    public static function getMessage($id = null){
         global $dbConnectionAumet;
-        $arr = $dbConnectionAumet->exec("select * from onex.\"getMessages\"()");
+        $where = '';
+        if($id != null){
+            $where .= ' AND "messageId" = '.$id;
+        }
+        $arr = $dbConnectionAumet->exec("select * from onex.\"vwMessages\" WHERE 1=1 ".$where);
         return array_map(function ($obj) {
             return BaseModel::toObject($obj);
         }, $arr);
