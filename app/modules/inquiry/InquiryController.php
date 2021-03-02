@@ -12,8 +12,8 @@ class InquiryController extends Controller
         if (!$this->f3->ajax()) {
             $this->renderLayout("inquiries");
         } else {
-            $this->f3->set('arrToUser',  AumetDBRoutines::getMessagesUsers());
-            $this->f3->set('arrFromUser',  AumetDBRoutines::getMessagesUsers(1));
+            $this->f3->set('arrToUser',  AumetDBRoutines::getMessagesCompany());
+            $this->f3->set('arrFromUser',  AumetDBRoutines::getMessagesCompany(1));
             $this->webResponse->setData(View::instance()->render("inquiry/list.php"));
             echo $this->webResponse->getJSONResponse();
         }
@@ -55,10 +55,10 @@ class InquiryController extends Controller
             }
         }
         if ($inquiryReceiverUser) {
-            $where .= ' AND "toUserId" = ' . $inquiryReceiverUser;
+            $where .= ' AND "receiverCompanyId" = ' . $inquiryReceiverUser;
         }
         if ($inquirySenderUser) {
-            $where .= ' AND "fromUserId" = ' . $inquirySenderUser;
+            $where .= ' AND "senderCompanyId" = ' . $inquirySenderUser;
         }
         if ($senderType) {
             $where .= " AND \"senderType\" = '" . $senderType . "'";
@@ -100,6 +100,7 @@ class InquiryController extends Controller
 
         echo json_encode($result);
     }
+
     /**
      * Get inquiries datatable
      */

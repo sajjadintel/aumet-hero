@@ -59,7 +59,7 @@
                                             <select class="form-control select2 col-md-8" id="inquiryReceiverUser" name="receiverUser">
                                                 <option value="0">Select</option>
                                                 <?php foreach ($arrToUser as $user): ?>
-                                                    <option value='<?php echo $user->messageUserId; ?>'><?php echo $user->displayName; ?></option>
+                                                    <option value='<?php echo $user->receiverCompanyId; ?>'><?php echo $user->receiverCompany; ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
@@ -72,7 +72,7 @@
                                             <select class="form-control select2 col-md-8" id="inquirySenderUser" name="senderUser">
                                                 <option value="0">Select</option>
                                                 <?php foreach ($arrFromUser as $user): ?>
-                                                    <option value='<?php echo $user->messageUserId; ?>'><?php echo $user->displayName; ?></option>
+                                                    <option value='<?php echo $user->senderCompanyId; ?>'><?php echo $user->senderCompany; ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
