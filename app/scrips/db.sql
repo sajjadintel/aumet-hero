@@ -206,7 +206,7 @@ SELECT m.id                                        AS "messageId",
        CASE
            WHEN ((SELECT count(*) AS count
                   FROM onex.subscription sub
-                  WHERE sub."companyId" = m."toCompanyId")) > 0 THEN 1
+                  WHERE sub."companyId" = m."fromCompanyId")) > 0 THEN 1
            ELSE 0
            END                                     AS subscription,
        m."parentId",
