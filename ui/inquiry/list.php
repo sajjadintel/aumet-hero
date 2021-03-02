@@ -137,8 +137,7 @@
                                         <div class="input-group">
                                             <input type="hidden" name="boTypeHidden" id="boTypeHidden">
                                             <select class="form-control select2 col-md-8 " id="boType" name="boType">
-                                                <option value="0">Select</option>
-                                                <option value='1'>Both</option>
+                                                <option value="0">Both</option>
                                                 <option value='2'>Business Opportunity Only</option>
                                                 <option value='3'>No Business Opportunity</option>
                                             </select>

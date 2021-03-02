@@ -342,6 +342,11 @@ var KTDatatableInquiry = (function() {
 			$('#manufacturerType').trigger('change.select2');
 
 
+			$('#boTypeHidden').val('0');
+			$('#boType').val('0');
+			$('#boType').trigger('change.select2');
+
+
 			$("input:radio").val(0);
 			$("input:radio").attr("checked", false);
 
