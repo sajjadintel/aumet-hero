@@ -78,6 +78,8 @@ class InquiryController extends Controller
         }
         if($boOnly){
             $where .=' AND "hasActiveBO" = 1';
+        }else{
+            $where .=' AND "hasActiveBO" = 0';
         }
         if($emailNeeded){
          $where .= ' AND "noOfRcverUsers" = 0';
