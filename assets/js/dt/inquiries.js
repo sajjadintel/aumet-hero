@@ -85,7 +85,6 @@ var KTDatatableInquiry = (function() {
 					field: 'senderCompany',
 					title: 'Sender Company',
 					sortable: true,
-					autoHide: false,
 					template: function(row) {
 						return row.senderCompany;
 					}
@@ -94,7 +93,6 @@ var KTDatatableInquiry = (function() {
 					field: 'senderCountry',
 					title: 'Sender Country',
 					sortable: true,
-					autoHide: false,
 					template: function(row) {
 						return row.senderCountry;
 					}
@@ -104,7 +102,6 @@ var KTDatatableInquiry = (function() {
 					title: 'Sender Type',
 					width: 90,
 					sortable: true,
-					autoHide: false,
 					template: function(row) {
 
 						return row.senderType;
@@ -114,7 +111,6 @@ var KTDatatableInquiry = (function() {
 					field: 'receiverCompany',
 					title: 'Receiver Company',
 					sortable: true,
-					autoHide: false,
 					template: function(row) {
 						return row.receiverCompany;
 					}
@@ -123,7 +119,6 @@ var KTDatatableInquiry = (function() {
 					field: 'sentOnDate',
 					title: 'Sent On Date',
 					sortable: true,
-					autoHide: false,
 					template: function(row) {
 						return row.sentOnDate;
 					}
@@ -132,7 +127,6 @@ var KTDatatableInquiry = (function() {
 					field: 'repliedOnDate',
 					title: 'Received Reply On',
 					sortable: true,
-					autoHide: false,
 					template: function(row) {
 						return row.repliedOnDate;
 					}
@@ -140,9 +134,7 @@ var KTDatatableInquiry = (function() {
 				{
 					field: 'actionStatus',
 					title: 'Status',
-					width: 70,
 					sortable: true,
-					autoHide: false,
 					template: function(row) {
 						var temp = '';
 						switch (row.actionStatus){
@@ -168,10 +160,7 @@ var KTDatatableInquiry = (function() {
 				{
 					field: 'Actions',
 					title: 'Actions',
-					width: 220,
 					sortable: false,
-					overflow: 'visible',
-					autoHide: false,
 					template: function(row) {
 						let emailNeeded = '';
 						if(row.noOfRcverUsers==0){
