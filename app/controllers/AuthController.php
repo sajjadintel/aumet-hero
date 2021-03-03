@@ -244,7 +244,7 @@ class AuthController extends Controller
 
                 $objFBuser = $auth->getUser($uid);
 
-                $dbUser = new AuthUser();
+                $dbUser = new OnexAuthUser();
                 $objSessionUser = $dbUser->getByUID($uid);
 
                 if($dbUser->dry()){
@@ -307,7 +307,7 @@ class AuthController extends Controller
                     }
                     $email = $this->f3->get("POST.email");
 
-                    $dbUser = new AuthUser();
+                    $dbUser = new OnexAuthUser();
                     $objUser= $dbUser->getByEmail($email);
 
                     if(!$dbUser->dry()) {
