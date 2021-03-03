@@ -133,13 +133,13 @@
                                         <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
                                     </div>-->
                                     <div class="col-md-4">
-                                        <label>Business Opportunity type:</label>
+                                        <label>Business Opportunity Status:</label>
                                         <div class="input-group">
                                             <input type="hidden" name="boTypeHidden" id="boTypeHidden">
                                             <select class="form-control select2 col-md-8 " id="boType" name="boType">
                                                 <option value="0">Both</option>
-                                                <option value='2'>Business Opportunity Only</option>
-                                                <option value='3'>No Business Opportunity</option>
+                                                <option value='2'>Active Business Opportunity</option>
+                                                <option value='3'>Non-Active Business Opportunity</option>
                                             </select>
                                         </div>
                                         <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
