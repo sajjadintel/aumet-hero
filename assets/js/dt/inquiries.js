@@ -47,6 +47,8 @@ var KTDatatableInquiry = (function() {
 	// Private functions
 	var _init = function() {
 		var datatable = $('#kt_datatableInquiries').KTDatatable({
+			autoWidth: true,
+			responsive: true,
 			data: {
 				type: 'remote',
 				source: {
@@ -65,7 +67,7 @@ var KTDatatableInquiry = (function() {
 			},
 			// layout definition
 			layout: {
-				scroll: false, // enable/disable datatable scroll both horizontal and vertical when needed.
+				scroll: true, // enable/disable datatable scroll both horizontal and vertical when needed.
 				footer: false, // display/hide footer
 			},
 

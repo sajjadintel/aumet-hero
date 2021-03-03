@@ -109,8 +109,7 @@
                                         <div class="input-group">
                                             <input type="hidden" name="manufacturerTypeHidden" id="manufacturerTypeHidden">
                                             <select class="form-control select2 col-md-8 " id="manufacturerType" name="manufacturerType">
-                                                <option value="0">Select</option>
-                                                <option value='1'>Both</option>
+                                                <option value='0'>Both</option>
                                                 <option value='2'>Subscribed</option>
                                                 <option value='3'>Non Subscribed</option>
                                             </select>
