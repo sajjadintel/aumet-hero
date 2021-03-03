@@ -1,18 +1,4 @@
-<?php if($objInquiries) {?>
-    <div class="modal-header">
-        <h5 class="modal-title" id="inquirySubject"><?php echo $objInquiries->subject; ?></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <i aria-hidden="true" class="ki ki-close"></i>
-        </button>
-    </div>
-    <div class="modal-body">
-        <?php echo html_entity_decode($objInquiries->content); ?>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    </div>
-<?php } ?>
-<!--<style>
+<style>
     .container{max-width:1170px; margin:auto;}
     img{ max-width:100%;}
     .inbox_people {
@@ -148,18 +134,31 @@
         overflow-y: scroll;
         height: 250px;
     }
-</style>-->
-<?php /*if($tree) {*/?><!--
+    .border-bottom{
+        border-bottom: 1px solid #EBEDF3;
+    }
+</style>
+<?php if($objInquiries) {?>
     <div class="modal-header">
-        <h5 class="modal-title" id="inquirySubject">Complete conversation</h5>
+        <h5 class="modal-title" id="inquirySubject"><?php echo $objInquiries->subject; ?></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <i aria-hidden="true" class="ki ki-close"></i>
         </button>
     </div>
     <div class="modal-body">
-        <?php /*echo html_entity_decode($tree); */?>
+
+        <div class="border-bottom">
+            <?php echo html_entity_decode($objInquiries->content); ?>
+        </div>
+
+        <div class="tree">
+            <?php if($tree) {?>
+                <?php echo html_entity_decode($tree); ?>
+            <?php } ?>
+        </div>
+
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
     </div>
---><?php /*} */?>
+<?php } ?>
