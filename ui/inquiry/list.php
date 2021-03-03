@@ -59,7 +59,7 @@
                                             <select class="form-control select2 col-md-8" id="inquiryReceiverUser" name="receiverUser">
                                                 <option value="0">Select</option>
                                                 <?php foreach ($arrToUser as $user): ?>
-                                                    <option value='<?php echo $user->messageUserId; ?>'><?php echo $user->displayName; ?></option>
+                                                    <option value='<?php echo $user->receiverCompanyId; ?>'><?php echo $user->receiverCompany; ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
@@ -72,7 +72,7 @@
                                             <select class="form-control select2 col-md-8" id="inquirySenderUser" name="senderUser">
                                                 <option value="0">Select</option>
                                                 <?php foreach ($arrFromUser as $user): ?>
-                                                    <option value='<?php echo $user->messageUserId; ?>'><?php echo $user->displayName; ?></option>
+                                                    <option value='<?php echo $user->senderCompanyId; ?>'><?php echo $user->senderCompany; ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
@@ -103,18 +103,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!--From Business Opportunity-->
-                                    <!--<div class="col-lg-4">
-                                        <label>From Business Opportunity Only :</label>
-                                        <div class="radio-inline">
-                                            <label class="radio radio-solid">
-                                                <input type="radio" name="boOnly" value="1"><span></span>Yes
-                                            </label>
-                                        </div>
-                                        <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
-                                    </div>-->
-
                                     <!--Manufacturer Type-->
                                     <div class="col-md-4">
                                         <label>Manufacturer type:</label>
@@ -129,15 +117,64 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="form-group row">
+                                    <!--From Business Opportunity-->
+                                    <!--<div class="col-lg-4">
+                                        <label>From Business Opportunity Only :</label>
+                                        <div class="radio-inline">
+                                            <label class="radio radio-solid">
+                                                <input type="radio" name="boOnly" class="boOnly" value="1" ><span></span>Yes
+                                            </label>
+                                            <label class="radio radio-solid">
+                                                <input type="radio" name="boOnly" class="boOnly" checked value="0" ><span></span>No
+                                            </label>
+                                        </div>
+                                        <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
+                                    </div>-->
+                                    <div class="col-md-4">
+                                        <label>Business Opportunity Status:</label>
+                                        <div class="input-group">
+                                            <input type="hidden" name="boTypeHidden" id="boTypeHidden">
+                                            <select class="form-control select2 col-md-8 " id="boType" name="boType">
+                                                <option value="0">Both</option>
+                                                <option value='2'>Active Business Opportunity</option>
+                                                <option value='3'>Non-Active Business Opportunity</option>
+                                            </select>
+                                        </div>
+                                        <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <label>Email Needed:</label>
+                                        <div class="radio-inline">
+                                            <label class="radio radio-solid">
+                                                <input type="radio" name="emailNeeded" class="emailNeeded" value="1"><span></span>Yes
+                                            </label>
+                                            <label class="radio radio-solid">
+                                                <input type="radio" name="emailNeeded" class="emailNeeded" checked value="0"><span></span>No
+                                            </label>
+                                        </div>
+                                        <span class="form-text text-muted">Inquiries where manufacturer has no email.</span>
+                                    </div>
+
+                                    <!--Submit and reset button-->
+                                    <div class="col-lg-4 text-right mb-10">
+                                        <a href="javascript:void(0)" type="reset" id="submitButton" class="btn btn-primary mr-2">Submit</a>
+                                        <a href="javascript:void(0)" type="reset" onclick="KTDatatableInquiry.resetDataTable()" class="btn btn-secondary">Clear</a>
+                                    </div>
+
+                                </div>
+
                             </div>
-                            <div class="card-footer pb-1 pt-2 ">
+                            <!--<div class="card-footer pb-1 pt-2 ">
                                 <div class="row">
                                     <div class="col-lg-12 text-right mb-10">
                                         <a href="javascript:void(0)" type="reset" id="submitButton" class="btn btn-primary mr-2">Submit</a>
                                         <a href="javascript:void(0)" type="reset" onclick="KTDatatableInquiry.resetDataTable()" class="btn btn-secondary">Clear</a>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                         </form>
                     </div>
                 </div>

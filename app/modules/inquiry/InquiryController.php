@@ -12,8 +12,8 @@ class InquiryController extends Controller
         if (!$this->f3->ajax()) {
             $this->renderLayout("inquiries");
         } else {
-            $this->f3->set('arrToUser',  AumetDBRoutines::getMessagesUsers());
-            $this->f3->set('arrFromUser',  AumetDBRoutines::getMessagesUsers(1));
+            $this->f3->set('arrToUser',  AumetDBRoutines::getMessagesCompany());
+            $this->f3->set('arrFromUser',  AumetDBRoutines::getMessagesCompany(1));
             $this->webResponse->setData(View::instance()->render("inquiry/list.php"));
             echo $this->webResponse->getJSONResponse();
         }
@@ -23,71 +23,123 @@ class InquiryController extends Controller
      * Get inquiries datatable
      */
     function getInquiries(){
-        $where = '1=1';
+        $where = '1=1 AND "parentId" = 0 ';
         $inquiryStatus = $this->f3->get('POST.inquiryStatusHidden');
         $inquiryReceiverUser = $this->f3->get('POST.inquiryReceiverUserHidden');
         $inquirySenderUser = $this->f3->get('POST.inquirySenderUserHidden');
         $senderType = $this->f3->get('POST.senderTypeHidden');
-        $inquiryDate= $this->f3->get('POST.inquiryDate');
-        $boOnly = $this->f3->get('POST.boOnly');
+        $inquiryDate = $this->f3->get('POST.inquiryDate');
+        $boTypeHidden = $this->f3->get('POST.boTypeHidden');
         $manufacturerType = $this->f3->get('POST.manufacturerTypeHidden');
         $startDate = '';
         $endDate = '';
+        $emailNeeded = intval($this->f3->get('POST.emailNeeded')) ;
 
-        if($inquiryStatus){
-            switch ($inquiryStatus){
+        if ($inquiryStatus) {
+            switch ($inquiryStatus) {
                 case 1:
-                    $where .=' AND "actionStatus" = 0';
+                    $where .= ' AND "actionStatus" = 0';
                     break;
                 case 2:
-                    $where .=' AND "actionStatus" = 1';
+                    $where .= ' AND "actionStatus" = 1';
                     break;
                 case 3:
-                    $where .=' AND "actionStatus" = 2';
+                    $where .= ' AND "actionStatus" = 2';
                     break;
                 case 4:
-                    $where .=' AND "actionStatus" = 3';
+                    $where .= ' AND "actionStatus" = 3';
                     break;
                 case 5:
-                    $where .=' AND "actionStatus" = 4';
+                    $where .= ' AND "actionStatus" = 4';
                     break;
             }
         }
-        if($inquiryReceiverUser){
-            $where .=' AND "toUserId" = '.$inquiryReceiverUser;
+        if ($inquiryReceiverUser) {
+            $where .= ' AND "receiverCompanyId" = ' . $inquiryReceiverUser;
         }
-        if($inquirySenderUser){
-            $where .=' AND "fromUserId" = '.$inquirySenderUser;
+        if ($inquirySenderUser) {
+            $where .= ' AND "senderCompanyId" = ' . $inquirySenderUser;
         }
-        if($senderType){
-            $where .=" AND \"senderType\" = '".$senderType."'";
+        if ($senderType) {
+            $where .= " AND \"senderType\" = '" . $senderType . "'";
         }
-        if($inquiryDate){
-            $arrDate = explode('-',$inquiryDate);
+        if ($inquiryDate) {
+            $arrDate = explode('-', $inquiryDate);
             $date = new DateTime($arrDate[0]);
             $startDate = $date->format('Y-m-d'); // 31-07-2012
-            if(isset($arrDate[1])){
+            if (isset($arrDate[1])) {
                 $date = new DateTime($arrDate[1]);
                 $endDate = $date->format('Y-m-d');
             }
-            $where .=' AND DATE("sentOnDate") >='."'".$startDate."'";
-            if($endDate){
-                $where .=' AND DATE("sentOnDate") <= '."'".$endDate."'";
+            $where .= ' AND DATE("sentOnDate") >=' . "'" . $startDate . "'";
+            if ($endDate) {
+                $where .= ' AND DATE("sentOnDate") <= ' . "'" . $endDate . "'";
             }
         }
-        if($boOnly){
-            //$where .=' AND "senderType" = "distributor"';
+        if($boTypeHidden){
+            switch ($boTypeHidden) {
+                case 2:
+                    $where .= ' AND "hasActiveBO" = 1';
+                    break;
+                case 3:
+                    $where .= ' AND "hasActiveBO" = 0';
+                    break;
+            }
         }
-        if($manufacturerType){
-            if($manufacturerType == 2) {
+        if($emailNeeded){
+         $where .= ' AND "noOfRcverUsers" = 0';
+        }
+
+
+        if ($manufacturerType) {
+            if ($manufacturerType == 2) {
                 $where .= ' AND "subscription" = 1';
-            }elseif ($manufacturerType == 3){
+            } elseif ($manufacturerType == 3) {
                 $where .= ' AND "subscription" = 0';
             }
+        }
+        if ($where) {
+            $result = $this->getDatatable((new InquiryView()), $where, 'sentOnDate', 'desc');
+        } else {
+            $result = $this->getDatatable((new InquiryView()), '', 'sentOnDate', 'desc');
         }
         $result = $this->getDatatable((new InquiryView()), $where, 'sentOnDate', 'desc');
 
         echo json_encode($result);
+    }
+
+    /**
+     * Get inquiries datatable
+     */
+    function addEmail(){
+        $msgId = $this->f3->get('POST.msgId');
+        $newEmail = $this->f3->get('POST.email');
+
+        $objMessage = (new Message())->getById($msgId);
+        $objInquiryDetail = (new InquiryView())->getWhere('"messageId"='.$msgId);
+        $toCompanyId = $objMessage->toCompanyId;
+        $dbUser = new AumetUser();
+        $ojbUser = $dbUser->getWhere('"Email"=\''.$newEmail.'\'');
+
+        if(!$ojbUser){
+            $dbUser->FirstName = $objInquiryDetail->receiverCompany;
+            $dbUser->Email = $newEmail;
+            $dbUser->CompanyID = $toCompanyId;
+            $dbUser->add();
+
+            //Send email to new user
+            $inBox = new InboxController();
+            $res = $inBox->sendMessageEmail($objMessage);
+            $this->webResponse->setErrorCode(200);
+            $this->webResponse->setTitle('Email added');
+            $this->webResponse->setMessage('Email added successfully');
+            echo $this->webResponse->getJSONResponse();
+        }else{
+            $this->webResponse->setErrorCode(404);
+            $this->webResponse->setTitle('email already exist');
+            $this->webResponse->setMessage('User with this email already exist');
+            echo $this->webResponse->getJSONResponse();
+        }
     }
 
     /**
@@ -114,16 +166,15 @@ class InquiryController extends Controller
             $this->webResponse->setErrorCode(500);
             $this->webResponse->setMessage("Inquiry not found");
         } else {
-
             //Approved
             $dbMessage->actionStatus = 1;
             $dbMessage->update();
             $this->webResponse->setMessage("Inquiry approved successfully.");
-
+            $messageVwResponse = AumetDBRoutines::getMessage($inquiryId)[0];
             /**
              * Check if message is sent via dialogue box then send email as well.
              */
-            if($objMessage->messageDialogue == 1) {
+            if($objMessage->messageDialogue == 1 && $messageVwResponse->subscription == 1) {
                 $this->webResponse->setMessage("Inquiry approved and email sent successfully.");
                 $arrContacts = (new AumetUser())->getEmailListByCompanyId($dbMessage->toCompanyId);
                 if (count($arrContacts) > 0) {
@@ -160,7 +211,7 @@ class InquiryController extends Controller
                                 $this->f3->set('companyType', $objAumetCompany->Type);
                                 $htmlContent = View::instance()->render('email/layout.php');
                                 $response = $emailSender->send("New message @ Aumet from " . $user->displayName, $htmlContent, $arrContacts, null, $bccEmails);
-                                if(!$response){
+                                if(!$response || !in_array($response, range(200, 299))){
                                     $messageSent        = false;
                                     $messageException   = 'Some thing went wrong while sending email.';
                                 }else{
@@ -223,6 +274,11 @@ class InquiryController extends Controller
         $objInquiries = (new Message())->getById($inquiryId);
         if($objInquiries) {
             $this->f3->set('objInquiries',$objInquiries);
+            /*$objInquiries = (new Message())->all();
+            $tree = $this->inboxTree($objInquiries,0,1, $inquiryId);
+            $htmlChat = $this->getTreeHTML($tree);
+            $html = '<div class="msg_history">'.$htmlChat.'</div>';
+            $this->f3->set('tree',$html);*/
             $this->webResponse->setData(View::instance()->render("inquiry/model/message.php"));
         }
         else {
@@ -299,4 +355,69 @@ class InquiryController extends Controller
         print_r($_SESSION);
         print_r('</pre>');
     }
+
+    function getTreeHTML($tree, $loop=0, $html = ''){
+        $html ='';
+        foreach ($tree as $msg){
+            if ($loop == 0){
+                $html .= '<div class="outgoing_msg">
+                              <div class="sent_msg">
+                                    <p>'.($msg->content != ""? html_entity_decode($msg->content): "Content of message is empty").'</p>
+                                    <span class="time_date"> '.date('h:i A', strtotime($msg->createdAt)).'    |   '.$month = date('j M ', strtotime($msg->createdAt)).'</span>
+                                </div>
+                            </div>';
+            }
+            if ($loop == 1){
+                $html .= '<div class="incoming_msg">
+                              <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                              <div class="received_msg">
+                                <div class="received_withd_msg">
+                                  <p>'.($msg->content != "" ? html_entity_decode($msg->content): "Content of message is empty").'</p>
+                                  <span class="time_date"> '.date('h:i A', strtotime($msg->createdAt)).'    |   '.$month = date('j M ', strtotime($msg->createdAt)).'</span>
+                                </div>
+                              </div>
+                            </div>';
+            }
+            if(!empty(is_array($msg->children))){
+                $loop = ($loop == 1 ? 0 : 1);
+                $html .= $this->getTreeHTML($msg->children,$loop, $html);
+            }
+        }
+        return $html;
+    }
+
+    /**
+     * Helper Method
+     *
+     * Generate inbox tree for a particulate message
+     *
+     * @param array $elements
+     * @param int $parentId
+     * @param int $iteration
+     * @param int $parentMessageId
+     * @return array
+     */
+    function inboxTree(array $elements, $parentId = 0, $iteration=0, $parentMessageId=0) {
+        $check  = false;
+        $branch = array();
+        foreach ($elements as $element) {
+            if($iteration != 0 && $parentMessageId == $element->id){
+                $check = true;
+            }
+            if($check) {
+                if ($element->parentId == $parentId) {
+                    $children = $this->inboxTree((array)$elements, $element->id, $iteration++, $element->id);
+                    if ($children) {
+                        $element->children = $children;
+                    }
+                    $branch[] = $element;
+                    if(count($branch)>0){
+                        break;
+                    }
+                }
+            }
+        }
+        return $branch;
+    }
+
 }

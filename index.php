@@ -10,7 +10,7 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
 
-date_default_timezone_set("Asia/Dubai");
+date_default_timezone_set("Asia/Amman");
 
 require_once("vendor/autoload.php");
 
@@ -99,9 +99,15 @@ if (getenv('ENV') == Constants::ENV_PROD) {
 
 define('CHUNK_SIZE', 1024 * 1024);
 
-global $emailSender;
+//Old sendgrid credentials
+/*global $emailSender;
+$emailSender = new AumetEmail("Aumet", "no-reply@aumet.me", getenv('SENDGRID_API_KEY'));*/
 
+global $emailSender;
 $emailSender = new AumetEmail("Aumet", "info@aumet.com", getenv('SENDGRID_API_KEY'));
+
+//$emailSender = new AumetEmail("Aumet", "no-reply@aumet.me", getenv('SENDGRID_API_KEY'));
+//$emailSender = new AumetEmail("Aumet", "info@aumet.com", getenv('SENDGRID_API_KEY'));
 
 include_once("routes.php");
 

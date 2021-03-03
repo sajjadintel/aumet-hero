@@ -218,6 +218,7 @@ $f3->route('GET /@language/search/products', 'SearchController->getSearchProduct
 //Get inquiries
 $f3->route('GET /@language/inquiries', 'InquiryController->getInquiriesPage');
 $f3->route('POST /@language/inquiries/datatable', 'InquiryController->getInquiries');
+$f3->route('POST /@language/inquiry/add_email', 'InquiryController->addEmail');
 $f3->route('GET /@language/inquiry/@inquiryId', 'InquiryController->getInquiry');
 $f3->route('GET /@language/inquiry/approve/@inquiryId', 'InquiryController->setApprove');
 $f3->route('GET /@language/inquiry/disapprove/@inquiryId', 'InquiryController->setDisapprove');
