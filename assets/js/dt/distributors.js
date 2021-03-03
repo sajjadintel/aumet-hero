@@ -132,16 +132,16 @@ var KTDatatableDistributors = (function() {
 					field: 'RegistrationDate',
 					title: 'Registered Date',
 					sortable: false,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
-						return row.RegistrationDate;
+						return row.RegistrationDate.split(" ")[0];
 					}
 				},
 				{
 					field: 'Registered',
 					title: 'Registered',
 					sortable: true,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
 						if(row.RegistrationDate){
 							return 'Yes'
@@ -154,7 +154,7 @@ var KTDatatableDistributors = (function() {
 					field: 'Payload',
 					title: 'last Login',
 					sortable: true,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
 						let payload = null;
 						if(row.payload!=null){
@@ -169,10 +169,11 @@ var KTDatatableDistributors = (function() {
 					field: 'payload',
 					title: 'Accssed new website',
 					sortable: false,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
 						let payload = null;
 						if(row.payload!=null){
+							return 'Yes';
 							payload = JSON.parse(row.payload);
 							let releaseDate = new Date('2021-1-31');
 							let lastLogin = new Date(payload.metadata.lastLoginAt);
@@ -190,7 +191,7 @@ var KTDatatableDistributors = (function() {
 					field: 'Activated',
 					title: 'Status',
 					sortable: false,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
 						// console.log(row);
 						if(row.statusId==1){
@@ -213,7 +214,7 @@ var KTDatatableDistributors = (function() {
 					sortable: false,
 
 					width: 200,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
 						return (
 							'<a href="javascript:;" class="btn btn-primary mr-5" title="Edit" onclick="KTDatatableDistributors.edit('+ row.ID +')">Edit</a>' +
@@ -222,7 +223,7 @@ var KTDatatableDistributors = (function() {
 					}
 				}
 			]
-		}).sort('ID', 'asc');
+		}).sort('ID', 'DESC');
 		$('#submitButton').click(function(event){
 			// console.log('click');
 			var Name = $('#filterForm').find('input[name="Name"]').val();
@@ -234,6 +235,7 @@ var KTDatatableDistributors = (function() {
 			var MedicallineID = $('#filterForm').find('input[name="MedicallineID"]').val();
 			var statusId = $('#filterForm').find('input[name="statusId"]').val();
 			var Registered = $("input[name='Registered']:checked").val();;
+			var accessedNewWeb = $("input[name='accessedNewWeb']:checked").val();;
 			var inquirySend = $("input[name='inquirySend']:checked").val();
 			datatable.setDataSourceParam('Name', Name);
 			datatable.setDataSourceParam('CountryID', CountryID);
@@ -243,6 +245,7 @@ var KTDatatableDistributors = (function() {
 			datatable.setDataSourceParam('SpecialityID', SpecialityID);
 			datatable.setDataSourceParam('MedicallineID', MedicallineID);
 			datatable.setDataSourceParam('Registered', Registered);
+			datatable.setDataSourceParam('accessedNewWeb', accessedNewWeb);
 			datatable.setDataSourceParam('inquirySend', inquirySend);
 			datatable.setDataSourceParam('statusId', statusId);
 			// console.log(datatable);
@@ -265,6 +268,7 @@ var KTDatatableDistributors = (function() {
 			datatable.setDataSourceParam('SpecialityID', '');
 			datatable.setDataSourceParam('MedicallineID', '');
 			datatable.setDataSourceParam('Registered', '');
+			datatable.setDataSourceParam('accessedNewWeb', '');
 			datatable.setDataSourceParam('inquirySend', '');
 			datatable.setDataSourceParam('statusId', '');
 			datatable.reload();

@@ -209,3 +209,18 @@ ul.dual-listbox__available, ul.dual-listbox__selected {
 #kt_datatableDistributors .datatable-cell{
 	text-align: center;
 }
+#kt_datatableBusinessOpportunity .datatable-cell{
+	text-align: center;
+}
+#kt_datatableDistributors .datatable-detail table{
+	width: 100%;
+	margin-top: 5px;
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+}
+#kt_datatableBusinessOpportunity .datatable-detail table{
+	width: 100%;
+	margin-top: 5px;
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+}

@@ -166,6 +166,7 @@ class BusinessOpportunitiesController extends Controller
         $sendDateTime = $this->f3->get('POST.sendDateTime');
         $SpecialityID = $this->f3->get('POST.SpecialityID');
         $reminderCount = $this->f3->get('POST.reminderCount');
+        $accessedNewWeb = $this->f3->get('POST.accessedNewWeb');
         $MedicallineID = $this->f3->get('POST.MedicallineID');
         $startDate = '';
         $endDate = '';
@@ -200,6 +201,13 @@ class BusinessOpportunitiesController extends Controller
         }
         if($connectionStatusId){
             $where .=' AND "connectionStatusId" ='.$connectionStatusId;
+        }
+        if($accessedNewWeb){
+            if($accessedNewWeb==1) {
+                $where .= ' AND "payload" IS NOT NULL';
+            }else{
+                $where .= ' AND "payload" IS NULL';
+            }
         }
         if($SpecialityID){
             $where .=" AND '".$SpecialityID."' = ANY ( \"SpecialityID\" ) ";
