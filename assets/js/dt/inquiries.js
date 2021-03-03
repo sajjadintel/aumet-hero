@@ -66,6 +66,8 @@ var KTDatatableInquiry = (function() {
 			},
 			// layout definition
 			layout: {
+				responsive: true,
+				deferRender:    true,
 				scroll: true, // enable/disable datatable scroll both horizontal and vertical when needed.
 				footer: false, // display/hide footer
 			},
