@@ -166,15 +166,16 @@ class InquiryController extends Controller
             $this->webResponse->setErrorCode(500);
             $this->webResponse->setMessage("Inquiry not found");
         } else {
+            $messageVwResponse = AumetDBRoutines::getMessage($inquiryId)[0];
+            $subscriptionStatus = $messageVwResponse->subscription;
             //Approved
             $dbMessage->actionStatus = 1;
             $dbMessage->update();
             $this->webResponse->setMessage("Inquiry approved successfully.");
-            $messageVwResponse = AumetDBRoutines::getMessage($inquiryId)[0];
             /**
              * Check if message is sent via dialogue box then send email as well.
              */
-            if($objMessage->messageDialogue == 1 && $messageVwResponse->subscription == 1) {
+            if($objMessage->messageDialogue == 1 && $subscriptionStatus == 1) {
                 $this->webResponse->setMessage("Inquiry approved and email sent successfully.");
                 $arrContacts = (new AumetUser())->getEmailListByCompanyId($dbMessage->toCompanyId);
                 if (count($arrContacts) > 0) {
