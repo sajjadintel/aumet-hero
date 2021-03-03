@@ -17,13 +17,44 @@ function compress_htmlcode($codedata)
 <!--begin::Head-->
 
 <head>
-    <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-app.js"></script>
 
-    <!-- TODO: Add SDKs for Firebase products that you want to use
-         https://firebase.google.com/docs/web/setup#available-libraries -->
-    <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.2.5/firebase-analytics.js"></script>
+    <!-- TODO: Add SDKs for Firebase products that you want to use        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-performance.js"></script>
+    <script>
+        <?php if ( getenv('ENV') == Constants::ENV_LOC): ?>
+        var firebaseConfig = {
+            apiKey: "AIzaSyC5kStRUB63Jae9jGbvul93ZNi_jgTjs8Q",
+            authDomain: "aumet-dev.firebaseapp.com",
+            projectId: "aumet-dev",
+            storageBucket: "aumet-dev.appspot.com",
+            messagingSenderId: "773243474783",
+            appId: "1:773243474783:web:22bc0baa02aca627495cea",
+            measurementId: "G-B1GS9BKE18"
+        };
+        <?php else: ?>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyBy1rh8zZNp1lnUBLyQ15a-cgNvZzsNFBU",
+            authDomain: "aumet-com.firebaseapp.com",
+            databaseURL: "https://aumet-com.firebaseio.com",
+            projectId: "aumet-com",
+            storageBucket: "aumet-com.appspot.com",
+            messagingSenderId: "380649916442",
+            appId: "1:380649916442:web:8ff3bfa9cd74f7c69969a3",
+            measurementId: "G-YJ2BRPK2JD"
+        };
+        <?php endif; ?>
 
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+
+        var perf = firebase.performance();
+    </script>
     <script src="/assets/js/fb.js"></script>
     <script>
         WebFB.init();
