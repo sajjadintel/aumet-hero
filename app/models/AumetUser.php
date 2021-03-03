@@ -65,4 +65,12 @@ class AumetUser extends BaseModel
         }
         return $arrEmailList;
     }
+
+    public function getByEmail($email){
+        return parent::getByField('"Email"', $email);
+    }
+
+    public function getById($id){
+        return parent::getByField('"ID"', $id);
+    }
 }

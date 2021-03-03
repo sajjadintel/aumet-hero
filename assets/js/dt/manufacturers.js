@@ -1,5 +1,7 @@
 'use strict';
-
+$('#adduser_modal').on('shown.bs.modal', function () {
+	$(".modal-backdrop").hide();
+});
 var KTDatatableManufacturers = (function() {
 
 	// Private functions
@@ -58,7 +60,7 @@ var KTDatatableManufacturers = (function() {
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
-						return row.Name;
+						return '<a href="javascript:;" data-toggle="modal" data-target="#adduser_modal"  title="Edit" onclick="KTDatatableManufacturers.addUser('+ row.ID +')">'+ row.Name+'</a>';
 					}
 				},
 				{
@@ -89,8 +91,20 @@ var KTDatatableManufacturers = (function() {
 		},
 		view: function(_id) {
 			WebApp.loadPage('manufacturers/' + _id );
-		},
+		},addUser: function(_id) {
+			adjustPopUp();
+			$('#companyId').val(_id);
+			console.log(_id);
+		}
 	};
 })();
+function adjustPopUp(){
 
+	$('.modal-lg').css('top','15%');
+
+	$('.modal-lg').css('position','absolute');
+	$('.modal-lg').css('width','100%');
+	$('.modal-lg').css('right','26%');
+	$('.modal-lg').css('left','auto');
+}
 KTDatatableManufacturers.init();

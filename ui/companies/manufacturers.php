@@ -36,6 +36,103 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="adduser_modal" tabindex="-1" role="dialog" aria-hidden="true">
 
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="card card-custom example example-compact">
+                <div class="card-header">
+                    <h3 class="card-title">Add User</h3>
+                </div>
+                <!--begin::Form-->
+                <form id="kt_create_user_form" class="frmSignup">
+                    <input type="hidden" name="companyId" id="companyId">
+                    <input type="hidden" name="companyType" value="manufacturer" id="companyType">
+                    <div class="card-body">
+                        <!--begin::Code-->
+                        <!--end::Code-->
+                        <div class="form-group row">
+                            <label class="col-form-label text-right col-lg-3">First Name</label>
+                            <div class="col-lg-9">
+                                <div class="input-group date">
+                                    <input type="text" id="firstName" name="firstName" class="form-control" placeholder="First Name">
+                                </div>
+                                <span class="form-text text-muted">Please enter user first name.</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label text-right col-lg-3">Last Name</label>
+                            <div class="col-lg-9">
+                                <div class="input-group date">
+                                    <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Last Name">
+                                </div>
+                                <span class="form-text text-muted">Please enter user last name.</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label text-right col-lg-3">Email</label>
+                            <div class="col-lg-9">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+                                </div>
+                                <span class="form-text text-muted">Please enter user email.</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label text-right col-lg-3">Password</label>
+                            <div class="col-lg-9">
+                                <div class="input-group date">
+                                    <input type="text" name="password" id="password" class="form-control" placeholder="Password">
+                                </div>
+                                <span class="form-text text-muted">Please enter user password</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6 ml-lg-auto">
+                                <a href="javascript:void(0)" onclick="createUser()" type="reset" class="btn btn-primary mr-2">Submit</a>
+                            </div>
+                            <div class="col-lg-3">
+                                <button type="reset" id="closeAvailabilitiesPopUp" class="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!--end::Form-->
+            </div>
+        </div>
+    </div>
+</div>
 <script src="/assets/js/dt/manufacturers.js"></script>
+<script>
+    <?php if ( getenv('ENV') == Constants::ENV_LOC): ?>
+    var firebaseConfig = {
+        apiKey: "AIzaSyC5kStRUB63Jae9jGbvul93ZNi_jgTjs8Q",
+        authDomain: "aumet-dev.firebaseapp.com",
+        projectId: "aumet-dev",
+        storageBucket: "aumet-dev.appspot.com",
+        messagingSenderId: "773243474783",
+        appId: "1:773243474783:web:22bc0baa02aca627495cea",
+        measurementId: "G-B1GS9BKE18"
+    };
+    <?php else: ?>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyBy1rh8zZNp1lnUBLyQ15a-cgNvZzsNFBU",
+        authDomain: "aumet-com.firebaseapp.com",
+        databaseURL: "https://aumet-com.firebaseio.com",
+        projectId: "aumet-com",
+        storageBucket: "aumet-com.appspot.com",
+        messagingSenderId: "380649916442",
+        appId: "1:380649916442:web:8ff3bfa9cd74f7c69969a3",
+        measurementId: "G-YJ2BRPK2JD"
+    };
+    <?php endif; ?>
+
+
+    // Initialize Firebase
+</script>
+<script src="/assets/js/authUser.js"></script>
 

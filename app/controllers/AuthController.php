@@ -141,9 +141,21 @@ class AuthController extends Controller
     {
         global $emailSender;
 
-        $bccEmails = [
-            "a.atrash@aumet.com" => "Alaa Al Atrash"
-        ];
+        $bccEmails = [];
+        if((getenv('USE_REAL_EMAILS') == 1) && (getenv('ENV') == 'prod')) {
+            $bccEmails = [
+                "a.atrash@aumet.com" => "Alaa Al Atrash",
+                "m.issa@aumet.com" => "Mohammed Issa",
+                "r.abdelhadi@aumet.com" => "Raseel Abdelhadi"
+            ];
+            if ($this->isAuth) {
+                if($this->objCompany->Type == Company::TYPE_DISTRIBUTOR) {
+                    if (!array_key_exists('a.verhaeghe@aumet.com',$bccEmails)) {
+                        $bccEmails["a.verhaeghe@aumet.com"] = "A.Verhaeghe";
+                    }
+                }
+            }
+        }
 
         $this->f3->set("emailType", "reset");
         $this->f3->set("resetCode", $authCode);
@@ -211,4 +223,128 @@ class AuthController extends Controller
     {
         echo password_hash("atrash", PASSWORD_DEFAULT);
     }
+    function postSignUp()
+    {
+        if(!$this->isBetaAccess) {
+            $factory = (new Factory)->withServiceAccount($this->f3->get('firebaseAdminKeyFile'));
+
+            $auth = $factory->createAuth();
+
+            try {
+                $idTokenString = $this->f3->get("POST.token");
+                $verifiedIdToken = $auth->verifyIdToken($idTokenString);
+                $uid = $verifiedIdToken->getClaim('sub');
+
+                $userProperties = [
+                    'emailVerified' => true,
+                    'displayName' => $this->f3->get("POST.firstName")." ".$this->f3->get("POST.lastName"),
+                ];
+
+                $auth->updateUser($uid, $userProperties);
+
+                $objFBuser = $auth->getUser($uid);
+
+                $dbUser = new AuthUser();
+                $objSessionUser = $dbUser->getByUID($uid);
+
+                if($dbUser->dry()){
+                    $objSessionUser = $dbUser->getByEmail(trim($this->f3->get("POST.email")));
+                }
+
+                if($dbUser->dry()){
+                    $objInvitation = null;
+
+                    $dbUser->uid = $uid;
+
+                    $dbUser->email = $this->f3->get("POST.email");
+                    $dbUser->companyType = $this->f3->get("POST.companyType");
+                    $dbUser->statusId = 3;
+                    $dbUser->authCode = $this->generateRandomString(16);
+                    $dbUser->emailVerified = true;
+                    $dbUser->payload = json_encode($objFBuser);
+                    switch ($this->f3->get("POST.companyType")){
+                        case Company::TYPE_MANUFACTURER:
+                            $dbUser->scopeId=2; // OnEx Default
+                            break;
+                        case Company::TYPE_DISTRIBUTOR:
+                            $dbUser->scopeId=2; // OnEx Default
+                            break;
+                        case Company::TYPE_PHARMACY:
+                            $dbUser->scopeId=1;
+                            break;
+                    }
+
+                    $dbUser->displayName = $this->f3->get("POST.firstName")." ".$this->f3->get("POST.lastName");
+                    $dbUser->firstName = $this->f3->get("POST.firstName");
+                    $dbUser->lastName = $this->f3->get("POST.lastName");
+
+                    $dbUserContact = new AumetUser();
+                    $objUserContact = $dbUserContact->getByEmail($this->f3->get("POST.email"));
+                    if(!$objUserContact) {
+                        $dbUserContact->FirstName = $this->f3->get("POST.firstName");
+                        $dbUserContact->LastName = $this->f3->get("POST.lastName");
+                        $dbUserContact->Email = $this->f3->get("POST.email");
+                        $objUserContact = $dbUserContact->addAndLoadById('"ID"');
+                    }
+
+                    $dbUser->contactId = $objUserContact->ID;
+
+                    $objSessionUser = $dbUser->addAndLoadById();
+
+                    if($objSessionUser->id) {
+                        $dbCompanyUser = new CompanyUser();
+                        $dbCompanyUser->getByUserId($objSessionUser->id);
+                        //If already exists then delete it because it does not have any primary key
+                        if(!$dbCompanyUser->dry()){
+                            $dbCompanyUser->deleteByUserId($objSessionUser->id);
+                        }
+                        $dbCompanyUser->userId      = $objSessionUser->id;
+                        $dbCompanyUser->companyId   = $this->f3->get("POST.companyId");
+                        $dbCompanyUser->accessType  = $this->f3->get("POST.companyType");
+                        $dbCompanyUser->add();
+
+                        $auth->revokeRefreshTokens($uid);
+                    }
+                    $email = $this->f3->get("POST.email");
+
+                    $dbUser = new AuthUser();
+                    $objUser= $dbUser->getByEmail($email);
+
+                    if(!$dbUser->dry()) {
+                        $resetCode = $this->generateRandomString(32);
+                        $dbUser->resetCode = $resetCode;
+                        $this->sendResetPasswordEmail($objSessionUser->email, $objSessionUser->firstName, $resetCode );
+                        $dbUser->update();
+                        $this->f3->set('authScript', 'resetPasswordSent');
+                        View::instance()->render('auth/layout.php');
+                    } else {
+                        $auth->deleteUser($uid);
+                        $this->webResponse->setErrorCode(Constants::ERROR_UNKNOWN);
+                        $this->webResponse->setMessage($dbUser->getException());
+                    }
+                    $this->webResponse->setErrorCode(0);
+                    $this->webResponse->setMessage('User created successfully');
+                    echo $this->webResponse->getJSONResponse();exit;
+                }
+                else {
+                    $auth->revokeRefreshTokens($uid);
+                    $this->webResponse->setErrorCode(Constants::ERROR_USER_ALREADY_EXISTS);
+                    $this->webResponse->setMessage($this->f3->get("ERROR_USER_DISABLED"));
+                }
+
+            } catch (\InvalidArgumentException $e) {
+                $this->webResponse->setErrorCode(Constants::ERROR_UNKNOWN);
+                $this->webResponse->setMessage($e->getMessage());
+            } catch (InvalidToken $e) {
+                $this->webResponse->setErrorCode(Constants::ERROR_UNKNOWN);
+                $this->webResponse->setMessage($e->getMessage());
+            }
+        }
+        else{
+            $this->webResponse->setErrorCode(-1);
+        }
+
+        echo $this->webResponse->getJSONResponse();
+    }
+
 }

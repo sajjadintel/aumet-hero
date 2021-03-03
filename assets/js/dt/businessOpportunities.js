@@ -158,7 +158,7 @@ var KTDatatableDistributors = (function() {
 					autoHide: false,
 					template: function(row) {
 						return row.reminderCount;
-					}
+					},
 				},
 				{
 					field: 'Actions',
@@ -172,6 +172,13 @@ var KTDatatableDistributors = (function() {
 							'<a href="javascript:;" class="btn btn-primary mr-5" title="Edit" onclick="KTDatatableDistributors.edit('+ row.ID +')">Edit</a>' +
 							'<a href="javascript:;" class="btn btn-outline-primary" title="View" onclick="KTDatatableDistributors.view('+ row.ID +')">View</a>'
 						);
+					}
+				}
+			],
+			rows:[
+				{
+					afterTemplate:function (row){
+						console.log(row);
 					}
 				}
 			]
@@ -232,6 +239,11 @@ var KTDatatableDistributors = (function() {
 			WebApp.unblock();
 		});
 
+		$('#kt_datatableBusinessOpportunity .datatable-table tbody').on('click', 'tr', function () {
+			var data = datatable.row( this ).data();
+			console.log( data);
+		} );
+
 	};
 
 
@@ -267,21 +279,4 @@ var KTDatatableDistributors = (function() {
 	};
 
 })();
-// function distributorFormSubmit(){
-// 	$('#pages').val(datatable.API.params.pagination.pages);
-// 	$('#page').val(datatable.API.params.pagination.page);
-// 	$('#perpage').val(datatable.API.params.pagination.perpage);
-// 	$('#total').val(datatable.API.params.pagination.total);
-// 	$('#sort_by').val(datatable.API.params.sort.field);
-// 	$('#sort_order').val(datatable.API.params.sort.sort);
-//
-// 	var data =JSON.parse(JSON.stringify($('#filterForm').serializeArray()));
-//
-// 	console.log(data);
-// 	WebApp.post('distributors/datatable',data,function(response){
-// 		console.log(response)
-// 		datatable.destroy();
-// 		datatable.reload();
-// 	});
-// }
 KTDatatableDistributors.init();
