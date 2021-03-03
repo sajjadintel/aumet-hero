@@ -177,7 +177,7 @@
                         </form>
                     </div>
                 </div>
-                <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatableInquiries"></div>
+                <div class="datatable datatable-bordered datatable-head-custom p-5" id="kt_datatableInquiries"></div>
             </div>
         </div>
     </div>

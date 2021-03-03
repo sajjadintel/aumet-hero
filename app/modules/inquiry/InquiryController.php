@@ -264,32 +264,6 @@ class InquiryController extends Controller
     }
 
     /**
-     * Helper Method
-     *
-     * Get data for single inquiry
-     *
-     * @param $inquiryId
-     * @return false
-     */
-    function loadInquiries($inquiryId){
-        $objInquiries = (new Message())->getById($inquiryId);
-        if($objInquiries) {
-            $this->f3->set('objInquiries',$objInquiries);
-            /*$objInquiries = (new Message())->all();
-            $tree = $this->inboxTree($objInquiries,0,1, $inquiryId);
-            $htmlChat = $this->getTreeHTML($tree);
-            $html = '<div class="msg_history">'.$htmlChat.'</div>';
-            $this->f3->set('tree',$html);*/
-            $this->webResponse->setData(View::instance()->render("inquiry/model/message.php"));
-        }
-        else {
-            $this->webResponse->setData(View::instance()->render("errors/404.php"));
-            return false;
-        }
-
-    }
-
-    /**
      * Send email on approval for message type inquiry only
      *
      * @param $objMessage
@@ -351,20 +325,54 @@ class InquiryController extends Controller
         return array('messageStatus' => $messageSent, 'messageException' => $messageException);
     }
 
-    function getTest(){
-        print_r('<pre>');
-        print_r($_SESSION);
-        print_r('</pre>');
+    /**
+     * Helper Method
+     *
+     * Get data for single inquiry
+     *
+     * @param $inquiryId
+     * @return false
+     */
+    function loadInquiries($inquiryId){
+        $objInquiries = (new Message())->getById($inquiryId);
+        if($objInquiries) {
+            $this->f3->set('objInquiries',$objInquiries);
+            $objInquiries = (new Message())->all();
+            $tree = $this->inboxTree($objInquiries,0,1, $inquiryId);
+            $htmlChat = $this->getTreeHTML($tree);
+            $html = '<div class="msg_history">'.$htmlChat.'</div>';
+            $this->f3->set('tree',$html);
+            $this->webResponse->setData(View::instance()->render("inquiry/model/message.php"));
+        }
+        else {
+            $this->webResponse->setData(View::instance()->render("errors/404.php"));
+            return false;
+        }
+
     }
 
+    /**
+     * Helper Method
+     *
+     * Get chat view for messages
+     *
+     * @param $tree
+     * @param int $loop
+     * @param string $html
+     * @return string
+     */
     function getTreeHTML($tree, $loop=0, $html = ''){
         $html ='';
         foreach ($tree as $msg){
+            $date = new DateTime($msg->createdAt, new DateTimeZone('Asia/Amman'));
+            $time = $date->format('H:i A');
+            $timeT= $date->format('j M ');
+
             if ($loop == 0){
                 $html .= '<div class="outgoing_msg">
                               <div class="sent_msg">
                                     <p>'.($msg->content != ""? html_entity_decode($msg->content): "Content of message is empty").'</p>
-                                    <span class="time_date"> '.date('h:i A', strtotime($msg->createdAt)).'    |   '.$month = date('j M ', strtotime($msg->createdAt)).'</span>
+                                    <span class="time_date"> '.$time.' | '.$timeT.'</span>
                                 </div>
                             </div>';
             }
@@ -374,7 +382,7 @@ class InquiryController extends Controller
                               <div class="received_msg">
                                 <div class="received_withd_msg">
                                   <p>'.($msg->content != "" ? html_entity_decode($msg->content): "Content of message is empty").'</p>
-                                  <span class="time_date"> '.date('h:i A', strtotime($msg->createdAt)).'    |   '.$month = date('j M ', strtotime($msg->createdAt)).'</span>
+                                  <span class="time_date"> '.$time.' | '.$timeT.'</span>
                                 </div>
                               </div>
                             </div>';
@@ -421,4 +429,12 @@ class InquiryController extends Controller
         return $branch;
     }
 
+    /**
+     * Helper Method
+     */
+    function getTest(){
+        print_r('<pre>');
+        print_r($_SESSION);
+        print_r('</pre>');
+    }
 }
