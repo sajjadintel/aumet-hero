@@ -29,7 +29,7 @@ class InquiryController extends Controller
         $inquirySenderUser = $this->f3->get('POST.inquirySenderUserHidden');
         $senderType = $this->f3->get('POST.senderTypeHidden');
         $inquiryDate = $this->f3->get('POST.inquiryDate');
-        $boOnly = $this->f3->get('POST.boOnly');
+        $boTypeHidden = $this->f3->get('POST.boTypeHidden');
         $manufacturerType = $this->f3->get('POST.manufacturerTypeHidden');
         $startDate = '';
         $endDate = '';
@@ -76,8 +76,15 @@ class InquiryController extends Controller
                 $where .= ' AND DATE("sentOnDate") <= ' . "'" . $endDate . "'";
             }
         }
-        if($boOnly){
-            $where .=' AND "hasActiveBO" = 1';
+        if($boTypeHidden){
+            switch ($boTypeHidden) {
+                case 2:
+                    $where .= ' AND "hasActiveBO" = 1';
+                    break;
+                case 3:
+                    $where .= ' AND "hasActiveBO" = 0';
+                    break;
+            }
         }
         if($emailNeeded){
          $where .= ' AND "noOfRcverUsers" = 0';

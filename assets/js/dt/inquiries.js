@@ -16,9 +16,6 @@ $('#rangetime').on('apply.daterangepicker', function(ev, picker) {
 	$(this).val(picker.startDate.format('MM/DD/YYYY hh:mm A') + ' - ' + picker.endDate.format('MM/DD/YYYY hh:mm A'));
 
 });
-$('#boOnly').select2().on('select2:selecting', function (e) {
-	$('#boOnlyHidden').val(e.params.args.data.id);
-});
 $('#senderType').select2().on('select2:selecting', function (e) {
 	$('#senderTypeHidden').val(e.params.args.data.id);
 });
@@ -37,6 +34,9 @@ $('#kt_datepicker_2').daterangepicker({
 });
 $('#manufacturerType').select2().on('select2:selecting', function (e) {
 	$('#manufacturerTypeHidden').val(e.params.args.data.id);
+});
+$('#boType').select2().on('select2:selecting', function (e) {
+	$('#boTypeHidden').val(e.params.args.data.id);
 });
 
 //reset form
@@ -100,6 +100,7 @@ var KTDatatableInquiry = (function() {
 				{
 					field: 'senderType',
 					title: 'Sender Type',
+					width: 90,
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
@@ -137,7 +138,7 @@ var KTDatatableInquiry = (function() {
 				{
 					field: 'actionStatus',
 					title: 'Status',
-					width: 100,
+					width: 70,
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
@@ -156,7 +157,7 @@ var KTDatatableInquiry = (function() {
 								temp = '<span class="label font-weight-bold label-lg label-light-danger label-inline">Locked</span>';
 								break;
 							case 4:
-								temp = '<span class="label font-weight-bold label-lg label-danger label-inline">Disapproved</span>';
+								temp = '<span class="label font-weight-bold label-sm label-danger label-inline pt-4 pb-4">Disapproved</span>';
 								break;
 						}
 						return temp;
@@ -200,8 +201,8 @@ var KTDatatableInquiry = (function() {
 			var inquirySenderUserHidden = $('#filterForm').find('input[name="inquirySenderUserHidden"]').val();
 			var senderTypeHidden = $('#filterForm').find('input[name="senderTypeHidden"]').val();
 			var inquiryDate = $('#filterForm').find('input[name="inquiryDate"]').val();
-			var boOnly = ($('#filterForm .boOnly:checked').length>0)? $('#filterForm .boOnly:checked').val() : 0;
 			var manufacturerType = $('#filterForm').find('input[name="manufacturerTypeHidden"]').val();
+			var boTypeHidden = $('#filterForm').find('input[name="boTypeHidden"]').val();
 			var emailNeeded = ($('#filterForm .emailNeeded:checked').length>0)? $('#filterForm .emailNeeded:checked').val() : 0;
 
 			datatable.setDataSourceParam('inquiryStatusHidden', inquiryStatusHidden);
@@ -209,7 +210,7 @@ var KTDatatableInquiry = (function() {
 			datatable.setDataSourceParam('inquirySenderUserHidden', inquirySenderUserHidden);
 			datatable.setDataSourceParam('senderTypeHidden', senderTypeHidden);
 			datatable.setDataSourceParam('inquiryDate', inquiryDate);
-			datatable.setDataSourceParam('boOnly', boOnly);
+			datatable.setDataSourceParam('boTypeHidden', boTypeHidden);
 			datatable.setDataSourceParam('manufacturerTypeHidden', manufacturerType);
 			datatable.setDataSourceParam('emailNeeded', emailNeeded);
 
@@ -339,6 +340,11 @@ var KTDatatableInquiry = (function() {
 			$('#manufacturerTypeHidden').val('0');
 			$('#manufacturerType').val('0');
 			$('#manufacturerType').trigger('change.select2');
+
+
+			$('#boTypeHidden').val('0');
+			$('#boType').val('0');
+			$('#boType').trigger('change.select2');
 
 
 			$("input:radio").val(0);
