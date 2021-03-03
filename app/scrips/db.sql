@@ -179,15 +179,15 @@ create view onex."vwMessages"
              "receiverCompany", "receiverCompanyId", "sentOnDate", subject, content, "actionStatus", "toUserId",
              "fromUserId", "noOfRcverUsers", subscription, "parentId", "repliedOnDate", "hasActiveBO")
 as
-SELECT m.id                                        AS "messageId",
-       scom."Name"                                 AS "senderCompany",
-       scom."ID"                                   AS "senderCompanyId",
-       ct."Name"                                   AS "senderCountry",
-       scom."Type"                                 AS "senderType",
-       rcom."Type"                                 AS "receiverType",
-       rcom."Name"                                 AS "receiverCompany",
-       rcom."ID"                                   AS "receiverCompanyId",
-       m."createdAt"                               AS "sentOnDate",
+SELECT m.id                                                               AS "messageId",
+       scom."Name"                                                        AS "senderCompany",
+       scom."ID"                                                          AS "senderCompanyId",
+       ct."Name"                                                          AS "senderCountry",
+       scom."Type"                                                        AS "senderType",
+       rcom."Type"                                                        AS "receiverType",
+       rcom."Name"                                                        AS "receiverCompany",
+       rcom."ID"                                                          AS "receiverCompanyId",
+       timezone('asia/amman'::text, timezone('utc'::text, m."createdAt")) AS "sentOnDate",
        m.subject,
        m.content,
        CASE
@@ -196,26 +196,25 @@ SELECT m.id                                        AS "messageId",
                   WHERE sub."companyId" = m."toCompanyId")) <= 0 AND rcom."Type"::text = 'manufacturer'::text AND
                 m."actionStatus" = 1 THEN 3
            ELSE m."actionStatus"
-           END                                     AS "actionStatus",
+           END                                                            AS "actionStatus",
        m."toUserId",
        m."fromUserId",
        (SELECT count(ruser."ID") AS count
         FROM production."User" ruser
-        WHERE ruser."CompanyID" = m."toCompanyId") AS "noOfRcverUsers",
+        WHERE ruser."CompanyID" = m."toCompanyId")                        AS "noOfRcverUsers",
        CASE
-           WHEN (
-                   ((SELECT count(*) AS count FROM onex.subscription sub WHERE sub."companyId" = m."fromCompanyId") >
-                    0 AND scom."Type"::text = 'manufacturer'::text) OR
-                   ((SELECT count(*) AS count FROM onex.subscription sub WHERE sub."companyId" = m."toCompanyId") >
-                    0 AND rcom."Type"::text = 'manufacturer'::text)
-               )
-               THEN 1
+           WHEN ((SELECT count(*) AS count
+                  FROM onex.subscription sub
+                  WHERE sub."companyId" = m."fromCompanyId")) > 0 AND scom."Type"::text = 'manufacturer'::text OR
+                ((SELECT count(*) AS count
+                  FROM onex.subscription sub
+                  WHERE sub."companyId" = m."toCompanyId")) > 0 AND rcom."Type"::text = 'manufacturer'::text THEN 1
            ELSE 0
-           END                                     AS subscription,
+           END                                                            AS subscription,
        m."parentId",
-       (SELECT message."createdAt"
+       (SELECT timezone('asia/amman'::text, timezone('utc'::text, message."createdAt"))
         FROM onex.message
-        WHERE message.id = m."parentId")           AS "repliedOnDate",
+        WHERE message.id = m."parentId")                                  AS "repliedOnDate",
        CASE
            WHEN ((SELECT count(*) AS count
                   FROM onex."vwBusinessOpportunities"
@@ -224,7 +223,7 @@ SELECT m.id                                        AS "messageId",
                     AND "vwBusinessOpportunities"."endDate" >= now())) > 0 AND
                 scom."Type"::text = 'distributor'::text AND rcom."Type"::text = 'manufacturer'::text THEN 1
            ELSE 0
-           END                                     AS "hasActiveBO"
+           END                                                            AS "hasActiveBO"
 FROM onex.message m
          JOIN production."Company" scom ON scom."ID" = m."fromCompanyId"
          JOIN setup."Country" ct ON scom."CountryID" = ct."ID"
