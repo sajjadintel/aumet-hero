@@ -205,6 +205,19 @@ var KTDatatableInquiry = (function() {
 		$('#kt_datatableInquiries').on('datatable-on-ajax-done',function(){
 			WebApp.unblock();
 		});
+		$('#kt_datatableInquiries').on('datatable-on-init',function(event){
+			// WebApp.block();
+			event.preventDefault();
+			datatable.setDataSourceParam('inquiryStatusHidden', '');
+			datatable.setDataSourceParam('inquiryReceiverUserHidden', '');
+			datatable.setDataSourceParam('inquirySenderUserHidden', '');
+			datatable.setDataSourceParam('senderTypeHidden', '');
+			datatable.setDataSourceParam('inquiryDate', '');
+			datatable.setDataSourceParam('boTypeHidden', '');
+			datatable.setDataSourceParam('manufacturerTypeHidden', '');
+			datatable.setDataSourceParam('emailNeeded', '');
+			datatable.reload();
+		});
 		$('#kt_datatableInquiries').on('datatable-on-ajax-fail',function(){
 			WebApp.unblock();
 		});
