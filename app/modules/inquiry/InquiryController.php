@@ -364,15 +364,13 @@ class InquiryController extends Controller
     function getTreeHTML($tree, $loop=0, $html = ''){
         $html ='';
         foreach ($tree as $msg){
-            $date = new DateTime($msg->createdAt, new DateTimeZone('Asia/Amman'));
-            $time = $date->format('H:i A');
-            $timeT= $date->format('j M ');
-
+            $convertTime = (new Helper())->convertToOtherTimezone($msg->createdAt,'Asia/Dubai', 'Asia/Amman');
+            $convertTime = $convertTime['date'];
             if ($loop == 0){
                 $html .= '<div class="outgoing_msg">
                               <div class="sent_msg">
                                     <p>'.($msg->content != ""? html_entity_decode($msg->content): "Content of message is empty").'</p>
-                                    <span class="time_date"> '.$time.' | '.$timeT.'</span>
+                                    <span class="time_date"> '.date('H:i A', strtotime($convertTime)).'    |   '.date('j M ', strtotime($convertTime)).'</span>
                                 </div>
                             </div>';
             }
@@ -382,7 +380,7 @@ class InquiryController extends Controller
                               <div class="received_msg">
                                 <div class="received_withd_msg">
                                   <p>'.($msg->content != "" ? html_entity_decode($msg->content): "Content of message is empty").'</p>
-                                  <span class="time_date"> '.$time.' | '.$timeT.'</span>
+                                  <span class="time_date"> '.date('H:i A', strtotime($convertTime)).'    |   '.date('j M ', strtotime($convertTime)).'</span>
                                 </div>
                               </div>
                             </div>';

@@ -120,7 +120,11 @@ var KTDatatableInquiry = (function() {
 					title: 'Sent On Date',
 					sortable: true,
 					template: function(row) {
-						return row.sentOnDate;
+						const format1 = "YYYY-MM-DD HH:mm:ss"
+						var time = moment.duration("02:00:00");
+						var date = moment(row.sentOnDate);
+						date.subtract(time);
+						return date.format(format1);
 					}
 				},
 				{
@@ -294,7 +298,9 @@ var KTDatatableInquiry = (function() {
 		$('#genericModalContent').html(modelConent);
 		$("#genericModal").modal("show");
 	}
-
+	function convertTZ(date, tzString) {
+		return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("utc", {timeZone: tzString}));
+	}
 	return {
 		// Public functions
 		init: function() {
