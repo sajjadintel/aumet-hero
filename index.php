@@ -85,6 +85,11 @@ $dbConnectionUniOrder = new DB\SQL(
 
 $f3->set('rootDomain', getenv('rootDomain'));
 $f3->set('rootDomainUrl', getenv('rootDomainUrl'));
+if(getenv('rootDomainOnexUrl')==''){
+    $f3->set('rootDomainOnexUrl', getenv('https://dev-onex.aumet.tech'));
+}else{
+    $f3->set('rootDomainOnexUrl', getenv('rootDomainOnexUrl'));
+}
 $f3->set('emailAssetsDirectory', getenv('emailAssetsDirectory'));
 
 if (getenv('ENV') == Constants::ENV_PROD) {

@@ -69,6 +69,7 @@ var KTDatatableDistributors = (function() {
 					type: 'number',
 					selector: false,
 					textAlign: 'left',
+					width: '100',
 					autoHide: false,
 					template: function(row) {
 						return row.ID;

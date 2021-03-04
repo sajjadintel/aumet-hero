@@ -157,7 +157,7 @@ class AuthController extends Controller
             }
         }
 
-        $this->f3->set("emailType", "reset");
+        $this->f3->set("emailType", "resetOnexUser");
         $this->f3->set("resetCode", $authCode);
         $this->f3->set("authEmail", $userEmail);
         $htmlContent = View::instance()->render('email/layout.php');
@@ -315,8 +315,6 @@ class AuthController extends Controller
                         $dbUser->resetCode = $resetCode;
                         $this->sendResetPasswordEmail($objSessionUser->email, $objSessionUser->firstName, $resetCode );
                         $dbUser->update();
-                        $this->f3->set('authScript', 'resetPasswordSent');
-                        View::instance()->render('auth/layout.php');
                     } else {
                         $auth->deleteUser($uid);
                         $this->webResponse->setErrorCode(Constants::ERROR_UNKNOWN);
