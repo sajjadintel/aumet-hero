@@ -173,7 +173,7 @@ class InquiryController extends Controller
             $dbMessage->update();
             $this->webResponse->setMessage("Inquiry approved successfully.");
             /**
-             * Check if message is sent via dialogue box then send email as well.
+             * Check if message is sent via dialogue box then send email as well as check if user is subscribed.
              */
             if($objMessage->messageDialogue == 1 && $subscriptionStatus == 1) {
                 $this->webResponse->setMessage("Inquiry approved and email sent successfully.");
