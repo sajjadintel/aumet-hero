@@ -233,3 +233,78 @@ ORDER BY m."createdAt" DESC;
 alter table onex."vwMessages" owner to aumet_user;
 
 ## END {Mubasher} {02-03-2021}
+
+## START {Mubasher} {04-03-2021}
+
+create view "vwMessages"
+            ("messageId", "senderCompany", "senderCompanyId", "senderCountry", "senderType", "receiverType",
+             "receiverCompany", "receiverCompanyId", "sentOnDate", subject, content, "actionStatus", "toUserId",
+             "fromUserId", "noOfRcverUsers", subscription, "parentId", "repliedOnDate", "hasActiveBO")
+as
+SELECT m.id                                        AS "messageId",
+       scom."Name"                                 AS "senderCompany",
+       scom."ID"                                   AS "senderCompanyId",
+       ct."Name"                                   AS "senderCountry",
+       scom."Type"                                 AS "senderType",
+       rcom."Type"                                 AS "receiverType",
+       rcom."Name"                                 AS "receiverCompany",
+       rcom."ID"                                   AS "receiverCompanyId",
+       m."createdAt"                               AS "sentOnDate",
+       m.subject,
+       m.content,
+       CASE
+           WHEN ((SELECT count(*) AS count
+                  FROM onex.subscription sub
+                  WHERE sub."companyId" = m."toCompanyId")) <= 0 AND rcom."Type"::text = 'manufacturer'::text AND
+                m."actionStatus" = 1 AND ((SELECT count(*) AS count
+                                           FROM onex.message msgc
+                                           WHERE msgc."toCompanyId" = m."toCompanyId"
+                                             AND msgc."fromCompanyId" = m."fromCompanyId"
+                                             AND msgc."parentId" = 0
+                                             AND (msgc."actionStatus" <> ALL (ARRAY [0, 4])))) > 1 AND ((SELECT msg.id
+                                                                                                         FROM onex.message msg
+                                                                                                         WHERE msg."toCompanyId" = m."toCompanyId"
+                                                                                                           AND msg."fromCompanyId" = m."fromCompanyId"
+                                                                                                           AND msg."parentId" = 0
+                                                                                                           AND (msg."actionStatus" <> ALL (ARRAY [0, 4]))
+                                                                                                         ORDER BY msg.id
+                                                                                                         LIMIT 1)) <>
+                                                                                                       m.id THEN 3
+           ELSE m."actionStatus"
+           END                                     AS "actionStatus",
+       m."toUserId",
+       m."fromUserId",
+       (SELECT count(ruser."ID") AS count
+        FROM production."User" ruser
+        WHERE ruser."CompanyID" = m."toCompanyId") AS "noOfRcverUsers",
+       CASE
+           WHEN ((SELECT count(*) AS count
+                  FROM onex.subscription sub
+                  WHERE sub."companyId" = m."fromCompanyId")) > 0 AND scom."Type"::text = 'manufacturer'::text OR
+                ((SELECT count(*) AS count
+                  FROM onex.subscription sub
+                  WHERE sub."companyId" = m."toCompanyId")) > 0 AND rcom."Type"::text = 'manufacturer'::text THEN 1
+           ELSE 0
+           END                                     AS subscription,
+       m."parentId",
+       (SELECT message."createdAt" AS timezone
+        FROM onex.message
+        WHERE message.id = m."parentId")           AS "repliedOnDate",
+       CASE
+           WHEN ((SELECT count(*) AS count
+                  FROM onex."vwBusinessOpportunities"
+                  WHERE "vwBusinessOpportunities"."fromCompanyId" = rcom."ID"
+                    AND "vwBusinessOpportunities"."companyId" = scom."ID"
+                    AND "vwBusinessOpportunities"."endDate" >= now())) > 0 AND
+                scom."Type"::text = 'distributor'::text AND rcom."Type"::text = 'manufacturer'::text THEN 1
+           ELSE 0
+           END                                     AS "hasActiveBO"
+FROM onex.message m
+         JOIN production."Company" scom ON scom."ID" = m."fromCompanyId"
+         JOIN setup."Country" ct ON scom."CountryID" = ct."ID"
+         JOIN production."Company" rcom ON rcom."ID" = m."toCompanyId"
+ORDER BY m."createdAt" DESC;
+alter table "vwMessages"
+    owner to aumet_user;
+
+## END {Mubasher} {04-03-2021}
