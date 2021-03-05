@@ -308,3 +308,38 @@ alter table "vwMessages"
     owner to aumet_user;
 
 ## END {Mubasher} {04-03-2021}
+
+## START {Mubasher} {05-03-2021}
+
+create view onex."vwCompany"("ID", "Name", "Type", "Slug", "ParentID", "CreatedAt", "LoginToken") as
+SELECT c."ID",
+       c."Name",
+       c."Type",
+       c."Slug",
+       c."ParentID",
+       c."CreatedAt",
+       CASE
+           WHEN ((SELECT count(*) AS count
+                  FROM onex."companyUser" cu_1
+                  WHERE c."ID" = cu_1."companyId"
+                  LIMIT 1)) > 0 THEN
+               CASE
+                   WHEN ((SELECT count(*) AS count
+                          FROM auth."user" au
+                          WHERE cu."userId" = au.id
+                            AND au."isAdmin" = true)) > 0 THEN (SELECT au.uid
+                                                                FROM auth."user" au
+                                                                WHERE cu."userId" = au.id
+                                                                  AND au."isAdmin")
+                   ELSE (SELECT au.uid
+                         FROM auth."user" au
+                         WHERE cu."userId" = au.id)
+                   END
+           ELSE ''::character varying
+           END AS "LoginToken"
+FROM production."Company" c
+         LEFT JOIN onex."companyUser" cu ON c."ID" = cu."companyId";
+
+alter table onex."vwCompany" owner to aumet_user;
+
+## END {Mubasher} {05-03-2021}
