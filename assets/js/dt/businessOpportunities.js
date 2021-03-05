@@ -122,7 +122,7 @@ var KTDatatableDistributors = (function() {
 					field: 'BussinessUserEmail',
 					title: 'Email',
 					sortable: true,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
 						return row.BussinessUserEmail;
 					}
@@ -131,21 +131,67 @@ var KTDatatableDistributors = (function() {
 					field: 'sendDateTime',
 					title: 'Sent on',
 					sortable: true,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
-						return row.sendDateTime;
+						return row.sendDateTime.split(" ")[0];
+					}
+				},
+				{
+					field: 'endDate',
+					title: 'End on',
+					sortable: true,
+					autoHide: true,
+					template: function(row) {
+						if(row.endDate) {
+							return row.endDate.split(" ")[0];
+						}else{
+							return '';
+						}
+					}
+				},
+				{
+					field: 'connectionStatusId',
+					title: 'Status',
+					sortable: true,
+					autoHide: true,
+					template: function(row) {
+						if(row.connectionStatusId==1){
+							return '<span class="label font-weight-bold label-lg  label-light-danger label-inline">Pending</span>';
+						}
+						else if(row.connectionStatusId==2){
+							return '<span class="label font-weight-bold label-lg  label-light-warning label-inline">Mail Opened</span>';
+						}
+						else if(row.connectionStatusId==3){
+							return '<span class="label font-weight-bold label-lg  label-light-success label-inline">Viewed</span>';
+						}
+						else if(row.connectionStatusId==4){
+							return '<span class="label font-weight-bold label-lg  label-light-success label-inline">Inquiry Sent</span>';
+						}
+						else if(row.connectionStatusId==5){
+							return '<span class="label font-weight-bold label-lg  label-light-success label-inline">Call Scheduled</span>';
+						}
 					}
 				},
 				{
 					field: 'Days remaining',
 					title: 'Days remaining',
 					sortable: true,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
-						let payload = null;
-						if(row.payload!=null){
-							payload = JSON.parse(row.payload);
-							return payload.metadata.lastLoginAt.split("T")[0];
+						if(row.endDate) {
+							var date2 = new Date(row.endDate);
+							var date1 = new Date();
+							if(date2<date1){
+								return 'Expired';
+							}
+							let days = 'Days';
+							var Difference_In_Time = date2.getTime() - date1.getTime();
+							var Difference_In_Days = Math.floor(Difference_In_Time / (1000 * 3600 * 24));
+							if (Difference_In_Days < 1) {
+								days = 'Hours';
+								Difference_In_Days = Math.floor(Difference_In_Time / (1000 * 3600));
+							}
+							return Difference_In_Days + ' ' + days;
 						}else{
 							return '';
 						}
@@ -155,25 +201,25 @@ var KTDatatableDistributors = (function() {
 					field: 'reminderCount',
 					title: 'Follow up emails sent',
 					sortable: false,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
 						return row.reminderCount;
-					}
-				},
-				{
-					field: 'Actions',
-					title: 'Actions',
-					sortable: false,
-
-					width: 200,
-					autoHide: false,
-					template: function(row) {
-						return (
-							'<a href="javascript:;" class="btn btn-primary mr-5" title="Edit" onclick="KTDatatableDistributors.edit('+ row.ID +')">Edit</a>' +
-							'<a href="javascript:;" class="btn btn-outline-primary" title="View" onclick="KTDatatableDistributors.view('+ row.ID +')">View</a>'
-						);
-					}
+					},
 				}
+				// {
+				// 	field: 'Actions',
+				// 	title: 'Actions',
+				// 	sortable: false,
+				//
+				// 	width: 200,
+				// 	autoHide: true,
+				// 	template: function(row) {
+				// 		return (
+				// 			'<a href="javascript:;" class="btn btn-primary mr-5" title="Edit" onclick="KTDatatableDistributors.edit('+ row.ID +')">Edit</a>' +
+				// 			'<a href="javascript:;" class="btn btn-outline-primary" title="View" onclick="KTDatatableDistributors.view('+ row.ID +')">View</a>'
+				// 		);
+				// 	}
+				// }
 			]
 		}).sort('sendDateTime','desc');
 		$('#submitButton').click(function(event){
@@ -190,6 +236,7 @@ var KTDatatableDistributors = (function() {
 			var MedicallineID = $('#filterForm').find('input[name="MedicallineID"]').val();
 			var statusId = $('#filterForm').find('input[name="statusId"]').val();
 			var reminderCount = $('#filterForm').find('input[name="reminderCount"]').val();
+			var accessedNewWeb = $("input[name='accessedNewWeb']:checked").val();;
 			datatable.setDataSourceParam('ManufacturerName', Name);
 			datatable.setDataSourceParam('BussinessUserJobTitle', BussinessUserJobTitle);
 			datatable.setDataSourceParam('DistributorName', DistributorName);
@@ -199,6 +246,7 @@ var KTDatatableDistributors = (function() {
 			datatable.setDataSourceParam('sendDateTime', sendDateTime);
 			datatable.setDataSourceParam('SpecialityID', SpecialityID);
 			datatable.setDataSourceParam('MedicallineID', MedicallineID);
+			datatable.setDataSourceParam('accessedNewWeb', accessedNewWeb);
 			datatable.setDataSourceParam('reminderCount', reminderCount);
 			datatable.setDataSourceParam('connectionStatusId', statusId);
 			datatable.setDataSourceParam('BussinessUserEmail', email);
@@ -223,6 +271,7 @@ var KTDatatableDistributors = (function() {
 			datatable.setDataSourceParam('sendDateTime', '');
 			datatable.setDataSourceParam('SpecialityID', '');
 			datatable.setDataSourceParam('MedicallineID', '');
+			datatable.setDataSourceParam('accessedNewWeb', '');
 			datatable.setDataSourceParam('reminderCount', '');
 			datatable.setDataSourceParam('connectionStatusId', '');
 			// datatable.sort('ID', 'asc');
@@ -231,6 +280,11 @@ var KTDatatableDistributors = (function() {
 		$('#kt_datatableBusinessOpportunity').on('datatable-on-ajax-fail',function(){
 			WebApp.unblock();
 		});
+
+		$('#kt_datatableBusinessOpportunity .datatable-table tbody').on('click', 'tr', function () {
+			var data = datatable.row( this ).data();
+			console.log( data);
+		} );
 
 	};
 
@@ -267,21 +321,4 @@ var KTDatatableDistributors = (function() {
 	};
 
 })();
-// function distributorFormSubmit(){
-// 	$('#pages').val(datatable.API.params.pagination.pages);
-// 	$('#page').val(datatable.API.params.pagination.page);
-// 	$('#perpage').val(datatable.API.params.pagination.perpage);
-// 	$('#total').val(datatable.API.params.pagination.total);
-// 	$('#sort_by').val(datatable.API.params.sort.field);
-// 	$('#sort_order').val(datatable.API.params.sort.sort);
-//
-// 	var data =JSON.parse(JSON.stringify($('#filterForm').serializeArray()));
-//
-// 	console.log(data);
-// 	WebApp.post('distributors/datatable',data,function(response){
-// 		console.log(response)
-// 		datatable.destroy();
-// 		datatable.reload();
-// 	});
-// }
 KTDatatableDistributors.init();

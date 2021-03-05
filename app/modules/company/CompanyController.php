@@ -46,15 +46,16 @@ class CompanyController extends Controller
         $inquirySend = $this->f3->get('POST.inquirySend');
         $CountryID = $this->f3->get('POST.CountryID');
         $Registered = $this->f3->get('POST.Registered');
+        $accessedNewWeb = $this->f3->get('POST.accessedNewWeb');
         $RegistrationDate = $this->f3->get('POST.RegistrationDate');
         $SpecialityID = $this->f3->get('POST.SpecialityID');
-        $MedicallineID = $this->f3->get('POST.MedicallineID');
         $MedicallineID = $this->f3->get('POST.MedicallineID');
         $startDate = '';
         $endDate = '';
 
         if($RegistrationDate){
-            $arrDate = explode('-',$RegistrationDate);
+//            echo "<pre>";
+            $arrDate = explode(' - ',$RegistrationDate);
             $date = new DateTime($arrDate[0]);
             $startDate = $date->format('Y-m-d'); // 31-07-2012
             if(isset($arrDate[1])){
@@ -80,10 +81,25 @@ class CompanyController extends Controller
             }
         }
         if($inquirySend){
-            $where .=' AND "inquirySend" >0';
+            if($inquirySend==1) {
+                $where .= ' AND "inquirySend" >0';
+            }else {
+                $where .= ' AND "inquirySend" <1';
+            }
+        }
+        if($accessedNewWeb){
+            if($accessedNewWeb==1) {
+                $where .= ' AND "payload" IS NOT NULL';
+            }else{
+                $where .= ' AND "payload" IS NULL';
+            }
         }
         if($Registered){
-            $where .=' AND "RegistrationDate" !=null';
+            if($Registered==1) {
+                $where .= ' AND "RegistrationDate" IS NOT NULL';
+            }else{
+                $where .= ' AND "RegistrationDate" IS NULL';
+            }
         }
         if($CountryID){
             $where .=' AND "CountryID" ='.$CountryID;

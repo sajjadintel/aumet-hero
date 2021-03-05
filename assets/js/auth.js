@@ -1,5 +1,4 @@
 "use strict";
-
 (function ($) {
 	$.fn.serializeFormJSON = function () {
 		var o = {};
@@ -17,12 +16,9 @@
 		return o;
 	};
 })(jQuery);
-
 // Class Definition
 var WebAuth = function () {
-
 	var _buttonSpinnerClasses = 'spinner spinner-right spinner-white pr-15';
-
 	var _blockPage = function (_msgKey = "loading") {
 		KTApp.blockPage({
 			overlayColor: 'black',
@@ -31,30 +27,23 @@ var WebAuth = function () {
 			state: 'primary', // a bootstrap color
 		});
 	};
-
 	var _unblockPage = function () {
 		KTApp.unblockPage();
 	};
-
 	var _handleFormSignin = function () {
-
 		var form = KTUtil.getById('kt_login_singin_form');
 		var formSubmitUrl = KTUtil.attr(form, 'action');
 		var formSubmitButton = KTUtil.getById('kt_login_singin_form_submit_button');
-
 		if (!form) {
 			return;
 		}
-
 		_blockPage();
-
 		firebase.auth().signInWithEmailAndPassword(
 			form.querySelector('[name="email"]').value,
 			form.querySelector('[name="password"]').value)
 			.then((user) => {
 				firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
 					var urlSignIn = "/" + docLang + "/auth/signin?_t=" + Date.now();
-
 					$.ajax({
 						url: urlSignIn,
 						type: "POST",
@@ -64,7 +53,6 @@ var WebAuth = function () {
 						},
 						async: true
 					}).done(function (webResponse) {
-
 						if (webResponse && typeof webResponse === 'object') {
 							if (webResponse.errorCode == 0) {
 								window.location.href = "/" + docLang + '/dashboard';
@@ -82,7 +70,6 @@ var WebAuth = function () {
 								}).then(function () {
 									KTUtil.scrollTop();
 								});
-
 							}
 						}
 						else {
@@ -113,7 +100,6 @@ var WebAuth = function () {
 							KTUtil.scrollTop();
 						});
 					});
-
 				}).catch(function (error) {
 					_unblockPage();
 					Swal.fire({
@@ -146,17 +132,13 @@ var WebAuth = function () {
 				});
 			});
 	}
-
 	var _handleFormForgot = function () {
 		var form = KTUtil.getById('kt_login_forgot_form');
 		var formSubmitButton = KTUtil.getById('kt_login_forgot_form_submit_button');
-
 		if (!form) {
 			return;
 		}
-
 		var _url = "/" + docLang + "/auth/forgot?_t=" + Date.now();
-
 		$.ajax({
 			url: _url,
 			type: "POST",
@@ -166,7 +148,6 @@ var WebAuth = function () {
 			},
 			async: true
 		}).done(function (webResponse) {
-
 			if (webResponse && typeof webResponse === 'object') {
 				if (webResponse.errorCode == 0) {
 					window.location.href = "/" + docLang + "/auth/forgot/otp";
@@ -214,11 +195,9 @@ var WebAuth = function () {
 			});
 		});
 	}
-
 	var _setupFirebase = function () {
 		firebase.auth().languageCode = docLang;
 	}
-
 	// Public Functions
 	return {
 		init: function () {
@@ -232,7 +211,6 @@ var WebAuth = function () {
 		}
 	};
 }();
-
 // Class Initialization
 jQuery(document).ready(function () {
 	WebAuth.init();

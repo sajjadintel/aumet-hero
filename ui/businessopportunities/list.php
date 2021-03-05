@@ -182,7 +182,18 @@
                                         </div>
                                         <span class="form-text text-muted">Please enter UTM</span>
                                     </div>
-
+                                    <div class="col-lg-4">
+                                        <label>Accessed new website :</label>
+                                        <div class="radio-inline">
+                                            <label class="radio radio-solid">
+                                                <input type="radio" class="radioRegistered" name="accessedNewWeb" value="1">
+                                                <span></span>Yes</label>
+                                            <label class="radio radio-solid">
+                                                <input type="radio" class="radioRegistered" name="accessedNewWeb" value="2">
+                                                <span></span>No</label>
+                                        </div>
+                                        <span class="form-text text-muted">Please select accessed new website</span>
+                                    </div>
                                 </div>
 
                             </div>

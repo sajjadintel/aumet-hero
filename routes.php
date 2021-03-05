@@ -32,6 +32,8 @@ $f3->route('GET /@language/distributors/@companyId', 'CompanyController->getDist
 
 $f3->route('GET /@language/businessOppotunities', 'BusinessOpportunitiesController->getBusinessOppotunitiesPage');
 $f3->route('POST /@language/businessOppotunities/datatable', 'BusinessOpportunitiesController->getBORecords');
+$f3->route('POST /@language/auth/signup', 'AuthController->postSignUp');
+
 
 $f3->route('POST /pipedrive/api/organization', 'PipedriveWebHooksController->processWebhookOrganization');
 $f3->route('POST /pipedrive/api/user', 'PipedriveWebHooksController->processWebhookUser');

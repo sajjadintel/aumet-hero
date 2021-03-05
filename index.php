@@ -19,7 +19,7 @@ $dotenv->load();
 
 $f3 = \Base::instance();
 
-$f3->set('AUTOLOAD', "app/controllers/ | app/classes/ | app/models/ | app/modules/common/ | app/modules/company/ | app/modules/product/ | app/modules/matching/ | app/modules/inquiry/ | app/modules/communication/");
+$f3->set('AUTOLOAD', "app/controllers/ | app/classes/ | app/models/ | app/modules/common/ | app/modules/company/ | app/modules/company/models | app/modules/product/ | app/modules/matching/ | app/modules/inquiry/ | app/modules/communication/");
 
 /* Config */
 $f3->set('DEBUG', '3');
@@ -85,13 +85,22 @@ $dbConnectionUniOrder = new DB\SQL(
 
 $f3->set('rootDomain', getenv('rootDomain'));
 $f3->set('rootDomainUrl', getenv('rootDomainUrl'));
-$f3->set('onexRootDomainUrl', getenv('onexRootDomainUrl'));
+
+if(getenv('rootDomainOnexUrl')==''){
+    $f3->set('rootDomainOnexUrl', getenv('https://dev-onex.aumet.tech'));
+}else{
+    $f3->set('rootDomainOnexUrl', getenv('rootDomainOnexUrl'));
+}
 $f3->set('emailAssetsDirectory', getenv('emailAssetsDirectory'));
 
 if (getenv('ENV') == Constants::ENV_PROD) {
-    $f3->set('platformVersion', '?v=0.01');
+    $f3->set('platformVersion', '?v=1.0.1');
+    $f3->set('platformEnv', 'production');
+    $f3->set('firebaseAdminKeyFile', dirname(__FILE__) . '/config/aumet-com-firebase-adminsdk-2nsnx-64efaf5c39.json');
 } else {
     $f3->set('platformVersion', '?v=' . date('His'));
+    $f3->set('platformEnv', 'staging');
+    $f3->set('firebaseAdminKeyFile', dirname(__FILE__) . '/config/aumet-dev-c4772d6b4b5b.json');
 }
 
 define('CHUNK_SIZE', 1024 * 1024);
@@ -102,6 +111,9 @@ $emailSender = new AumetEmail("Aumet", "no-reply@aumet.me", getenv('SENDGRID_API
 
 global $emailSender;
 $emailSender = new AumetEmail("Aumet", "info@aumet.com", getenv('SENDGRID_API_KEY'));
+
+//$emailSender = new AumetEmail("Aumet", "no-reply@aumet.me", getenv('SENDGRID_API_KEY'));
+//$emailSender = new AumetEmail("Aumet", "info@aumet.com", getenv('SENDGRID_API_KEY'));
 
 include_once("routes.php");
 

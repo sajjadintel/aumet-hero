@@ -86,11 +86,22 @@
             <table class="o_block-lg" width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="max-width: 800px;margin: 0 auto;">
                 <tbody>
                 <tr>
-                    <td class="o_bg-white o_px o_py-md o_br-t o_sans o_text" align="center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;background-color: #ffffff;border-radius: 4px 4px 0px 0px;padding-left: 16px;padding-right: 16px;padding-top: 24px;padding-bottom: 24px;">
-                        <p style="margin-top: 0px;margin-bottom: 0px;">
-                            <a class="o_text-primary" href="<?php echo $rootDomainUrl; ?>" style="text-decoration: none;outline: none;color: #126de5;">
-                                <img src="https://d2qyez1diqag7p.cloudfront.net/assets/aumet-logo.svg" width="136" height="36" alt="Aumet Inc" style="max-width: 136px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a></p>
+                    <td class="o_bg-white o_px o_py-md o_br-t o_sans o_text" align="left" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;background-color: #192131;border-radius: 4px 0px 0px 0px;padding-left: 16px;padding-right: 16px;padding-top: 24px;padding-bottom: 24px;">
+                        <p style="margin-top: 0px;margin-bottom: 0px; margin-left: 90px">
+                            <a class="o_text-primary" href="<?php echo $rootDomainUrl; ?>" style="text-decoration: none;outline: none;color: #126de5; ">
+                                <img src="https://res.cloudinary.com/dztx993tt/image/upload/v1610873785/Logo_white-min_eqeqpr.png" width="136" height="36" alt="Aumet Inc" style="background:url('https://d2qyez1diqag7p.cloudfront.net/assets/aumet-logo.svg');max-width: 136px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;">
+                            </a>
+                        </p>
                     </td>
+                    <?php if($emailType!='reset' && $emailType!='otp' && $emailType!='invite'): ?>
+                        <td class="o_bg-white o_px o_py-md o_br-t o_sans o_text" align="right" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;background-color: #192131;border-radius: 0px 4px 0px 0px;padding-left: 16px;padding-right: 16px;padding-top: 24px;padding-bottom: 24px;">
+                            <p style="margin-top: 0px;margin-bottom: 0px; margin-right: 90px;">
+                                <a class="o_text-primary" href="<?php echo $rootDomainUrl; ?>" style="text-decoration:none;outline:none;color:#126de5;background-color: #13b9a9;border: 1px solid #13b9a9;padding: 0.4rem .8rem;border-radius: 0.42rem;color: white;">
+                                    Go to my account
+                                </a>
+                            </p>
+                        </td>
+                    <?php endif; ?>
                 </tr>
                 </tbody>
             </table>
@@ -151,10 +162,10 @@
                             <div style="font-size: 24px; line-height: 24px; height: 24px;">&nbsp; </div>
                             <div class="o_px-xs o_sans o_text-xs o_center" style="font-family: Helvetica, Arial, sans-serif;margin-top: 0px;margin-bottom: 0px;font-size: 14px;line-height: 21px;text-align: center;padding-left: 8px;padding-right: 8px;">
                                 <p style="margin-top: 0px;margin-bottom: 0px;">
-                                    <a class="o_text-light" href="https://www.facebook.com/aumet.me/" style="text-decoration: none;outline: none;color: #82899a;"><img src="https://d2qyez1diqag7p.cloudfront.net/assets/facebook.svg" width="24" height="24" alt="fb" style="max-width: 24px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a><span> &nbsp;</span>
-                                    <a class="o_text-light" href="https://twitter.com/aumet_me" style="text-decoration: none;outline: none;color: #82899a;"><img src="https://d2qyez1diqag7p.cloudfront.net/assets/twitter.svg" width="24" height="24" alt="tw" style="max-width: 24px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a><span> &nbsp;</span>
-                                    <a class="o_text-light" href="https://www.linkedin.com/company/aumet-co-/" style="text-decoration: none;outline: none;color: #82899a;"><img src="https://d2qyez1diqag7p.cloudfront.net/assets/linkedin.svg" width="24" height="24" alt="ig" style="max-width: 24px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a><span> &nbsp;</span>
-                                    <a class="o_text-light" href="https://www.youtube.com/channel/UCRrmnEByhmju6Cjl_N-cV1A" style="text-decoration: none;outline: none;color: #82899a;"><img src="https://d2qyez1diqag7p.cloudfront.net/assets/youtube.svg" width="24" height="24" alt="sc" style="max-width: 24px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a>
+                                    <a class="o_text-light" href="https://www.facebook.com/aumet.me/" style="text-decoration: none;outline: none;color: #82899a;"><img src="https://img.icons8.com/metro/2x/facebook-new.png" width="24" height="24" alt="fb" style="max-width: 24px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a><span> &nbsp;</span>
+                                    <a class="o_text-light" href="https://twitter.com/aumet_me" style="text-decoration: none;outline: none;color: #82899a;"><img src="https://img.icons8.com/android/2x/twitter.png" width="24" height="24" alt="tw" style="max-width: 24px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a><span> &nbsp;</span>
+                                    <a class="o_text-light" href="https://www.linkedin.com/company/aumet-co-/" style="text-decoration: none;outline: none;color: #82899a;"><img src="https://img.icons8.com/metro/2x/linkedin.png" width="24" height="24" alt="li" style="max-width: 24px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a><span> &nbsp;</span>
+                                    <a class="o_text-light" href="https://www.youtube.com/channel/UCRrmnEByhmju6Cjl_N-cV1A" style="text-decoration: none;outline: none;color: #82899a;"><img src="https://img.icons8.com/metro/2x/youtube.png" width="24" height="24" alt="sc" style="max-width: 24px;-ms-interpolation-mode: bicubic;vertical-align: middle;border: 0;line-height: 100%;height: auto;outline: none;text-decoration: none;"></a>
                                 </p>
                             </div>
                         </div>
@@ -173,9 +184,9 @@
                         <p class="o_mb-xs" style="margin-top: 0px;margin-bottom: 8px;">©<?php echo date('Y') ?> Aumet Inc<br>
                             133 Kearny street, Suite 401, San Francisco, USA
                         </p>
-                        <p style="margin-top: 0px;margin-bottom: 0px;">
-                            <a class="o_text-xxs o_text-light o_underline" href="<?php echo "$rootDomainUrl/en/settings/email/unsubscribe/$authEmail"?>" style="text-decoration: underline;outline: none;font-size: 12px;line-height: 19px;color: #82899a;">Unsubscribe</a>
-                        </p>
+                        <!--                        <p style="margin-top: 0px;margin-bottom: 0px;">-->
+                        <!--                            <a class="o_text-xxs o_text-light o_underline" href="--><?php //echo "$rootDomainUrl/en/settings/email/unsubscribe/$authEmail"?><!--" style="text-decoration: underline;outline: none;font-size: 12px;line-height: 19px;color: #82899a;">Unsubscribe</a>-->
+                        <!--                        </p>-->
                     </td>
                 </tr>
                 </tbody>

@@ -19,7 +19,9 @@ $('#status_Id').select2().on('select2:selecting', function (e) {
 	$('#statusId').val(e.params.args.data.id);
 });
 $('#filterForm').trigger("reset");
-
+$('#adduser_modal').on('shown.bs.modal', function () {
+	$(".modal-backdrop").hide();
+});
 
 
 var KTDatatableDistributors = (function() {
@@ -67,6 +69,7 @@ var KTDatatableDistributors = (function() {
 					type: 'number',
 					selector: false,
 					textAlign: 'left',
+					width: '100',
 					autoHide: false,
 					template: function(row) {
 						return row.ID;
@@ -78,7 +81,7 @@ var KTDatatableDistributors = (function() {
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
-						return row.Name;
+						return '<a href="javascript:;" data-toggle="modal" data-target="#adduser_modal"  title="Edit" onclick="KTDatatableDistributors.addUser('+ row.ID +')">'+ row.Name+'</a>';
 					}
 				},
 				{
@@ -130,16 +133,16 @@ var KTDatatableDistributors = (function() {
 					field: 'RegistrationDate',
 					title: 'Registered Date',
 					sortable: false,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
-						return row.RegistrationDate;
+						return row.RegistrationDate.split(" ")[0];
 					}
 				},
 				{
 					field: 'Registered',
 					title: 'Registered',
 					sortable: true,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
 						if(row.RegistrationDate){
 							return 'Yes'
@@ -152,7 +155,7 @@ var KTDatatableDistributors = (function() {
 					field: 'Payload',
 					title: 'last Login',
 					sortable: true,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
 						let payload = null;
 						if(row.payload!=null){
@@ -167,10 +170,11 @@ var KTDatatableDistributors = (function() {
 					field: 'payload',
 					title: 'Accssed new website',
 					sortable: false,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
 						let payload = null;
 						if(row.payload!=null){
+							return 'Yes';
 							payload = JSON.parse(row.payload);
 							let releaseDate = new Date('2021-1-31');
 							let lastLogin = new Date(payload.metadata.lastLoginAt);
@@ -188,7 +192,7 @@ var KTDatatableDistributors = (function() {
 					field: 'Activated',
 					title: 'Status',
 					sortable: false,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
 						// console.log(row);
 						if(row.statusId==1){
@@ -211,7 +215,7 @@ var KTDatatableDistributors = (function() {
 					sortable: false,
 
 					width: 200,
-					autoHide: false,
+					autoHide: true,
 					template: function(row) {
 						return (
 							'<a href="javascript:;" class="btn btn-primary mr-5" title="Edit" onclick="KTDatatableDistributors.edit('+ row.ID +')">Edit</a>' +
@@ -220,7 +224,7 @@ var KTDatatableDistributors = (function() {
 					}
 				}
 			]
-		}).sort('ID', 'asc');
+		}).sort('ID', 'DESC');
 		$('#submitButton').click(function(event){
 			// console.log('click');
 			var Name = $('#filterForm').find('input[name="Name"]').val();
@@ -232,6 +236,7 @@ var KTDatatableDistributors = (function() {
 			var MedicallineID = $('#filterForm').find('input[name="MedicallineID"]').val();
 			var statusId = $('#filterForm').find('input[name="statusId"]').val();
 			var Registered = $("input[name='Registered']:checked").val();;
+			var accessedNewWeb = $("input[name='accessedNewWeb']:checked").val();;
 			var inquirySend = $("input[name='inquirySend']:checked").val();
 			datatable.setDataSourceParam('Name', Name);
 			datatable.setDataSourceParam('CountryID', CountryID);
@@ -241,6 +246,7 @@ var KTDatatableDistributors = (function() {
 			datatable.setDataSourceParam('SpecialityID', SpecialityID);
 			datatable.setDataSourceParam('MedicallineID', MedicallineID);
 			datatable.setDataSourceParam('Registered', Registered);
+			datatable.setDataSourceParam('accessedNewWeb', accessedNewWeb);
 			datatable.setDataSourceParam('inquirySend', inquirySend);
 			datatable.setDataSourceParam('statusId', statusId);
 			// console.log(datatable);
@@ -263,6 +269,7 @@ var KTDatatableDistributors = (function() {
 			datatable.setDataSourceParam('SpecialityID', '');
 			datatable.setDataSourceParam('MedicallineID', '');
 			datatable.setDataSourceParam('Registered', '');
+			datatable.setDataSourceParam('accessedNewWeb', '');
 			datatable.setDataSourceParam('inquirySend', '');
 			datatable.setDataSourceParam('statusId', '');
 			datatable.reload();
@@ -285,6 +292,11 @@ var KTDatatableDistributors = (function() {
 		view: function(_id) {
 			WebApp.loadPage('distributors/' + _id );
 		},
+		addUser: function(_id) {
+			adjustPopUp();
+			$('#companyId').val(_id);
+			console.log(_id);
+		},
 		resetDataTable: function(_id) {
 			$('#filterForm').trigger("reset");
 			$('#country_id').val('0');
@@ -306,21 +318,13 @@ var KTDatatableDistributors = (function() {
 	};
 
 })();
-// function distributorFormSubmit(){
-// 	$('#pages').val(datatable.API.params.pagination.pages);
-// 	$('#page').val(datatable.API.params.pagination.page);
-// 	$('#perpage').val(datatable.API.params.pagination.perpage);
-// 	$('#total').val(datatable.API.params.pagination.total);
-// 	$('#sort_by').val(datatable.API.params.sort.field);
-// 	$('#sort_order').val(datatable.API.params.sort.sort);
-//
-// 	var data =JSON.parse(JSON.stringify($('#filterForm').serializeArray()));
-//
-// 	console.log(data);
-// 	WebApp.post('distributors/datatable',data,function(response){
-// 		console.log(response)
-// 		datatable.destroy();
-// 		datatable.reload();
-// 	});
-// }
+function adjustPopUp(){
+
+	$('.modal-lg').css('top','50%');
+
+	$('.modal-lg').css('position','absolute');
+	$('.modal-lg').css('width','100%');
+	$('.modal-lg').css('right','26%');
+	$('.modal-lg').css('left','auto');
+}
 KTDatatableDistributors.init();
