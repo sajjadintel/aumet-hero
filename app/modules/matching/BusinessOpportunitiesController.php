@@ -216,9 +216,9 @@ class BusinessOpportunitiesController extends Controller
             $where .=" AND '".$MedicallineID."' = ANY ( \"MedicallineID\" ) ";
         }
         if($sendDateTime){
-            $where .=' AND "sendDateTime" >='."'".$startDate."'";
+            $where .=' AND "introSendDateTime" >='."'".$startDate."'";
             if($endDate){
-                $where .=' AND "sendDateTime" <= '."'".$endDate."'";
+                $where .=' AND "introSendDateTime" <= '."'".$endDate."'";
             }
         }
 //echo $where;exit;

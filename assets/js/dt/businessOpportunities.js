@@ -116,12 +116,12 @@ var KTDatatableDistributors = (function() {
 					}
 				},
 				{
-					field: 'sendDateTime',
+					field: 'introSendDateTime',
 					title: 'Sent on',
 					sortable: true,
 					autoHide: true,
 					template: function(row) {
-						return row.sendDateTime.split(" ")[0];
+						return row.introSendDateTime.split(" ")[0];
 					}
 				},
 				{
@@ -196,7 +196,7 @@ var KTDatatableDistributors = (function() {
 				// 	}
 				// }
 			]
-		}).sort('sendDateTime','desc');
+		}).sort('introSendDateTime','desc');
 		$('#submitButton').click(function(event){
 			// console.log('click');
 			var Name = $('#filterForm').find('input[name="ManufacturerName"]').val();

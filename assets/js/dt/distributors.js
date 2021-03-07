@@ -130,12 +130,12 @@ var KTDatatableDistributors = (function() {
 					}
 				},
 				{
-					field: 'RegistrationDate',
+					field: 'CompanyRegistrationDate',
 					title: 'Registered Date',
 					sortable: false,
 					autoHide: true,
 					template: function(row) {
-						return row.RegistrationDate.split(" ")[0];
+						return row.CompanyRegistrationDate.split(" ")[0];
 					}
 				},
 				{
@@ -144,7 +144,7 @@ var KTDatatableDistributors = (function() {
 					sortable: true,
 					autoHide: true,
 					template: function(row) {
-						if(row.RegistrationDate){
+						if(row.CompanyRegistrationDate){
 							return 'Yes'
 						}else{
 							return 'No'
