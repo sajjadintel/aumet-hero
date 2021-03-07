@@ -15,6 +15,7 @@ $(form.querySelector('[name="lastName"]')).keyup(function(){
 $(form.querySelector('[name="email"]')).keyup(function(){
     // if(isEmail(form.querySelector('[name="email"]').value)) {
     //     console.log(form.querySelector('[name="email"]').value);
+        $('#email-msg').css('display','none');
         $(form.querySelector('[name="email"]')).removeClass('is-invalid');
         $(form.querySelector('[name="email"]')).addClass('is-valid');
     // }else{
@@ -24,6 +25,11 @@ $(form.querySelector('[name="email"]')).keyup(function(){
 $(form.querySelector('[name="firstName"]')).keyup(function(){
     $(form.querySelector('[name="firstName"]')).removeClass('is-invalid');
     $(form.querySelector('[name="firstName"]')).addClass('is-valid');
+});
+$(form.querySelector('[name="password"]')).keyup(function(){
+    $('#password-msg').css('display','none');
+    $(form.querySelector('[name="password"]')).removeClass('is-invalid');
+    $(form.querySelector('[name="password"]')).addClass('is-valid');
 });
 function createUser() {
     if (firebase.apps.length === 0) {
@@ -49,12 +55,14 @@ function createUser() {
     if(form.querySelector('[name="email"]').value==''){
         $(form.querySelector('[name="email"]')).addClass('is-invalid');
     }else{
+        $('#email-msg').css('display','none');
         $(form.querySelector('[name="email"]')).removeClass('is-invalid');
         $(form.querySelector('[name="email"]')).addClass('is-valid');
     }
     if(form.querySelector('[name="password"]').value==''){
         $(form.querySelector('[name="password"]')).addClass('is-invalid');
     }else{
+        $('#password-msg').css('display','none');
         $(form.querySelector('[name="password"]')).removeClass('is-invalid');
         $(form.querySelector('[name="password"]')).addClass('is-valid');
     }
@@ -139,12 +147,24 @@ function createUser() {
                 }).then(function () {
                     KTUtil.scrollTop();
                 });
-                console.log(error);
+                // console.log(error);
             });
         })
         .catch((error) => {
             // Handle Errors here.
             _unblockPage();
+            if(error.code=='auth/weak-password'){
+                $(form.querySelector('[name="password"]')).removeClass('is-valid');
+                $(form.querySelector('[name="password"]')).addClass('is-invalid');
+                $('#password-msg').css('display','block');
+                $('#password-msg').html(error.message);
+            }
+            if(error.code=='auth/email-already-in-use'){
+                $(form.querySelector('[name="email"]')).removeClass('is-valid');
+                $(form.querySelector('[name="email"]')).addClass('is-invalid');
+                $('#email-msg').css('display','block');
+                $('#email-msg').html(error.message);
+            }
             console.log(error);
         });
 }
