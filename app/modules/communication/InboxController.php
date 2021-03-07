@@ -483,13 +483,18 @@ class InboxController extends Controller
             "a.atrash@aumet.com" => "Alaa Al Atrash"
         ];
 
-        $arrContacts = (new AumetUser())->getEmailListByCompanyId($objMessage->toCompanyId);
+        $dbUser = new AumetUser();
+        $arrContacts = $dbUser->getEmailListByCompanyId($objMessage->toCompanyId);
+
+        $senderInfo = $dbUser->getWhere('"ID"='.$objMessage->fromUserId)[0];
+        $senderDisplayName = $senderInfo->FirstName.' '.$senderInfo->LastName;
 
         $this->f3->set("emailType", "message");
         $this->f3->set('objMessage', $objMessage);
-        $this->f3->set('fromName', $this->objUser->displayName);
+        $this->f3->set('fromName', $senderDisplayName);
         $htmlContent = View::instance()->render('email/layout.php');
 
-        return $emailSender->send("New message @ Aumet from Alaa", $htmlContent, $arrContacts, null, $bccEmails);
+        $subject = "New message @ Aumet from ".$senderDisplayName;
+        return $emailSender->send($subject, $htmlContent, $arrContacts, null, $bccEmails);
     }
 }
