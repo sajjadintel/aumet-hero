@@ -17,8 +17,10 @@
                                 </tr>
                                 </tbody>
                             </table>
-                            <h2 class="o_heading o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;font-size: 30px;line-height: 39px;">Your Account's Confirmation Code</h2>
-                            <p style="margin-top: 0px;margin-bottom: 0px;">Please verify your email address by clicking on the link you find below.</p>
+                            <h2 class="o_heading o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;font-size: 30px;line-height: 39px;">Reset Your Password</h2>
+                            <p style="margin-top: 0px;margin-bottom: 0px;">You have recently requested on to reset the password for your account. Click on the button below to reset it
+
+                            </p>
                         </div>
                         <!--[if mso]></td></tr></table><![endif]-->
                     </td>
@@ -62,7 +64,7 @@
                             <tbody>
                             <tr>
                                 <td width="300" class="o_btn o_bg-success o_br o_heading o_text" align="center" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 0px;font-size: 16px;line-height: 24px;mso-padding-alt: 12px 24px;background-color: #12b9a9;border-radius: 4px;">
-                                    <a class="o_text-white" href="<?php echo "$rootDomainOnexUrl/en/auth/reset/$resetCode"?>" style="text-decoration: none;outline: none;color: #ffffff;display: block;padding: 12px 24px;mso-text-raise: 3px;">Reset Your Account</a>
+                                    <a class="o_text-white" href="<?php echo "$rootDomainOnexUrl/en/auth/reset/$resetCode"?>" style="text-decoration: none;outline: none;color: #ffffff;display: block;padding: 12px 24px;mso-text-raise: 3px;">Reset your Password</a>
                                 </td>
                             </tr>
                             </tbody>
