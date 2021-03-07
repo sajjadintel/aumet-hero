@@ -21,9 +21,9 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex align-items-center">
-            <a href="javascript:;" class="btn btn-primary font-weight-normal font-size-h5 py-2 px-5" onclick="WebApp.loadPage('manufacturers/add');">Add Manufacturer</a>
-        </div>
+<!--        <div class="d-flex align-items-center">-->
+<!--            <a href="javascript:;" class="btn btn-primary font-weight-normal font-size-h5 py-2 px-5" onclick="WebApp.loadPage('manufacturers/add');">Add Manufacturer</a>-->
+<!--        </div>-->
     </div>
 </div>
 
