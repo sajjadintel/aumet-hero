@@ -111,9 +111,9 @@ class CompanyController extends Controller
             $where .=" AND '".$MedicallineID."' = ANY ( \"MedicallineID\" ) ";
         }
         if($RegistrationDate){
-            $where .=' AND "RegistrationDate" >='."'".$startDate."'";
+            $where .=' AND "CompanyRegistrationDate" >='."'".$startDate."'";
             if($endDate){
-                $where .=' AND "RegistrationDate" <= '."'".$endDate."'";
+                $where .=' AND "CompanyRegistrationDate" <= '."'".$endDate."'";
             }
         }
 //echo $where;exit;

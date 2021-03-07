@@ -60,7 +60,7 @@ var KTDatatableManufacturers = (function() {
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
-						return '<a href="javascript:;" data-toggle="modal" data-target="#adduser_modal"  title="Edit" onclick="KTDatatableManufacturers.addUser('+ row.ID +')">'+ row.Name+'</a>';
+						return '<a href="javascript:;"  title="Edit">'+ row.Name+'</a>';
 					}
 				},
 				{
@@ -80,13 +80,12 @@ var KTDatatableManufacturers = (function() {
 					width: 200,
 					autoHide: false,
 					template: function(row) {
-						var tmpHTML= '<a href="javascript:;" class="btn btn-primary mr-3" title="Edit" onclick="KTDatatableManufacturers.edit('+ row.ID +')">Edit</a>' +
-							'<a href="javascript:;" class="btn btn-outline-primary mr-3" title="View" onclick="KTDatatableManufacturers.view('+ row.ID +')">View</a>';
+						var tmpHTML= '<a href="javascript:;" class="btn btn-primary mr-5" data-toggle="modal" data-target="#adduser_modal"  title="Edit" onclick="KTDatatableManufacturers.addUser('+ row.ID +')">Add User</a>' +
+							'<a href="javascript:;" class="btn btn-outline-primary" title="View" onclick="KTDatatableManufacturers.view('+ row.ID +')">View</a>'
 						if(row.LoginToken){
 							tmpHTML += '<a href="'+rootURL+'/'+docLang+'/auth/signin?token='+row.LoginToken+'" target="_blank" class="btn btn-warning mr-5" title="Edit" >Token</a>';
 						}
 						return tmpHTML;
-
 					}
 				}
 			]
