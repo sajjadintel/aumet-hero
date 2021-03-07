@@ -60,19 +60,7 @@ var KTDatatableDistributors = (function() {
 			},
 
 			// columns definition
-			columns: [				
-				{
-					field: 'ID',
-					title: 'id',
-					sortable: 'asc',
-					type: 'number',
-					selector: false,
-					textAlign: 'left',
-					autoHide: false,
-					template: function(row) {
-						return row.ID;
-					}
-				},
+			columns: [
 				{
 					field: 'ManufacturerName',
 					title: 'Manufacturer Name',
@@ -93,7 +81,7 @@ var KTDatatableDistributors = (function() {
 				},
 				{
 					field: 'CountryName',
-					title: 'Country',
+					title: 'Distributor Country',
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
@@ -102,7 +90,7 @@ var KTDatatableDistributors = (function() {
 				},
 				{
 					field: 'BussinessUserPersonName',
-					title: 'Person Name',
+					title: 'Distributor Person name',
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
@@ -111,7 +99,7 @@ var KTDatatableDistributors = (function() {
 				},
 				{
 					field: 'BussinessUserJobTitle',
-					title: 'Job Title',
+					title: 'Distributor Job Title',
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
@@ -120,7 +108,7 @@ var KTDatatableDistributors = (function() {
 				},
 				{
 					field: 'BussinessUserEmail',
-					title: 'Email',
+					title: 'Distributor Email',
 					sortable: true,
 					autoHide: true,
 					template: function(row) {
@@ -134,19 +122,6 @@ var KTDatatableDistributors = (function() {
 					autoHide: true,
 					template: function(row) {
 						return row.sendDateTime.split(" ")[0];
-					}
-				},
-				{
-					field: 'endDate',
-					title: 'End on',
-					sortable: true,
-					autoHide: true,
-					template: function(row) {
-						if(row.endDate) {
-							return row.endDate.split(" ")[0];
-						}else{
-							return '';
-						}
 					}
 				},
 				{
