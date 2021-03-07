@@ -264,6 +264,7 @@
                                 <div class="input-group date">
                                     <input type="text" class="form-control" id="email" name="email" placeholder="Email">
                                 </div>
+                                <div id="email-msg" style="display: none;" class="invalid-feedback"></div>
                                 <span class="form-text text-muted">Please enter user email.</span>
                             </div>
                         </div>
@@ -273,6 +274,7 @@
                                 <div class="input-group date">
                                     <input type="text" name="password" id="password" class="form-control" placeholder="Password">
                                 </div>
+                                <div id="password-msg" style="display: none;" class="invalid-feedback"></div>
                                 <span class="form-text text-muted">Please enter user password</span>
                             </div>
                         </div>
