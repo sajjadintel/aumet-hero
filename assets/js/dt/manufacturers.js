@@ -64,6 +64,15 @@ var KTDatatableManufacturers = (function() {
 					}
 				},
 				{
+					field: 'LoginToken',
+					title: 'Token',
+					sortable: true,
+					autoHide: false,
+					template: function(row) {
+						return row.LoginToken;
+					}
+				},
+				{
 					field: 'Actions',
 					title: 'Actions',
 					sortable: false,
@@ -71,10 +80,12 @@ var KTDatatableManufacturers = (function() {
 					width: 200,
 					autoHide: false,
 					template: function(row) {
-						return (
-							'<a href="javascript:;" class="btn btn-primary mr-5" data-toggle="modal" data-target="#adduser_modal"  title="Edit" onclick="KTDatatableManufacturers.addUser('+ row.ID +')">Add User</a>' +
+						var tmpHTML= '<a href="javascript:;" class="btn btn-primary mr-5" data-toggle="modal" data-target="#adduser_modal"  title="Edit" onclick="KTDatatableManufacturers.addUser('+ row.ID +')">Add User</a>' +
 							'<a href="javascript:;" class="btn btn-outline-primary" title="View" onclick="KTDatatableManufacturers.view('+ row.ID +')">View</a>'
-						);
+						if(row.LoginToken){
+							tmpHTML += '<a href="'+rootURL+'/'+docLang+'/auth/signin?token='+row.LoginToken+'" target="_blank" class="btn btn-warning mr-5" title="Edit" >Token</a>';
+						}
+						return tmpHTML;
 					}
 				}
 			]

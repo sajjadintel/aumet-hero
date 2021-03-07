@@ -638,6 +638,6 @@ var WebApp = (function () {
 		},
 		hideModal: function (_modalId){
 			_hideModal(_modalId);
-		}
+		},
 	};
 })();

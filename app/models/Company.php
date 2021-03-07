@@ -7,11 +7,14 @@ class Company extends BaseModel
     const TYPE_DISTRIBUTOR = "distributor";
     const TYPE_PHARMACY = "pharmacy";
 
-    public function __construct()
+    public function __construct($loadView = null)
     {
         global $dbConnectionAumet;
-
-        parent::__construct($dbConnectionAumet, 'production.Company');
+        if($loadView != null){
+            parent::__construct($dbConnectionAumet, 'onex.vwCompany');
+        }else {
+            parent::__construct($dbConnectionAumet, 'production.Company');
+        }
     }
 
     public function getById($id)

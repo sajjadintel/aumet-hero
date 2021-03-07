@@ -292,6 +292,7 @@ function compress_htmlcode($codedata)
 	<?php endif; ?>
 
 	<script>
+		var rootURL = "<?php echo $rootDomainOnexUrl; ?>";
 		var docLang = "<?php echo $LANGUAGE; ?>";
 		var _ajaxUrl = "<?php echo $ajaxUrl; ?>";
 		var _id = "<?php echo $objUser->uid ?>";

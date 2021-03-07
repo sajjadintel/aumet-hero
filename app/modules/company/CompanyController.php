@@ -14,7 +14,7 @@ class CompanyController extends Controller
     function getManufacturersRecords()
     {
         echo json_encode(
-            $this->getDatatable((new Company()), '"Type"=\'manufacturer\'')
+            $this->getDatatable((new Company(true)), '"Type"=\'manufacturer\'')
         );
     }
 

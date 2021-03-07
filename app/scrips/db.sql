@@ -308,3 +308,100 @@ alter table "vwMessages"
     owner to aumet_user;
 
 ## END {Mubasher} {04-03-2021}
+
+## START {Mubasher} {05-03-2021}
+
+create view onex."vwCompany"("ID", "Name", "Type", "Slug", "ParentID", "CreatedAt", "LoginToken") as
+SELECT c."ID",
+       c."Name",
+       c."Type",
+       c."Slug",
+       c."ParentID",
+       c."CreatedAt",
+       CASE
+           WHEN ((SELECT count(*) AS count
+                  FROM onex."companyUser" cu_1
+                  WHERE c."ID" = cu_1."companyId"
+                  LIMIT 1)) > 0 THEN
+               CASE
+                   WHEN ((SELECT count(*) AS count
+                          FROM auth."user" au
+                          WHERE cu."userId" = au.id
+                            AND au."isAdmin" = true)) > 0 THEN (SELECT au.uid
+                                                                FROM auth."user" au
+                                                                WHERE cu."userId" = au.id
+                                                                  AND au."isAdmin")
+                   ELSE (SELECT au.uid
+                         FROM auth."user" au
+                         WHERE cu."userId" = au.id)
+                   END
+           ELSE ''::character varying
+           END AS "LoginToken"
+FROM production."Company" c
+         LEFT JOIN onex."companyUser" cu ON c."ID" = cu."companyId";
+
+alter table onex."vwCompany" owner to aumet_user;
+
+create view onex."vwDistributorsData"
+            ("ID", "Name", "Token", "Slug", "WebsiteUrl", "Banner", "CountryID", "DeletedAt", "Logo", "Location",
+             "Address", "IsActive", "CountryName", "CountryFlag", "RegistrationDate", "PersonName", position, payload,
+             email, "inquirySend", "SpecialityID", "MedicallineID", "statusId", "LoginToken")
+as
+SELECT c."ID",
+       c."Name",
+       c."Token",
+       c."Slug",
+       c."WebsiteUrl",
+       c."Banner",
+       c."CountryID",
+       c."DeletedAt",
+       c."Logo",
+       c."Location",
+       c."Address",
+       c."IsActive",
+       co."Name"                         AS "CountryName",
+       co."FlagPath"                     AS "CountryFlag",
+       c."CreatedAt"                     AS "RegistrationDate",
+       au."displayName"                  AS "PersonName",
+       au."position",
+       au.payload,
+       au.email,
+       (SELECT count(msg.id) AS count
+        FROM onex.message msg
+        WHERE msg."fromCompanyId" = c."ID"
+          AND msg."parentId" = 0)        AS "inquirySend",
+       (SELECT string_to_array(compny."SpecialtiyID"::text, ','::text) AS "SpecialityID"
+        FROM onex."companyExperience" compny
+        WHERE compny.companyid = c."ID") AS "SpecialityID",
+       (SELECT string_to_array(compny."MedicalLineID"::text, ','::text) AS "MedicalLineID"
+        FROM onex."companyExperience" compny
+        WHERE compny.companyid = c."ID") AS "MedicallineID",
+       au."statusId",
+       CASE
+           WHEN ((SELECT count(*) AS count
+                  FROM onex."companyUser" cu_1
+                  WHERE c."ID" = cu_1."companyId"
+                  LIMIT 1)) > 0 THEN
+               CASE
+                   WHEN ((SELECT count(*) AS count
+                          FROM auth."user" au_1
+                          WHERE cu."userId" = au_1.id
+                            AND au_1."isAdmin" = true)) > 0 THEN (SELECT au_1.uid
+                                                                  FROM auth."user" au_1
+                                                                  WHERE cu."userId" = au_1.id
+                                                                    AND au_1."isAdmin")
+                   ELSE (SELECT au_1.uid
+                         FROM auth."user" au_1
+                         WHERE cu."userId" = au_1.id)
+                   END
+           ELSE ''::character varying
+           END                           AS "LoginToken"
+FROM production."Company" c
+         JOIN setup."Country" co ON c."CountryID" = co."ID"
+         JOIN onex."companyUser" cu ON c."ID" = cu."companyId"
+         JOIN auth."user" au ON au.id = cu."userId"
+WHERE c."Type"::text = 'distributor'::text;
+
+alter table onex."vwDistributorsData" owner to aumet_user;
+
+## END {Mubasher} {05-03-2021}
