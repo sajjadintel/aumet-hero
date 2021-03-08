@@ -211,11 +211,15 @@ var KTDatatableDistributors = (function() {
 				},
 				{
 					field: 'LoginToken',
-					title: 'Token',
+					title: 'Token Exists',
 					sortable: true,
 					autoHide: true,
 					template: function(row) {
-						return row.LoginToken;
+						var tokenExists = '';
+						if(row.LoginToken){
+							tokenExists = 'Yes';
+						}
+						return tokenExists;
 					}
 				},
 				{
@@ -227,9 +231,9 @@ var KTDatatableDistributors = (function() {
 					autoHide: true,
 					template: function(row) {
 						var tmpHTML= '<a href="javascript:;" class="btn btn-primary mr-5" data-toggle="modal" data-target="#adduser_modal"  title="Edit" onclick="KTDatatableDistributors.addUser('+ row.ID +')">Add User</a>' +
-							'<a href="javascript:;" class="btn btn-outline-primary" title="View" onclick="KTDatatableDistributors.view('+ row.ID +')">View</a>'
+							'<a href="javascript:;" class="btn btn-outline-primary mr-5" title="View" onclick="KTDatatableDistributors.view('+ row.ID +')">View</a>'
 						if(row.LoginToken){
-							tmpHTML += '<a href="'+rootURL+'/'+docLang+'/auth/signin?token='+row.LoginToken+'" target="_blank" class="btn btn-warning ml-5" title="Edit" >Token</a>';
+							tmpHTML += '<a href="javascript:;" class="btn btn-warning" title="View Inquiry" onclick="KTDatatableDistributors.getToken(\''+row.LoginToken+'\')">Get Token</a>';
 						}
 						return tmpHTML;
 					}
@@ -325,7 +329,10 @@ var KTDatatableDistributors = (function() {
 			WebApp.block();
 			$('#submitButton').trigger('click');
 		},
-
+		getToken: function (_id){
+			$("#genericModal").modal("show");
+			WebApp.loadPartialPage("#genericModalContent", "manufacturers/token/"+_id);
+		}
 	};
 
 })();
