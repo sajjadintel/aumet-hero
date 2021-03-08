@@ -81,7 +81,7 @@ var KTDatatableDistributors = (function() {
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
-						return '<a href="javascript:;" title="Edit">'+ row.Name+'</a>';
+						return '<a href="javascript:;" data-toggle="modal" data-target="#adduser_modal"  title="Edit" onclick="KTDatatableDistributors.addUser('+ row.ID +')">'+ row.Name+'</a>';
 					}
 				},
 				{
@@ -130,12 +130,12 @@ var KTDatatableDistributors = (function() {
 					}
 				},
 				{
-					field: 'CompanyRegistrationDate',
+					field: 'RegistrationDate',
 					title: 'Registered Date',
 					sortable: false,
 					autoHide: true,
 					template: function(row) {
-						return row.CompanyRegistrationDate.split(" ")[0];
+						return row.RegistrationDate.split(" ")[0];
 					}
 				},
 				{
@@ -144,7 +144,7 @@ var KTDatatableDistributors = (function() {
 					sortable: true,
 					autoHide: true,
 					template: function(row) {
-						if(row.CompanyRegistrationDate){
+						if(row.RegistrationDate){
 							return 'Yes'
 						}else{
 							return 'No'
@@ -226,10 +226,10 @@ var KTDatatableDistributors = (function() {
 					width: 200,
 					autoHide: true,
 					template: function(row) {
-						var tmpHTML= '<a href="javascript:;" class="btn btn-primary mr-5" data-toggle="modal" data-target="#adduser_modal"  title="Edit" onclick="KTDatatableDistributors.addUser('+ row.ID +')">Add User</a>' +
-							'<a href="javascript:;" class="btn btn-outline-primary" title="View" onclick="KTDatatableDistributors.view('+ row.ID +')">View</a>'
+						var tmpHTML= '<a href="javascript:;" class="btn btn-primary mr-3" title="Edit" onclick="KTDatatableDistributors.edit('+ row.ID +')">Edit</a>' +
+							'<a href="javascript:;" class="btn btn-outline-primary mr-3" title="View" onclick="KTDatatableDistributors.view('+ row.ID +')">View</a>';
 						if(row.LoginToken){
-							tmpHTML += '<a href="'+rootURL+'/'+docLang+'/auth/signin?token='+row.LoginToken+'" target="_blank" class="btn btn-warning ml-5" title="Edit" >Token</a>';
+							tmpHTML += '<a href="javascript:;" class="btn btn-warning" title="View Inquiry" onclick="KTDatatableDistributors.getToken(\''+row.LoginToken+'\')">Get Token</a>';
 						}
 						return tmpHTML;
 					}
