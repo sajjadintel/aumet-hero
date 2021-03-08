@@ -62,19 +62,19 @@ var KTDatatableDistributors = (function() {
 
 			// columns definition
 			columns: [				
-				// {
-				// 	field: 'ID',
-				// 	title: 'id',
-				// 	sortable: 'asc',
-				// 	type: 'number',
-				// 	selector: false,
-				// 	textAlign: 'left',
-				// 	width: '100',
-				// 	autoHide: false,
-				// 	template: function(row) {
-				// 		return row.ID;
-				// 	}
-				// },
+				{
+					field: 'ID',
+					title: 'id',
+					sortable: 'asc',
+					type: 'number',
+					selector: false,
+					textAlign: 'left',
+					width: '100',
+					autoHide: false,
+					template: function(row) {
+						return row.ID;
+					}
+				},
 				{
 					field: 'Name',
 					title: 'Name',
