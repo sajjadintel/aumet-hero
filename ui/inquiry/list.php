@@ -147,6 +147,7 @@
                                         <span class="form-text text-muted">To show all messages sent from distributors to manufacturers.</span>
                                     </div>
 
+                                    <!--
                                     <div class="col-lg-4">
                                         <label>Email Needed:</label>
                                         <div class="radio-inline">
@@ -156,6 +157,20 @@
                                             <label class="radio radio-solid">
                                                 <input type="radio" name="emailNeeded" class="emailNeeded" checked value="0"><span></span>No
                                             </label>
+                                        </div>
+                                        <span class="form-text text-muted">Inquiries where manufacturer has no email.</span>
+                                    </div>
+                                    -->
+
+                                    <div class="col-md-4">
+                                        <label>Email Needed:</label>
+                                        <div class="input-group">
+                                            <input type="hidden" name="emailNeededHidden" id="emailNeededHidden">
+                                            <select class="form-control select2 col-md-8 " id="emailNeeded" name="emailNeeded">
+                                                <option value="">All</option>
+                                                <option value='0'>No</option>
+                                                <option value='1'>Yes</option>
+                                            </select>
                                         </div>
                                         <span class="form-text text-muted">Inquiries where manufacturer has no email.</span>
                                     </div>
