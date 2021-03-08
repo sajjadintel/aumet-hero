@@ -211,15 +211,11 @@ var KTDatatableDistributors = (function() {
 				},
 				{
 					field: 'LoginToken',
-					title: 'Token Exists',
+					title: 'Token',
 					sortable: true,
 					autoHide: true,
 					template: function(row) {
-						var tokenExists = '';
-						if(row.LoginToken){
-							tokenExists = 'Yes';
-						}
-						return tokenExists;
+						return row.LoginToken;
 					}
 				},
 				{
@@ -329,10 +325,6 @@ var KTDatatableDistributors = (function() {
 			WebApp.block();
 			$('#submitButton').trigger('click');
 		},
-		getToken: function (_id){
-			$("#genericModal").modal("show");
-			WebApp.loadPartialPage("#genericModalContent", "manufacturers/token/"+_id);
-		}
 
 	};
 
