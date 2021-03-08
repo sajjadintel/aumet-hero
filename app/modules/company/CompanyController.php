@@ -1,4 +1,5 @@
 <?php
+use Ahc\Jwt\JWT;
 
 class CompanyController extends Controller
 {
@@ -116,7 +117,7 @@ class CompanyController extends Controller
                 $where .=' AND "CompanyRegistrationDate" <= '."'".$endDate."'";
             }
         }
-//echo $where;exit;
+
         if($where) {
             $distributors = $this->getDatatable((new Distributors()), $where);
         }else{
@@ -545,6 +546,25 @@ class CompanyController extends Controller
                 $objCompanyFile->Deleted =  true;
                 $objCompanyFile->update();
             }
+            echo $this->webResponse->getJSONResponse();
+        }
+    }
+
+    /**
+     * Generate jwt token using uid to access company user's account
+     */
+    function getJWTCompanyUser(){
+        $uid = $this->f3->get("PARAMS.uid");
+        if (!$this->f3->ajax()) {
+            $this->renderLayout("manufacturers/token/@uid");
+        } else {
+            // Instantiate with key, algo, maxAge and leeway.
+            $jwt = new JWT('secret', 'HS256', 3600, 10);
+            $token = $jwt->encode([
+                'uId' => $uid,
+            ]);
+            $this->f3->set('jwt',$token);
+            $this->webResponse->setData(View::instance()->render("companies/model/JWT.php"));
             echo $this->webResponse->getJSONResponse();
         }
     }

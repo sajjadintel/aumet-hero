@@ -225,3 +225,5 @@ $f3->route('GET /@language/inquiry/disapprove/@inquiryId', 'InquiryController->s
 
 //Test
 $f3->route('GET /@language/test', 'InquiryController->getTest');
+//Get manufacturer token to share with users
+$f3->route('GET /@language/manufacturers/token/@uid', 'CompanyController->getJWTCompanyUser');

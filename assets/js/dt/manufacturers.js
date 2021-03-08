@@ -65,11 +65,15 @@ var KTDatatableManufacturers = (function() {
 				},
 				{
 					field: 'LoginToken',
-					title: 'Token',
+					title: 'Token Exists',
 					sortable: true,
 					autoHide: false,
 					template: function(row) {
-						return row.LoginToken;
+						var tokenExists = '';
+						if(row.LoginToken){
+							tokenExists = 'Yes';
+						}
+						return tokenExists;
 					}
 				},
 				{
@@ -83,7 +87,7 @@ var KTDatatableManufacturers = (function() {
 						var tmpHTML= '<a href="javascript:;" class="btn btn-primary mr-5" data-toggle="modal" data-target="#adduser_modal"  title="Edit" onclick="KTDatatableManufacturers.addUser('+ row.ID +')">Add User</a>' +
 							'<a href="javascript:;" class="btn btn-outline-primary" title="View" onclick="KTDatatableManufacturers.view('+ row.ID +')">View</a>'
 						if(row.LoginToken){
-							tmpHTML += '<a href="'+rootURL+'/'+docLang+'/auth/signin?token='+row.LoginToken+'" target="_blank" class="btn btn-warning mr-5" title="Edit" >Token</a>';
+							tmpHTML += '<a href="javascript:;" class="btn btn-warning" title="View Inquiry" onclick="KTDatatableManufacturers.getToken(\''+row.LoginToken+'\')">Get Token</a>';
 						}
 						return tmpHTML;
 					}
@@ -102,10 +106,15 @@ var KTDatatableManufacturers = (function() {
 		},
 		view: function(_id) {
 			WebApp.loadPage('manufacturers/' + _id );
-		},addUser: function(_id) {
+		},
+		addUser: function(_id) {
 			adjustPopUp();
 			$('#companyId').val(_id);
 			console.log(_id);
+		},
+		getToken: function (_id){
+			$("#genericModal").modal("show");
+			WebApp.loadPartialPage("#genericModalContent", "manufacturers/token/"+_id);
 		}
 	};
 })();
