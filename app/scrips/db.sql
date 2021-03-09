@@ -405,3 +405,96 @@ WHERE c."Type"::text = 'distributor'::text;
 alter table onex."vwDistributorsData" owner to aumet_user;
 
 ## END {Mubasher} {05-03-2021}
+
+## START {Mubasher} {09-03-2021}
+
+create view "vwDistributorsData"
+            ("ID", "Name", "Token", "Slug", "WebsiteUrl", "Banner", "CountryID", "DeletedAt", "Logo", "Location",
+             "Address", "IsActive", "CountryName", "CountryFlag", "CompanyRegistrationDate", "PersonName", position,
+             payload, email, "inquirySend", "SpecialityID", "MedicallineID", "statusId", "LoginToken")
+as
+SELECT c."ID",
+       c."Name",
+       c."Token",
+       c."Slug",
+       c."WebsiteUrl",
+       c."Banner",
+       c."CountryID",
+       c."DeletedAt",
+       c."Logo",
+       c."Location",
+       c."Address",
+       c."IsActive",
+       co."Name"                                     AS "CountryName",
+       co."FlagPath"                                 AS "CountryFlag",
+       split_part(c."CreatedAt"::text, ' '::text, 1) AS "CompanyRegistrationDate",
+       (SELECT concat(pu."FirstName", ' ', pu."LastName") AS concat
+        FROM production."User" pu
+        WHERE pu."CompanyID" = c."ID"
+        ORDER BY pu."IsAdmin" DESC
+        LIMIT 1)                                     AS "PersonName",
+       (SELECT pu."JobTitle"
+        FROM production."User" pu
+        WHERE pu."CompanyID" = c."ID"
+        ORDER BY pu."IsAdmin" DESC
+        LIMIT 1)                                     AS "position",
+       (SELECT au.payload
+        FROM production."User" pu
+                 JOIN auth."user" au ON au.email::text = pu."Email"::text
+        WHERE pu."CompanyID" = c."ID"
+        ORDER BY pu."IsAdmin" DESC
+        LIMIT 1)                                     AS payload,
+       (SELECT pu."Email"
+        FROM production."User" pu
+        WHERE pu."CompanyID" = c."ID"
+        ORDER BY pu."IsAdmin" DESC
+        LIMIT 1)                                     AS email,
+       (SELECT count(msg.id) AS count
+        FROM onex.message msg
+        WHERE msg."fromCompanyId" = c."ID"
+          AND msg."parentId" = 0)                    AS "inquirySend",
+       (SELECT string_to_array(compny."SpecialtiyID"::text, ','::text) AS "SpecialityID"
+        FROM onex."companyExperience" compny
+        WHERE compny.companyid = c."ID")             AS "SpecialityID",
+       (SELECT string_to_array(compny."MedicalLineID"::text, ','::text) AS "MedicalLineID"
+        FROM onex."companyExperience" compny
+        WHERE compny.companyid = c."ID")             AS "MedicallineID",
+       (SELECT au."statusId"
+        FROM production."User" pu
+                 JOIN auth."user" au ON au.email::text = pu."Email"::text
+        WHERE pu."CompanyID" = c."ID"
+        ORDER BY pu."IsAdmin" DESC
+        LIMIT 1)                                     AS "statusId",
+       (SELECT au.uid
+        FROM onex."companyUser" cu
+                 JOIN auth."user" au ON au.id = cu."userId"
+        WHERE cu."companyId" = c."ID"
+          AND CASE
+                  WHEN ((SELECT count(*) AS count
+                         FROM auth."user" au_1
+                         WHERE cu."userId" = au_1.id)) > 0 THEN
+                      CASE
+                          WHEN ((SELECT count(*) AS count
+                                 FROM auth."user" au_1
+                                 WHERE cu."userId" = au_1.id
+                                   AND au_1."isAdmin" = true)) > 0 THEN cu."userId" = ((SELECT au_1.id
+                                                                                        FROM auth."user" au_1
+                                                                                        WHERE cu."userId" = au_1.id
+                                                                                          AND au_1."isAdmin"
+                                                                                        LIMIT 1))
+                          ELSE cu."userId" = ((SELECT au_1.id
+                                               FROM auth."user" au_1
+                                               WHERE cu."userId" = au_1.id
+                                               LIMIT 1))
+                          END
+                  ELSE 1 = 1
+            END
+        LIMIT 1)                                     AS "LoginToken"
+FROM production."Company" c
+         JOIN setup."Country" co ON c."CountryID" = co."ID"
+WHERE c."Type"::text = 'distributor'::text;
+
+alter table "vwDistributorsData"
+    owner to aumet_user;
+
+## END {Mubasher} {05-03-2021}
