@@ -390,4 +390,26 @@ class AumetDBRoutines
             return BaseModel::toObject($obj);
         }, $arr);
     }
+
+    /**
+     * @return array
+     */
+    public static function getAllDistributors(){
+        global $dbConnectionAumet;
+        $arr = $dbConnectionAumet->exec("select * from onex.\"vwDistributorsData\" WHERE  \"jwtToken\" is null AND \"LoginToken\" is not null ");
+        return array_map(function ($obj) {
+            return BaseModel::toObject($obj);
+        }, $arr);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAllManufacturer(){
+        global $dbConnectionAumet;
+        $arr = $dbConnectionAumet->exec("select * from onex.\"vwCompany\" WHERE  \"jwtToken\" is null AND \"LoginToken\" is not null ");
+        return array_map(function ($obj) {
+            return BaseModel::toObject($obj);
+        }, $arr);
+    }
 }

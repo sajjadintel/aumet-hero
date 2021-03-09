@@ -87,7 +87,7 @@ var KTDatatableManufacturers = (function() {
 						var tmpHTML= '<a href="javascript:;" class="btn btn-primary mr-5" data-toggle="modal" data-target="#adduser_modal"  title="Edit" onclick="KTDatatableManufacturers.addUser('+ row.ID +')">Add User</a>' +
 							'<a href="javascript:;" class="btn btn-outline-primary" title="View" onclick="KTDatatableManufacturers.view('+ row.ID +')">View</a>'
 						if(row.LoginToken){
-							tmpHTML += '<a href="javascript:;" class="btn btn-warning" title="View Inquiry" onclick="KTDatatableManufacturers.getToken(\''+row.LoginToken+'\')">Get Token</a>';
+							tmpHTML += '<a href="javascript:;" class="btn btn-warning" title="View Inquiry" onclick="KTDatatableManufacturers.getToken(\''+row.LoginToken+'\','+row.ID+')">Get Token</a>';
 						}
 						return tmpHTML;
 					}
@@ -112,9 +112,9 @@ var KTDatatableManufacturers = (function() {
 			$('#companyId').val(_id);
 			console.log(_id);
 		},
-		getToken: function (_id){
+		getToken: function (_id,cid){
 			$("#genericModal").modal("show");
-			WebApp.loadPartialPage("#genericModalContent", "manufacturers/token/"+_id);
+			WebApp.loadPartialPage("#genericModalContent", "manufacturers/token/"+_id+'/'+cid);
 		}
 	};
 })();

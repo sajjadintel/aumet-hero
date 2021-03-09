@@ -123,7 +123,6 @@ class CompanyController extends Controller
         }else{
             $distributors = $this->getDatatable((new Distributors()));
         }
-
         echo json_encode(
             $distributors
         );
@@ -555,17 +554,29 @@ class CompanyController extends Controller
      */
     function getJWTCompanyUser(){
         $uid = $this->f3->get("PARAMS.uid");
+        $companyId = $this->f3->get("PARAMS.companyId");
         if (!$this->f3->ajax()) {
             $this->renderLayout("manufacturers/token/@uid");
         } else {
-            // Instantiate with key, algo, maxAge and leeway.
-            $jwt = new JWT('secret', 'HS256', 1209600, 10);
-            $token = $jwt->encode([
-                'uId' => $uid,
-            ]);
-            $this->f3->set('jwt',$token);
+            $newToken = $this->genrateToken($uid);
+            $dbCompany = new Company();
+            $dbCompany->getById($companyId);
+            if (!$dbCompany->dry()) {
+                $dbCompany->jwtToken = $newToken;
+                $dbCompany->update();
+            }
+            $this->f3->set('jwt',$newToken);
             $this->webResponse->setData(View::instance()->render("companies/model/JWT.php"));
             echo $this->webResponse->getJSONResponse();
         }
     }
+
+    function genrateToken($uid){
+        $jwt = new JWT('secret', 'HS256', 1209600, 10);
+        return $jwt->encode([
+            'uId' => $uid,
+        ]);
+    }
+
+
 }
