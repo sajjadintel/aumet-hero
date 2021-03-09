@@ -52,11 +52,13 @@
                         <form id="filterForm" class="form">
                             <div class="card-body">
                                 <div class="form-group row">
+                                    <!--Distributor Name:-->
                                     <div class="col-lg-4">
                                         <label>Distributor Name:</label>
                                         <input type="text" class="form-control" id="kt_datatable_search_query" placeholder="Enter distributor name" name="Name">
                                         <span class="form-text text-muted">Please enter distributor name</span>
                                     </div>
+                                    <!--Country:-->
                                     <div class="col-lg-4">
                                         <label>Country:</label>
                                         <div class="input-group">
@@ -71,6 +73,7 @@
 
                                         <span class="form-text text-muted">Select country</span>
                                     </div>
+                                    <!--Person Name:-->
                                     <div class="col-lg-4">
                                         <label>Person Name:</label>
                                         <div class="input-group">
@@ -124,6 +127,21 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
+                                    <!--Distributor Experience (Medical line)-->
+                                    <div class="col-lg-4">
+                                        <label>Distributor Experience (Medical line):</label>
+                                        <div class="input-group">
+                                            <input type="hidden" id="MedicallineID" name="MedicallineID">
+                                            <select id="Medicalline_ID" name="Medicalline_ID" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
+                                                <option value="0">Select</option>
+                                                <?php foreach ($arrMedicalLines as $medicalLine): ?>
+                                                    <option value="<?php echo $medicalLine->ID ?>" ><?php echo $medicalLine->Name; ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <span class="form-text text-muted">Please enter your postcode</span>
+                                    </div>
+                                    <!--Distributor Experience (Specialty):-->
                                     <div class="col-lg-4">
                                         <label>Distributor Experience (Specialty):</label>
                                         <div class="input-group">
@@ -137,19 +155,7 @@
                                         </div>
                                         <span class="form-text text-muted">Please enter your postcode</span>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <label>Distributor Experience (Medical line):</label>
-                                        <div class="input-group">
-                                            <input type="hidden" id="MedicallineID" name="MedicallineID">
-                                            <select id="Medicalline_ID" name="Medicalline_ID" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
-                                                <option value="0">Select</option>
-                                                <?php foreach ($arrMedicalLines as $medicalLine): ?>
-                                                    <option value="<?php echo $medicalLine['ID'] ?>" ><?php echo $medicalLine['Name']; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        <span class="form-text text-muted">Please enter your postcode</span>
-                                    </div>
+                                    <!--Status-->
                                     <div class="col-lg-4">
                                         <label>Status:</label>
                                         <div class="input-group">

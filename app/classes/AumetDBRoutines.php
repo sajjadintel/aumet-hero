@@ -390,4 +390,17 @@ class AumetDBRoutines
             return BaseModel::toObject($obj);
         }, $arr);
     }
+
+    /**
+     * Get all Medicals lines with IsActive either null or active
+     * @return array|FALSE|int
+     */
+    public static function getMedicalLines()
+    {
+        global $dbConnectionAumet;
+        $arrMedicalLines = $dbConnectionAumet->exec("select * from setup.\"GetMedicalLines\"()");
+        return array_map(function ($obj) {
+            return BaseModel::toObject($obj);
+        }, $arrMedicalLines);
+    }
 }

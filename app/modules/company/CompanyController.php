@@ -24,14 +24,23 @@ class CompanyController extends Controller
             $this->renderLayout("distributors");
         } else {
             $arrCountries = [];
+            global $dbConnectionAumet;
+
+            $arrMedicalL = AumetDBRoutines::getMedicalLines();
+            $this->f3->set('arrMedicalLines', $arrMedicalL);
+
+            $dbSpeciality   = new BaseModel($dbConnectionAumet, 'setup.Speciality');
+            $arrSpeciality  = $dbSpeciality->getWhere('"ParentID" is null');
+            $this->f3->set('speciallities', $arrSpeciality);
+
             $speciallities = (new Speciality())->all();
             $arrCountries = (new Country())->getAll();
 
             $arrMedicalLines = AumetDBRoutines::GetMedicalLineWithScientificNamesCount();
 
             $this->f3->set('arrCountries', $arrCountries);
-            $this->f3->set('speciallities', $speciallities);
-            $this->f3->set('arrMedicalLines', $arrMedicalLines);
+            /*$this->f3->set('speciallities', $speciallities);
+            $this->f3->set('arrMedicalLines', $arrMedicalLines);*/
             $this->webResponse->setData(View::instance()->render("companies/distributors.php"));
             echo $this->webResponse->getJSONResponse();
         }
