@@ -559,7 +559,7 @@ class CompanyController extends Controller
             $this->renderLayout("manufacturers/token/@uid");
         } else {
             // Instantiate with key, algo, maxAge and leeway.
-            $jwt = new JWT('secret', 'HS256', 3600, 10);
+            $jwt = new JWT('secret', 'HS256', 1209600, 10);
             $token = $jwt->encode([
                 'uId' => $uid,
             ]);
