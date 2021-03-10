@@ -126,7 +126,6 @@ class CompanyController extends Controller
                 $where .=' AND "CompanyRegistrationDate" <= '."'".$endDate."'";
             }
         }
-
         if($where) {
             $distributors = $this->getDatatable((new Distributors()), $where);
         }else{
@@ -612,14 +611,17 @@ class CompanyController extends Controller
      */
     function checkTime($token){
         try {
-            $jwt = new JWT('secret', 'HS256', 1209600, 10);
-            // Spoof time() for testing token expiry.
-            $decodeInfo = $jwt->decode($token);
-            $dt = new DateTime();
-            $dateObj = $dt->setTimestamp($decodeInfo['exp']);
-            $date = $dateObj->format("Y-m-d H:i:s A");
-            // current date is greater than token expire then true else false
-            return (time() >= strtotime($date)) ? true : false;
+            if($token != '' && $token != null) {
+                $jwt = new JWT('secret', 'HS256', 1209600, 10);
+                // Spoof time() for testing token expiry.
+                $decodeInfo = $jwt->decode($token);
+                $dt = new DateTime();
+                $dateObj = $dt->setTimestamp($decodeInfo['exp']);
+                $date = $dateObj->format("Y-m-d H:i:s A");
+                // current date is greater than token expire then true else false
+                return (time() >= strtotime($date)) ? true : false;
+            }
+            return false;
         }catch (Exception $e){
             return false;
         }
