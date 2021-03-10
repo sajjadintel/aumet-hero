@@ -132,7 +132,6 @@ class CompanyController extends Controller
         }else{
             $distributors = $this->getDatatable((new Distributors()));
         }
-
         echo json_encode(
             $distributors
         );
@@ -564,17 +563,66 @@ class CompanyController extends Controller
      */
     function getJWTCompanyUser(){
         $uid = $this->f3->get("PARAMS.uid");
+        $companyId = $this->f3->get("PARAMS.companyId");
         if (!$this->f3->ajax()) {
             $this->renderLayout("manufacturers/token/@uid");
         } else {
-            // Instantiate with key, algo, maxAge and leeway.
-            $jwt = new JWT('secret', 'HS256', 1209600, 10);
-            $token = $jwt->encode([
-                'uId' => $uid,
-            ]);
+            $dbCompany  = new Company();
+            $companyObj = $dbCompany->getById($companyId);
+            if ($this->checkTime($companyObj->jwtToken)) {
+                // current date is greater than token expire
+                $token = $companyObj->jwtToken;
+            }else {
+                $token = $this->genrateToken($uid);
+                if (!$dbCompany->dry()) {
+                    $dbCompany->jwtToken = $token;
+                    $dbCompany->update();
+                }
+            }
             $this->f3->set('jwt',$token);
             $this->webResponse->setData(View::instance()->render("companies/model/JWT.php"));
             echo $this->webResponse->getJSONResponse();
         }
     }
+
+    /**
+     * !4 day based token
+     * @param $uid
+     * @return string
+     */
+    function genrateToken($uid){
+        $jwt = new JWT('secret', 'HS256', 1209600, 10);
+        return $jwt->encode([
+            'uId' => $uid,
+        ]);
+    }
+
+    /**
+     * @param $token
+     * @return array
+     */
+    function decodeToken($token){
+        $jwt = new JWT('secret', 'HS256', 1209600, 10);
+        return $jwt->decode($token);
+    }
+
+    /**
+     * @param $token
+     * @return bool
+     */
+    function checkTime($token){
+        try {
+            $jwt = new JWT('secret', 'HS256', 1209600, 10);
+            // Spoof time() for testing token expiry.
+            $decodeInfo = $jwt->decode($token);
+            $dt = new DateTime();
+            $dateObj = $dt->setTimestamp($decodeInfo['exp']);
+            $date = $dateObj->format("Y-m-d H:i:s A");
+            // current date is greater than token expire then true else false
+            return (time() >= strtotime($date)) ? true : false;
+        }catch (Exception $e){
+            return false;
+        }
+    }
+
 }
