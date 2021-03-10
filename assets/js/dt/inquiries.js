@@ -38,6 +38,9 @@ $('#manufacturerType').select2().on('select2:selecting', function (e) {
 $('#boType').select2().on('select2:selecting', function (e) {
 	$('#boTypeHidden').val(e.params.args.data.id);
 });
+$('#emailNeeded').select2().on('select2:selecting', function (e) {
+	$('#emailNeededHidden').val(e.params.args.data.id);
+});
 
 //reset form
 $('#filterForm').trigger("reset");
@@ -191,7 +194,8 @@ var KTDatatableInquiry = (function() {
 			var inquiryDate = $('#filterForm').find('input[name="inquiryDate"]').val();
 			var manufacturerType = $('#filterForm').find('input[name="manufacturerTypeHidden"]').val();
 			var boTypeHidden = $('#filterForm').find('input[name="boTypeHidden"]').val();
-			var emailNeeded = ($('#filterForm .emailNeeded:checked').length>0)? $('#filterForm .emailNeeded:checked').val() : 0;
+			var emailNeeded = $('#filterForm').find('input[name="emailNeededHidden"]').val();
+			// var emailNeeded = ($('#filterForm .emailNeeded:checked').length>0)? $('#filterForm .emailNeeded:checked').val() : 0;
 
 			datatable.setDataSourceParam('inquiryStatusHidden', inquiryStatusHidden);
 			datatable.setDataSourceParam('inquiryReceiverUserHidden', inquiryReceiverUserHidden);
