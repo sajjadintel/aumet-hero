@@ -420,7 +420,7 @@ class AumetDBRoutines
      */
     public static function getAllManufacturer(){
         global $dbConnectionAumet;
-        $arr = $dbConnectionAumet->exec("select * from onex.\"vwCompany\" WHERE  \"jwtToken\" is null AND \"LoginToken\" is not null ");
+        $arr = $dbConnectionAumet->exec("select * from onex.\"vwCompany\" WHERE  \"jwtToken\" is null AND \"LoginToken\" is not null AND \"Type\" = 'manufacturer' ");
         return array_map(function ($obj) {
             return BaseModel::toObject($obj);
         }, $arr);
