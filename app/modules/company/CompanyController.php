@@ -558,19 +558,29 @@ class CompanyController extends Controller
         if (!$this->f3->ajax()) {
             $this->renderLayout("manufacturers/token/@uid");
         } else {
-            $newToken = $this->genrateToken($uid);
-            $dbCompany = new Company();
-            $dbCompany->getById($companyId);
-            if (!$dbCompany->dry()) {
-                $dbCompany->jwtToken = $newToken;
-                $dbCompany->update();
+            $dbCompany  = new Company();
+            $companyObj = $dbCompany->getById($companyId);
+            if ($this->checkTime($companyObj->jwtToken)) {
+                // current date is greater than token expire
+                $token = $companyObj->jwtToken;
+            }else {
+                $token = $this->genrateToken($uid);
+                if (!$dbCompany->dry()) {
+                    $dbCompany->jwtToken = $token;
+                    $dbCompany->update();
+                }
             }
-            $this->f3->set('jwt',$newToken);
+            $this->f3->set('jwt',$token);
             $this->webResponse->setData(View::instance()->render("companies/model/JWT.php"));
             echo $this->webResponse->getJSONResponse();
         }
     }
 
+    /**
+     * !4 day based token
+     * @param $uid
+     * @return string
+     */
     function genrateToken($uid){
         $jwt = new JWT('secret', 'HS256', 1209600, 10);
         return $jwt->encode([
@@ -578,5 +588,32 @@ class CompanyController extends Controller
         ]);
     }
 
+    /**
+     * @param $token
+     * @return array
+     */
+    function decodeToken($token){
+        $jwt = new JWT('secret', 'HS256', 1209600, 10);
+        return $jwt->decode($token);
+    }
+
+    /**
+     * @param $token
+     * @return bool
+     */
+    function checkTime($token){
+        try {
+            $jwt = new JWT('secret', 'HS256', 1209600, 10);
+            // Spoof time() for testing token expiry.
+            $decodeInfo = $jwt->decode($token);
+            $dt = new DateTime();
+            $dateObj = $dt->setTimestamp($decodeInfo['exp']);
+            $date = $dateObj->format("Y-m-d H:i:s A");
+            // current date is greater than token expire then true else false
+            return (time() >= strtotime($date)) ? true : false;
+        }catch (Exception $e){
+            return false;
+        }
+    }
 
 }
