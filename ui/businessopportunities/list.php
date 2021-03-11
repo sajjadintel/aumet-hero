@@ -77,7 +77,7 @@
                                                     <i class="far fa-user"></i>
                                                 </span>
                                             </div>
-                                            <input type="text" name="PersonName" class="form-control" placeholder="">
+                                            <input type="text" name="BussinessUserPersonName" class="form-control" placeholder="">
                                         </div>
                                         <span class="form-text text-muted">Please enter person name</span>
                                     </div>
