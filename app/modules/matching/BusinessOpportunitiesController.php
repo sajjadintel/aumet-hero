@@ -140,14 +140,17 @@ class BusinessOpportunitiesController extends Controller
         if (!$this->f3->ajax()) {
             $this->renderLayout("distributors");
         } else {
+            global $dbConnectionAumet;
             $arrCountries = [];
-            $speciallities = (new Speciality())->all();
             $arrCountries = (new Country())->getAll();
 
-            $arrMedicalLines = AumetDBRoutines::GetMedicalLineWithScientificNamesCount();
+            $dbSpeciality   = new BaseModel($dbConnectionAumet, 'setup.Speciality');
+            $arrSpeciality  = $dbSpeciality->getWhere('"ParentID" is null');
+            $this->f3->set('speciallities', $arrSpeciality);
+
+            $arrMedicalLines = AumetDBRoutines::getMedicalLines();
 
             $this->f3->set('arrCountries', $arrCountries);
-            $this->f3->set('speciallities', $speciallities);
             $this->f3->set('arrMedicalLines', $arrMedicalLines);
             $this->webResponse->setData(View::instance()->render("businessopportunities/list.php"));
             echo $this->webResponse->getJSONResponse();

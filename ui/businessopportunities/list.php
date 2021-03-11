@@ -169,7 +169,7 @@
                                             <select id="Medicalline_ID" name="Medicalline_ID" class="form-control selectpicker form-control-solid" data-size="7" data-live-search="true" tabindex="null">
                                                 <option value="0">Select</option>
                                                 <?php foreach ($arrMedicalLines as $medicalLine): ?>
-                                                    <option value="<?php echo $medicalLine['ID'] ?>" ><?php echo $medicalLine['Name']; ?></option>
+                                                    <option value="<?php echo $medicalLine->ID ?>" ><?php echo $medicalLine->Name; ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
