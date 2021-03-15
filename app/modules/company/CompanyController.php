@@ -585,12 +585,12 @@ class CompanyController extends Controller
     }
 
     /**
-     * !4 day based token
+     * 30 day based token
      * @param $uid
      * @return string
      */
     function genrateToken($uid){
-        $jwt = new JWT('secret', 'HS256', 1209600, 10);
+        $jwt = new JWT('secret', 'HS256', 2592000, 10);
         return $jwt->encode([
             'uId' => $uid,
         ]);
@@ -601,7 +601,7 @@ class CompanyController extends Controller
      * @return array
      */
     function decodeToken($token){
-        $jwt = new JWT('secret', 'HS256', 1209600, 10);
+        $jwt = new JWT('secret', 'HS256', 2592000, 10);
         return $jwt->decode($token);
     }
 
@@ -612,7 +612,7 @@ class CompanyController extends Controller
     function checkTime($token){
         try {
             if($token != '' && $token != null) {
-                $jwt = new JWT('secret', 'HS256', 1209600, 10);
+                $jwt = new JWT('secret', 'HS256', 2592000, 10);
                 // Spoof time() for testing token expiry.
                 $decodeInfo = $jwt->decode($token);
                 $dt = new DateTime();
@@ -624,6 +624,24 @@ class CompanyController extends Controller
             return false;
         }catch (Exception $e){
             return false;
+        }
+    }
+
+    /**
+     * Add JwtToken For all
+     */
+    function getJWTForAll(){
+        //$distributor = AumetDBRoutines::getAllDistributors();
+        $distributor = AumetDBRoutines::getAllManufacturer();
+        foreach ($distributor as $row){
+            if(($row->LoginToken != null || $row->LoginToken != '') && ($row->jwtToken == '' || $row->jwtToken == null)){
+                $dbCompany = new Company();
+                $dbCompany->getById($row->ID);
+                if (!$dbCompany->dry()) {
+                    $dbCompany->jwtToken = $this->genrateToken($row->LoginToken);
+                    $dbCompany->update();
+                }
+            }
         }
     }
 
