@@ -122,12 +122,14 @@ class InquiryController extends Controller
         $ojbUser = $dbUser->getWhere('"Email"=\''.$newEmail.'\'');
 
         if(!$ojbUser){
-            $dbUser->FirstName = $objInquiryDetail->receiverCompany;
+            $dbUser->FirstName = $objInquiryDetail[0]->receiverCompany;
             $dbUser->Email = $newEmail;
             $dbUser->CompanyID = $toCompanyId;
             $dbUser->add();
 
             //Send email to new user
+            $this->f3->set('companyType',Company::TYPE_DISTRIBUTOR);
+            $this->f3->set('countryName',$objInquiryDetail[0]->senderCountry);
             $inBox = new InboxController();
             $res = $inBox->sendMessageEmail($objMessage);
             $this->webResponse->setErrorCode(200);
