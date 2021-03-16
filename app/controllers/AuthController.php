@@ -258,7 +258,7 @@ class AuthController extends Controller
 
                     $dbUser->email = $this->f3->get("POST.email");
                     $dbUser->companyType = $this->f3->get("POST.companyType");
-                    $dbUser->statusId = 3;
+                    $dbUser->statusId = 2;
                     $dbUser->authCode = $this->generateRandomString(16);
                     $dbUser->emailVerified = true;
                     $dbUser->payload = json_encode($objFBuser);
