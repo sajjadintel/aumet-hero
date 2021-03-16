@@ -23,7 +23,7 @@
                                 </tbody>
                             </table>
                             <h2 class="o_heading o_mb-xxs" style="font-family: Helvetica, Arial, sans-serif;font-weight: bold;margin-top: 0px;margin-bottom: 4px;font-size: 30px;line-height: 39px; color: white;">You Have a New Message</h2>
-                            <p style="margin-top: 0px;margin-bottom: 0px; color: white;">From a <?php echo $companyType ?> <!--in --><?php /*echo $countryName */?></p>
+                            <p style="margin-top: 0px;margin-bottom: 0px; color: white;">From a <?php echo $companyType ?> in <?php echo $countryName?></p>
                         </div>
                         <!--[if mso]></td></tr></table><![endif]-->
                     </td>
@@ -82,7 +82,7 @@
     </tbody>
 </table>
 <!-- buttons -->
-<table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
+<table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation" style="margin-top: 20px;">
     <tbody>
     <tr>
         <td class="o_bg-light o_px-xs" align="center" style="background-color: #dbe5ea;padding-left: 8px;padding-right: 8px;">
