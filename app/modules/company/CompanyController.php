@@ -125,7 +125,6 @@ class CompanyController extends Controller
                 $where .=' AND "CompanyRegistrationDate" <= '."'".$endDate."'";
             }
         }
-        $this->getJWTForAll();
         if($where) {
             $distributors = $this->getDatatable((new Distributors()), $where);
         }else{
