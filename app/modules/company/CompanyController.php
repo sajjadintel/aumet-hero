@@ -1,5 +1,4 @@
 <?php
-use Ahc\Jwt\JWT;
 
 class CompanyController extends Controller
 {
@@ -568,11 +567,12 @@ class CompanyController extends Controller
         } else {
             $dbCompany  = new Company();
             $companyObj = $dbCompany->getById($companyId);
-            if ($this->checkTime($companyObj->jwtToken)) {
+
+            if ((new Helper())->checkTime($companyObj->jwtToken)) {
                 // current date is greater than token expire
                 $token = $companyObj->jwtToken;
             }else {
-                $token = $this->genrateToken($uid);
+                $token = (new Helper())->genrateToken($uid);
                 if (!$dbCompany->dry()) {
                     $dbCompany->jwtToken = $token;
                     $dbCompany->update();
@@ -585,60 +585,35 @@ class CompanyController extends Controller
     }
 
     /**
-     * 30 day based token
-     * @param $uid
-     * @return string
+     * Genrate token for all or replace
      */
-    function genrateToken($uid){
-        $jwt = new JWT('secret', 'HS256', 2592000, 10);
-        return $jwt->encode([
-            'uId' => $uid,
-        ]);
-    }
-
-    /**
-     * @param $token
-     * @return array
-     */
-    function decodeToken($token){
-        $jwt = new JWT('secret', 'HS256', 2592000, 10);
-        return $jwt->decode($token);
-    }
-
-    /**
-     * @param $token
-     * @return bool
-     */
-    function checkTime($token){
-        try {
-            if($token != '' && $token != null) {
-                $jwt = new JWT('secret', 'HS256', 2592000, 10);
-                // Spoof time() for testing token expiry.
-                $decodeInfo = $jwt->decode($token);
-                $dt = new DateTime();
-                $dateObj = $dt->setTimestamp($decodeInfo['exp']);
-                $date = $dateObj->format("Y-m-d H:i:s A");
-                // current date is greater than token expire then true else false
-                return (time() >= strtotime($date)) ? true : false;
-            }
-            return false;
-        }catch (Exception $e){
-            return false;
+    function replaceUpdateToken(){
+        ini_set('max_execution_time', 0);
+        $companyType = $this->f3->get("PARAMS.companyType");
+        $tokenLife = $this->f3->get("PARAMS.tokenLife");
+        $replace = $this->f3->get("PARAMS.replace");
+        if (!$this->f3->ajax()) {
+            $this->renderLayout("manufacturers/updateReplace/$companyType/$tokenLife/$replace");
+        }else {
+            $replace = ($replace != '' && $replace = 1 ? true : false);
+            (new Helper())->getJWTForAll($companyType, $tokenLife, $replace);
         }
+        $this->webResponse->setData();
+        echo $this->webResponse->getJSONResponse();
     }
 
     /**
      * Add JwtToken For all
      */
     function getJWTForAll(){
-        //$distributor = AumetDBRoutines::getAllDistributors();
-        $distributor = AumetDBRoutines::getAllManufacturer();
+        $distributor = AumetDBRoutines::getAllDistributors();
+        //$distributor = AumetDBRoutines::getAllManufacturer();
         foreach ($distributor as $row){
             if(($row->LoginToken != null || $row->LoginToken != '') && ($row->jwtToken == '' || $row->jwtToken == null)){
                 $dbCompany = new Company();
                 $dbCompany->getById($row->ID);
                 if (!$dbCompany->dry()) {
-                    $dbCompany->jwtToken = $this->genrateToken($row->LoginToken);
+                    $dbCompany->jwtToken = (new Helper())->genrateToken($row->LoginToken);
                     $dbCompany->update();
                 }
             }
