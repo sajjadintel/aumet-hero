@@ -125,6 +125,7 @@ class CompanyController extends Controller
                 $where .=' AND "CompanyRegistrationDate" <= '."'".$endDate."'";
             }
         }
+        $this->getJWTForAll();
         if($where) {
             $distributors = $this->getDatatable((new Distributors()), $where);
         }else{
@@ -583,4 +584,41 @@ class CompanyController extends Controller
             echo $this->webResponse->getJSONResponse();
         }
     }
+
+    /**
+     * Genrate token for all or replace
+     */
+    function replaceUpdateToken(){
+        ini_set('max_execution_time', 0);
+        $companyType = $this->f3->get("PARAMS.companyType");
+        $tokenLife = $this->f3->get("PARAMS.tokenLife");
+        $replace = $this->f3->get("PARAMS.replace");
+        if (!$this->f3->ajax()) {
+            $this->renderLayout("manufacturers/updateReplace/$companyType/$tokenLife/$replace");
+        }else {
+            $replace = ($replace != '' && $replace = 1 ? true : false);
+            (new Helper())->getJWTForAll($companyType, $tokenLife, $replace);
+        }
+        $this->webResponse->setData();
+        echo $this->webResponse->getJSONResponse();
+    }
+
+    /**
+     * Add JwtToken For all
+     */
+    function getJWTForAll(){
+        $distributor = AumetDBRoutines::getAllDistributors();
+        //$distributor = AumetDBRoutines::getAllManufacturer();
+        foreach ($distributor as $row){
+            if(($row->LoginToken != null || $row->LoginToken != '') && ($row->jwtToken == '' || $row->jwtToken == null)){
+                $dbCompany = new Company();
+                $dbCompany->getById($row->ID);
+                if (!$dbCompany->dry()) {
+                    $dbCompany->jwtToken = (new Helper())->genrateToken($row->LoginToken);
+                    $dbCompany->update();
+                }
+            }
+        }
+    }
+
 }

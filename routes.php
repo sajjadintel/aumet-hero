@@ -227,3 +227,5 @@ $f3->route('GET /@language/inquiry/disapprove/@inquiryId', 'InquiryController->s
 $f3->route('GET /@language/test', 'InquiryController->getTest');
 //Get manufacturer token to share with users
 $f3->route('GET /@language/manufacturers/token/@uid/@companyId', 'CompanyController->getJWTCompanyUser');
+//Generate or replace all tokens with new configuration
+$f3->route('GET /@language/manufacturers/updateReplace/@companyType/@tokenLife/@replace', 'CompanyController->replaceUpdateToken');
