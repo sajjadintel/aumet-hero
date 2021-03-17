@@ -38,44 +38,61 @@ $f3->set('rootDIR', dirname(__FILE__));
 
 $f3->set('tempDIR', dirname(__FILE__) . '/tmp/');
 
-$f3->set('uploadDIR', dirname(__FILE__).'/files/uploads/');
+$f3->set('uploadDIR', dirname(__FILE__) . '/files/uploads/');
 $f3->set('uploadDIRServe', 'https://d2qyez1diqag7p.cloudfront.net/uploads/');
 
 $f3->set('authServerKey', '-SC4,=$?.3:&KRR]:DCQx{~wY!)`+--CkhE`2ur<VCZ(Tk8Pt2YXvdp3mz>3wsW`');
 
-$dbNameAumet = getenv('ONEX_DB_NAME_AUMET');
+$dbPGNameAumet = getenv('ONEX_DB_NAME_AUMET');
 
-$dbPGPort_DEV = getenv('ONEX_DB_PORT_DEV');
-$dbPGHost_DEV = getenv('ONEX_DB_HOST_DEV');
-$dbPGUsername_DEV = getenv('ONEX_DB_USER_DEV');
-$dbPGPassword_DEV = getenv('ONEX_DB_PASS_DEV');
-
-global $dbConnectionAumet_dev;
-
-$dbConnectionAumet_dev = new DB\SQL(
-    "pgsql:host=$dbPGHost_DEV;port=$dbPGPort_DEV;dbname=$dbNameAumet",
-    $dbPGUsername_DEV,
-    $dbPGPassword_DEV,
-    array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
-);
-
-$dbPGPort_PROD = getenv('ONEX_DB_PORT_PROD');
-$dbPGHost_PROD = getenv('ONEX_DB_HOST_PROD');
-$dbPGUsername_PROD = getenv('ONEX_DB_USER_PROD');
-$dbPGPassword_PROD = getenv('ONEX_DB_PASS_PROD');
+if (getenv('ENV') == Constants::ENV_LOC) {
+    $dbPGHost = getenv('ONEX_DB_HOST_DEV');
+    $dbPGPort = getenv('ONEX_DB_PORT_DEV');
+    $dbPGUsername = getenv('ONEX_DB_USER_DEV');
+    $dbPGPassword = getenv('ONEX_DB_PASS_DEV');
+} else if (getenv('ENV') == Constants::ENV_PROD) {
+    $dbPGHost = getenv('ONEX_DB_HOST_PROD');
+    $dbPGPort = getenv('ONEX_DB_PORT_PROD');
+    $dbPGUsername = getenv('ONEX_DB_USER_PROD');
+    $dbPGPassword = getenv('ONEX_DB_PASS_PROD');
+}
 
 global $dbConnectionAumet;
 
 $dbConnectionAumet = new DB\SQL(
-    "pgsql:host=$dbPGHost_PROD;port=$dbPGPort_PROD;dbname=$dbNameAumet",
-    $dbPGUsername_PROD,
-    $dbPGPassword_PROD,
+    "pgsql:host=$dbPGHost;port=$dbPGPort;dbname=$dbPGNameAumet",
+    $dbPGUsername,
+    $dbPGPassword,
     array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
 );
 
-global $dbConnectionUniOrder;
+
+$dbMyNameAumet = getenv('MP_DB_NAME_AUMET');
+
+if (getenv('ENV') == Constants::ENV_LOC) {
+    $dbMyHost = getenv('MP_DB_HOST_DEV');
+    $dbMyPort = getenv('MP_DB_PORT');
+    $dbMyUsername = getenv('MP_DB_USER_DEV');
+    $dbMyPassword = getenv('MP_DB_PASS_DEV');
+} else if (getenv('ENV') == Constants::ENV_PROD) {
+    $dbMyHost = getenv('MP_DB_HOST_PROD');
+    $dbMyPort = getenv('MP_DB_PORT');
+    $dbMyUsername = getenv('MP_DB_USER_PROD');
+    $dbMyPassword = getenv('MP_DB_PASS_PROD');
+}
+
+global $dbMPConnectionAumet;
+
+$dbMPConnectionAumet = new DB\SQL(
+    "mysql:host=$dbMyHost;port=$dbMyPort;dbname=$dbMyNameAumet",
+    $dbMyUsername,
+    $dbMyPassword,
+    array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
+);
+
 
 /*
+global $dbConnectionUniOrder;
 $dbConnectionUniOrder = new DB\SQL(
     "sqlsrv:Server=smartsrvr.database.windows.net,1433;Database=uniorders",
     "Smart",
@@ -86,9 +103,9 @@ $dbConnectionUniOrder = new DB\SQL(
 $f3->set('rootDomain', getenv('rootDomain'));
 $f3->set('rootDomainUrl', getenv('rootDomainUrl'));
 
-if(getenv('rootDomainOnexUrl')==''){
+if (getenv('rootDomainOnexUrl') == '') {
     $f3->set('rootDomainOnexUrl', 'https://dev-onex.aumet.tech');
-}else{
+} else {
     $f3->set('rootDomainOnexUrl', getenv('rootDomainOnexUrl'));
 }
 $f3->set('emailAssetsDirectory', getenv('emailAssetsDirectory'));
@@ -138,10 +155,10 @@ if (getenv('ENV') == Constants::ENV_LOC) {
 $timeout = 0;
 
 // Set the maxlifetime of session
-ini_set( "session.gc_maxlifetime", $timeout );
+ini_set("session.gc_maxlifetime", $timeout);
 
 // Also set the session cookie timeout
-ini_set( "session.cookie_lifetime", $timeout );
+ini_set("session.cookie_lifetime", $timeout);
 
 ini_set('max_execution_time', '0');
 
